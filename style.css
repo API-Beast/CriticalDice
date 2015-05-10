@@ -1,0 +1,48 @@
+body
+{
+	background: url("Table/background.jpg");
+}
+
+.dialog
+{
+	border: 2px solid white;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0px 4px 16px 0px rgba(32, 0, 0, 0.8);
+
+	width: intrinsic;
+	margin: auto;
+	padding: 20px;
+}
+
+.dialog > section:not(:first-child)
+{
+	margin-top: 20px;
+}
+
+.dialog > section > input, .dialog > section > button, .dialog > section > div
+{
+	display: block;
+	width: 100%;
+}
+
+.token
+{
+	transition: width 0.2s, height 0.2s, background 2s, border 2s, border-radius 2s;
+	background: none;
+	border: 0px dashed white;
+	border-radius: 0px;
+	overflow: hidden;
+}
+
+.token.placeholder
+{
+	border: 3px dashed white;
+	border-radius: 20%;
+	background: rgba(255, 255, 255, 0.25);
+}
+
+.token.placeholder img
+{
+	opacity: 0.5;
+}

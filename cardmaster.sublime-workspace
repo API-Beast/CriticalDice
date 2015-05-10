@@ -1,0 +1,2018 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Inter",
+				"InterfaceID"
+			],
+			[
+				"f",
+				"f	Anonymous Function"
+			],
+			[
+				"Net",
+				"NetState"
+			],
+			[
+				"Interf",
+				"InterfaceID"
+			],
+			[
+				"Action",
+				"ActionCallBack"
+			],
+			[
+				"OnObj",
+				"OnObjectCreation"
+			],
+			[
+				"margin-",
+				"margin-right"
+			],
+			[
+				"for",
+				"for	for (…) {…}"
+			],
+			[
+				"card",
+				"cardList"
+			],
+			[
+				"pr",
+				"prototype"
+			],
+			[
+				"pro",
+				"prototype"
+			],
+			[
+				"Card",
+				"CardPile"
+			],
+			[
+				"anim",
+				"animation"
+			],
+			[
+				"fli",
+				"flip-up"
+			],
+			[
+				"fo",
+				"for	for (…) {…}"
+			],
+			[
+				"tex",
+				"text-decoration"
+			],
+			[
+				"Att",
+				"AttributeList"
+			],
+			[
+				"Propert",
+				"PropertyMatchesWord"
+			],
+			[
+				"search",
+				"searchbar"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"que",
+				"querySelectorAll"
+			],
+			[
+				"min-",
+				"min-width"
+			],
+			[
+				"con",
+				"continue"
+			],
+			[
+				"Link",
+				"LinkList"
+			],
+			[
+				"title",
+				"titleNode"
+			],
+			[
+				"create",
+				"createTextNode"
+			],
+			[
+				"text",
+				"textNode"
+			],
+			[
+				"class",
+				"className"
+			],
+			[
+				"func",
+				"function"
+			],
+			[
+				"Trait",
+				"TraitList"
+			],
+			[
+				"prot",
+				"prototype"
+			],
+			[
+				"par",
+				"parseDefinition"
+			],
+			[
+				"Load",
+				"LoadData"
+			],
+			[
+				"LoadText",
+				"LoadTextFiles"
+			],
+			[
+				"Attr",
+				"Attributes"
+			],
+			[
+				"City",
+				"CityTraits"
+			],
+			[
+				"font-",
+				"font-family"
+			],
+			[
+				"GameS",
+				"GameStep"
+			],
+			[
+				"string",
+				"stringStart"
+			],
+			[
+				"l",
+				"length"
+			],
+			[
+				"clo",
+				"closedArray"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"subO",
+				"subObjBody"
+			],
+			[
+				"subOb",
+				"subObj"
+			],
+			[
+				"sub",
+				"subObjBody"
+			],
+			[
+				"subObj",
+				"subObjBody"
+			],
+			[
+				"num",
+				"numProperties"
+			],
+			[
+				"conta",
+				"containsNatVal"
+			],
+			[
+				"contains",
+				"containsObjects"
+			],
+			[
+				"contain",
+				"containsNatVal"
+			],
+			[
+				"font-s",
+				"font-size"
+			],
+			[
+				"pe",
+				"peffect"
+			],
+			[
+				"symb",
+				"symbols"
+			],
+			[
+				"fun",
+				"fun	Function"
+			],
+			[
+				"attr",
+				"attrChronic"
+			],
+			[
+				"rand",
+				"random"
+			],
+			[
+				"Tac",
+				"Tactics"
+			],
+			[
+				"Char",
+				"Charisma"
+			],
+			[
+				"Tra",
+				"TraitDefinition"
+			],
+			[
+				"Pol",
+				"Politican"
+			],
+			[
+				"app",
+				"applyEffects"
+			],
+			[
+				"has",
+				"hasOwnProperty"
+			],
+			[
+				"Stre",
+				"STRENGTH"
+			],
+			[
+				"margin",
+				"margin-left"
+			],
+			[
+				"Create",
+				"CreateSymbol"
+			],
+			[
+				"p",
+				"population"
+			],
+			[
+				"Effec",
+				"Effects"
+			],
+			[
+				"Skil",
+				"SkillDefinition"
+			],
+			[
+				"prev",
+				"PreviousRank"
+			],
+			[
+				"sort",
+				"sort"
+			],
+			[
+				"Gener",
+				"GenerateOffspring"
+			],
+			[
+				"max",
+				"maxLevel"
+			],
+			[
+				"char",
+				"Character"
+			],
+			[
+				"new",
+				"newHome"
+			],
+			[
+				"Min",
+				"MinorRelations"
+			],
+			[
+				"Minor",
+				"MinorRanks"
+			],
+			[
+				"fr",
+				"foreach	js-foreach"
+			],
+			[
+				"scroll",
+				"scrollTop"
+			],
+			[
+				"Cha",
+				"Character"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"pad",
+				"padding"
+			],
+			[
+				"inner",
+				"innerHeight-40"
+			],
+			[
+				"b",
+				"inline-block"
+			],
+			[
+				"border-colo",
+				"border-bottom-color"
+			],
+			[
+				"pare",
+				"parentNode"
+			],
+			[
+				"scro",
+				"scrollPos"
+			],
+			[
+				"isC",
+				"isCity"
+			],
+			[
+				"Ran",
+				"RandomLocation"
+			],
+			[
+				"Fa",
+				"FamilyNames"
+			],
+			[
+				"add",
+				"addColorStop"
+			],
+			[
+				"small",
+				"smallFaction"
+			],
+			[
+				"sor",
+				"sortedFactions"
+			],
+			[
+				"fam",
+				"families"
+			],
+			[
+				"Dist",
+				"DistinctColors"
+			],
+			[
+				"V",
+				"AngleToVec2"
+			],
+			[
+				"Vec2",
+				"Vec2Add"
+			],
+			[
+				"Rand",
+				"RandFloat"
+			],
+			[
+				"MapS",
+				"MapSizeY"
+			],
+			[
+				"fami",
+				"familyA"
+			],
+			[
+				"Ge",
+				"GenerateMan"
+			],
+			[
+				"famil",
+				"familyB"
+			],
+			[
+				"alig",
+				"text-align"
+			],
+			[
+				"inlin",
+				"inline-block"
+			],
+			[
+				"fon",
+				"font-weight"
+			],
+			[
+				"fu",
+				"fun	Function"
+			],
+			[
+				"crea",
+				"createElement"
+			],
+			[
+				"UiC",
+				"UiCharacterHistory"
+			],
+			[
+				"fa",
+				"familyB"
+			],
+			[
+				"Genera",
+				"GenerateCharacter"
+			],
+			[
+				"age",
+				"ageFirstChild"
+			],
+			[
+				"tr",
+				"traitsByRank"
+			],
+			[
+				"Tactic",
+				"TACTIC"
+			],
+			[
+				"base",
+				"baseTraits"
+			],
+			[
+				"family",
+				"familyB"
+			],
+			[
+				"Map",
+				"MapSizeX"
+			],
+			[
+				"rad",
+				"radiusTurbulence"
+			],
+			[
+				"Vec",
+				"Vec2Add"
+			],
+			[
+				"Vill",
+				"Villages"
+			],
+			[
+				"gener",
+				"GenerateStream"
+			],
+			[
+				"Upda",
+				"UpdateUI"
+			],
+			[
+				"fill",
+				"fillStyle"
+			],
+			[
+				"Ma",
+				"MapSizeY"
+			],
+			[
+				"View",
+				"ViewportSizeY"
+			],
+			[
+				"ca",
+				"canvas	Tag"
+			],
+			[
+				"D",
+				"Deception"
+			],
+			[
+				"random",
+				"randomElement"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"x",
+				"xstruct	xstruct"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 1025,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "data.js",
+			"settings":
+			{
+				"buffer_size": 1547,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "table.js",
+			"settings":
+			{
+				"buffer_size": 1201,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/GameDev/Cardmaster/index.html",
+			"settings":
+			{
+				"buffer_size": 1186,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "style.css",
+			"settings":
+			{
+				"buffer_size": 762,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/GameDev/Cardmaster/cardmaster.js",
+			"settings":
+			{
+				"buffer_size": 776,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "netstate.js",
+			"settings":
+			{
+				"buffer_size": 3339,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Libraries/peer.js",
+			"settings":
+			{
+				"buffer_size": 74953,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/GameDev/Cardmaster/card.class.js",
+			"settings":
+			{
+				"buffer_size": 3745,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Libraries/functions.js",
+			"settings":
+			{
+				"buffer_size": 3246,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "interface.js",
+			"settings":
+			{
+				"buffer_size": 5407,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/GameDev/Cardmaster/interface.js",
+			"settings":
+			{
+				"buffer_size": 176,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/GameDev/Cardmaster/data.js",
+			"settings":
+			{
+				"buffer_size": 1547,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "1\n2\n4\n8\n16\n32\n64\n\n 4444\n\n\n 32 - 16 16 - 8 8 8 8 - 4 4 4 4 4 4 4 4 - 8px\n 64 - 16px\n 128 - 32px - 4x8px\n 256 - 64px - 8x8px\n 8 - 16 4bit palettes + 4 bit ignored",
+			"settings":
+			{
+				"buffer_size": 160,
+				"line_ending": "Unix",
+				"name": "1"
+			}
+		},
+		{
+			"file": "/C/Users/Manuel/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+			"settings":
+			{
+				"buffer_size": 214,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 21 files for \"Merge\" (case sensitive, whole word)\n\nC:\\GameDev\\TheTable\\data.js:\n   49  			LoadSet(temp, \"CardSets/\"+file.beforeLastIndex('/'));\n   50  \n   51: 			//Definitions = Merge(Definitions, temp);\n   52  \n   53  			if(!numFilesLeft && OnDataLoaded)\n\nC:\\GameDev\\TheTable\\interface.js:\n   58  \n   59  	var act = {};\n   60: 	act.OriginalState = Merge(obj.Data);\n   61  	act.Result = {};\n   62  	act.Type   = obj.Type.ClickAction;\n   ..\n   94  		if(!IsEmptyObject(act.Result))\n   95  		{\n   96: 			var delta = Merge(prevResult, act.Result);\n   97  			\n   98  		}\n\nC:\\GameDev\\TheTable\\netstate.js:\n   94  {\n   95    // With just one parameter this is basically a deep clone\n   96:   var oldState = Merge(obj);\n   97  \n   98  	ApplyTemplate(obj, delta); \n\nC:\\GameDev\\TheTable\\Libraries\\functions.js:\n   34  // Deep\n   35  // Return Copy\n   36: function Merge()/*[...]*/\n   37  {\n   38  	var result = Object.create(null);\n   ..\n   45    			result[p] = result[p].concat(arguments[i][p]);\n   46    		else\n   47:   			result[p] = Merge(result[p], arguments[i][p]);\n   48    	}\n   49    	else\n\nC:\\GameDev\\TheTable\\Libraries\\quill.js:\n 5170      var diffs_a = diff_main(text1_a, text2_a);\n 5171      var diffs_b = diff_main(text1_b, text2_b);\n 5172:     // Merge the results.\n 5173      return diffs_a.concat([[DIFF_EQUAL, mid_common]], diffs_b);\n 5174    }\n ....\n 5475  \n 5476  /**\n 5477:  * Reorder and merge like edit sections.  Merge equalities.\n 5478   * Any edit section can move as long as it doesn't cross an equality.\n 5479   * @param {Array} diffs Array of diff tuples.\n ....\n 5545                      (count_delete ? 1 : 0) + (count_insert ? 1 : 0) + 1;\n 5546          } else if (pointer !== 0 && diffs[pointer - 1][0] == DIFF_EQUAL) {\n 5547:           // Merge this equality with the previous one.\n 5548            diffs[pointer - 1][1] += diffs[pointer][1];\n 5549            diffs.splice(pointer, 1);\n\nC:\\Downloads\\quill.tar\\quill\\quill\\quill.js:\n 5170      var diffs_a = diff_main(text1_a, text2_a);\n 5171      var diffs_b = diff_main(text1_b, text2_b);\n 5172:     // Merge the results.\n 5173      return diffs_a.concat([[DIFF_EQUAL, mid_common]], diffs_b);\n 5174    }\n ....\n 5475  \n 5476  /**\n 5477:  * Reorder and merge like edit sections.  Merge equalities.\n 5478   * Any edit section can move as long as it doesn't cross an equality.\n 5479   * @param {Array} diffs Array of diff tuples.\n ....\n 5545                      (count_delete ? 1 : 0) + (count_insert ? 1 : 0) + 1;\n 5546          } else if (pointer !== 0 && diffs[pointer - 1][0] == DIFF_EQUAL) {\n 5547:           // Merge this equality with the previous one.\n 5548            diffs[pointer - 1][1] += diffs[pointer][1];\n 5549            diffs.splice(pointer, 1);\n\nC:\\GameDev\\Cardmaster\\card.class.js:\n   51  Card.prototype.getValues = function()\n   52  {\n   53: 	return Merge(this.Back.Values, this.Front.Values, this.Data.Values);\n   54  };\n   55  \n\n13 matches across 7 files\n",
+			"settings":
+			{
+				"buffer_size": 2960,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "var x = (a, b) ==> a * b;\nvar x = function(a, b){ return a * b; }\nfunction x(a, b){ return a * b; }",
+			"settings":
+			{
+				"buffer_size": 99,
+				"line_ending": "Unix",
+				"name": "var x = (a, b) ==> a * b;"
+			}
+		},
+		{
+			"file": "objhandle.js",
+			"settings":
+			{
+				"buffer_size": 1382,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/xampp/apache/conf/extra/httpd-vhosts.conf",
+			"settings":
+			{
+				"buffer_size": 1718,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/GameDev/Cardmaster/session.js",
+			"settings":
+			{
+				"buffer_size": 5119,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Objects/common.js",
+			"settings":
+			{
+				"buffer_size": 1717,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Objects/document.js",
+			"settings":
+			{
+				"buffer_size": 931,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Objects/token.js",
+			"settings":
+			{
+				"buffer_size": 1022,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Downloads/quill.tar/quill/quill/quill.js",
+			"settings":
+			{
+				"buffer_size": 320397,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Libraries/quill.js",
+			"settings":
+			{
+				"buffer_size": 320397,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 196.0,
+		"selected_items":
+		[
+			[
+				"Java",
+				"Set Syntax: Java"
+			],
+			[
+				"syntax Java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"syntax",
+				"Set Syntax: Java"
+			],
+			[
+				"Syn",
+				"Set Syntax: C"
+			],
+			[
+				"Syntax",
+				"Set Syntax: INI"
+			],
+			[
+				"Set Syntax",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"Set Syn",
+				"Set Syntax: INI"
+			],
+			[
+				"Instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Packag Inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Set Syntax Mar",
+				"Set Syntax: Markdown"
+			],
+			[
+				"Pretty",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"Pretty Json",
+				"Pretty JSON: JSON query with ./jq"
+			],
+			[
+				"Package Control: Ins",
+				"Package Control: Install Package"
+			],
+			[
+				"hj",
+				"Set Syntax: Hjson"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Set Syntax: MultiMarkdown"
+			],
+			[
+				"Mar",
+				"Set Syntax: MultiMarkdown"
+			],
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"Snippet: ",
+				"Snippet: #include <…>"
+			],
+			[
+				"C++",
+				"Set Syntax: C++"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 146.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2deb499853c4371624f5a07e27c334aa' + 'bf8c4e67d14fb0525ba4f89698a6d7e1'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/GameDev/TheTable",
+		"/C/GameDev/TheTable/Content",
+		"/C/GameDev/TheTable/Libraries",
+		"/C/GameDev/TheTable/Objects",
+		"/C/GameDev/TheTable/Table"
+	],
+	"file_history":
+	[
+		"/C/Users/Manuel/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/GameDev/TheTable/session.js",
+		"/C/Program Files (x86)/PuTTY/README.txt",
+		"/C/GameDev/TheTable/Libraries/Angle.js",
+		"/C/Downloads/HDM_Texture_Collection/Readme.txt",
+		"/C/Downloads/More_Swimsuits_Mod_1.01/Readme.txt",
+		"/C/Downloads/SweetFX 1_5-23364-1-5-[Guru3D.com]/SweetFX readme.txt",
+		"/C/Downloads/SweetFX_Settings_Dead or Alive 5 Last Round_Shinobu Fix - -Sweat Candy- - 1.0.txt",
+		"/C/Games/PC/DEAD OR ALIVE 5 Last Round/SweetFX_preset.txt",
+		"/C/Games/PC/DEAD OR ALIVE 5 Last Round/SweetFX/Presets/DOA5.txt",
+		"/C/Documents/Downloads/[Fuwanovel] Fate Hollow Ataraxia/readme.txt",
+		"/C/Games/PC/League of Legends/RADS/system/launcher.cfg",
+		"/C/GameDev/AI Kingdoms/UserInterface/interface.js",
+		"/C/GameDev/AI Kingdoms/Backend/data.js",
+		"/C/GameDev/AI Kingdoms/Backend/functions.js",
+		"/C/WebDev/primaton_db.txt",
+		"/C/GameDev/Cardmaster/nodejsSuggestion.md",
+		"/C/GameDev/Cardmaster/network.js",
+		"/C/Downloads/qqcnao/Readme.txt",
+		"/C/Downloads/xygmip/Readme.txt",
+		"/C/Hacking/peerjs/lib/peer.js",
+		"/C/Hacking/peerjs/lib/socket.js",
+		"/C/Hacking/peerjs/dist/peer.js",
+		"/C/Hacking/node_modules/peer/lib/server.js",
+		"/C/GameDev/Cardmaster/style.css",
+		"/C/Users/Manuel/Desktop/Do Things Right Pt. 2/Steps.txt",
+		"/C/WebDev/mobile/primaton - gebrauchte Flöten von Altblockflöten - bis Bassflöten Startseite.html",
+		"/C/WebDev/mobile/primatonStart.html",
+		"/C/WebDev/mobile/primaton - gebrauchte Flöten von Altblockflöten - bis Bassflöten Startseite_files/mobile.css",
+		"/C/Downloads/mobile/primaton - gebrauchte Flöten von Altblockflöten - bis Bassflöten Startseite_files/mobile.css",
+		"/C/Downloads/mobile/primaton - gebrauchte Flöten von Altblockflöten - bis Bassflöten Startseite.html",
+		"/C/Downloads/mobile/primaton - gebrauchte Flöten von Altblockflöten - bis Bassflöten Startseite_files/cb=gapi.loaded_0",
+		"/C/Documents/Heroes of the Storm/GameLogs/2015-04-08 10.47.20 Graphics.txt",
+		"/C/GameDev/Cardmaster/CardSets/Aspect/Set.xini",
+		"/C/GameDev/AI Kingdoms/index.html",
+		"/C/GameDev/AI Kingdoms/UserInterface/style.css",
+		"/C/Users/Manuel/Desktop/Art.txt",
+		"/C/GameDev/AI Kingdoms/Backend/backend.js",
+		"/C/GameDev/Cardmaster/CardSets/Aspect/Aspect.xini",
+		"/C/GameDev/Cardmaster/cardpile.class.js",
+		"/C/GameDev/Cardmaster/carddefiniton.class.js",
+		"/C/xampp/apache/conf/extra/httpd-vhosts.conf",
+		"/C/GameDev/Cardmaster/cardmaster.sublime-project",
+		"/C/Roleplaying/Cards/InspirationGen.txt",
+		"/C/Users/Manuel/AppData/Local/Temp/Temp1_snowy8_for_windows_8_8_1_by_carborunda-d6rz6yq.zip/Windows 8.1/ReadMe.txt",
+		"/C/GameDev/AI Kingdoms/UserInterface/completly.js",
+		"/C/GameDev/AI Kingdoms/World/city.generation.js",
+		"/C/GameDev/AI Kingdoms/UserInterface/symbols.css",
+		"/C/GameDev/AI Kingdoms/Data/Attributes.xini",
+		"/C/GameDev/AI Kingdoms/UserInterface/ui.lib.js",
+		"/C/Downloads/Traits.xini",
+		"/C/GameDev/AI Kingdoms/Data/AFileList.xini",
+		"/C/GameDev/AI Kingdoms/World/world.generation.js",
+		"/C/GameDev/AI Kingdoms/ai-kingdoms.js",
+		"/C/GameDev/AI Kingdoms/Classes/city.class.js",
+		"/C/GameDev/AI Kingdoms/Data/Traits.xini",
+		"/C/GameDev/AI Kingdoms/Classes/trait.class.js",
+		"/C/GameDev/AI Kingdoms/Classes/traitlist.class.js",
+		"/C/GameDev/AI Kingdoms/World/character.generation.js",
+		"/C/GameDev/AI Kingdoms/Data/_FileList.xini",
+		"/C/GameDev/AI Kingdoms/citygen.js",
+		"/C/GameDev/AI Kingdoms/functions.js",
+		"/C/GameDev/AI Kingdoms/xini.js",
+		"/C/GameDev/AI Kingdoms/data.js",
+		"/C/GameDev/AI Kingdoms/interface.js",
+		"/C/GameDev/AI Kingdoms/style.css",
+		"/C/Users/Manuel/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/GameDev/AI Kingdoms/tooltip.js",
+		"/C/GameDev/AI Kingdoms/ui.lib.js",
+		"/C/GameDev/AI Kingdoms/Data/Skills.xini",
+		"/C/GameDev/AI Kingdoms/Data/CityTraits.xini",
+		"/C/GameDev/AI Kingdoms/start.js",
+		"/C/GameDev/AI Kingdoms/trait.class.js",
+		"/C/GameDev/AI Kingdoms/attributelist.class.js",
+		"/C/GameDev/AI Kingdoms/traitlist.class.js",
+		"/C/GameDev/AI Kingdoms/effect.class.js",
+		"/C/GameDev/AI Kingdoms/character.class.js",
+		"/C/GameDev/AI Kingdoms/city.class.js",
+		"/C/GameDev/AI Kingdoms/chargen.js",
+		"/C/Source/Randomly-generated-Magic-Items/patterns.txt",
+		"/C/Source/Randomly-generated-Magic-Items/concrete_noun.txt",
+		"/C/Source/Randomly-generated-Magic-Items/magic_items.py",
+		"/C/Games/PC/Diablo II/MODS/RoS084b/D2SE_SETUP.ini",
+		"/C/GameDev/AI Kingdoms/skill.class.js",
+		"/C/GameDev/AI Kingdoms/tabs.css",
+		"/C/GameDev/AI Kingdoms/backend.js",
+		"/C/GameDev/AI Kingdoms/Data/Calendar.xini",
+		"/C/GameDev/AI Kingdoms/Brainstorming/Cities.md",
+		"/C/GameDev/AI Kingdoms/Data/Colors.xini",
+		"/C/Users/Manuel/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Roleplaying/2050/CharakterFragen.md",
+		"/C/Users/Manuel/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/Manuel/.gitconfig",
+		"/C/GameDev/AI Kingdoms/skills.data.js",
+		"/C/Projects/XINI/Description.md",
+		"/C/xampp/apache/conf/httpd.conf",
+		"/E/GameDev/AI Kingdoms/Data/Skills.xini",
+		"/E/GameDev/AI Kingdoms/Data/Traits.xini",
+		"/E/GameDev/AI Kingdoms/chargen.js",
+		"/E/GameDev/AI Kingdoms/skills.data.js",
+		"/E/GameDev/AI Kingdoms/xini.js",
+		"/C/Users/Beast/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/E/GameDev/AI Kingdoms/Brainstorming/Abillities.md",
+		"/E/GameDev/AI Kingdoms/ai-kingdoms.js",
+		"/E/GameDev/AI Kingdoms/worldgen.js",
+		"/E/GameDev/AI Kingdoms/interface.js",
+		"/E/GameDev/AI Kingdoms/index.html",
+		"/E/GameDev/AI Kingdoms/data.js",
+		"/E/GameDev/AI Kingdoms/Data/MapSprites.xini",
+		"/E/GameDev/AI Kingdoms/Data/Names.xini",
+		"/E/GameDev/AI Kingdoms/Data/_FileList.xini",
+		"/E/GameDev/AI Kingdoms/Data/Colors.xini",
+		"/E/GameDev/AI Kingdoms/backend.js",
+		"/E/GameDev/AI Kingdoms/style.css",
+		"/E/GameDev/AI Kingdoms/tabs.css",
+		"/E/GameDev/AI Kingdoms/character.class.js",
+		"/E/GameDev/AI Kingdoms/effect.class.js",
+		"/E/GameDev/AI Kingdoms/skill.class.js",
+		"/E/GameDev/AI Kingdoms/functions.js",
+		"/E/GameDev/AI Kingdoms/symbols.css",
+		"/E/GameDev/AI Kingdoms/Data/Files.xini",
+		"/E/GameDev/AI Kingdoms/hjson.js",
+		"/E/GameDev/AI Kingdoms/Data/Traits.hjson",
+		"/E/GameDev/AI Kingdoms/Data/Skills.hjson",
+		"/E/GameDev/AI Kingdoms/faction.class.js",
+		"/E/GameDev/AI Kingdoms/events.data.js",
+		"/E/GameDev/AI Kingdoms/Brainstorming/TODO.md",
+		"/E/GameDev/AI Kingdoms/Brainstorming/Traits.md"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"send",
+			"Width",
+			"Merge",
+			"action",
+			"Things",
+			"state",
+			"Quill",
+			"Quill=",
+			"Quill",
+			"TargetHandle",
+			"action",
+			"Action",
+			"action",
+			"Action",
+			"action",
+			"GameObject",
+			"(obj)",
+			"obj.",
+			"obj",
+			"Note",
+			".Delta.",
+			"delta",
+			"Delta",
+			"delta",
+			"Delta",
+			"delta",
+			"Delta",
+			"delta",
+			"Delta",
+			"TargetState",
+			"Target.",
+			"BaseAngle",
+			"table",
+			"interface",
+			"StartClone",
+			"Obj",
+			"interaction",
+			"OnObjectCreated",
+			"OnStateChange",
+			"pack.Type",
+			"packet",
+			"Front",
+			"front",
+			"Front",
+			"front",
+			"data",
+			"connection",
+			"data-",
+			"grunt",
+			"peerID",
+			"dialog",
+			"this.LooseCards",
+			"this.CardStacks",
+			"Selection",
+			"AddLooseCard",
+			"�",
+			"Backside",
+			"i",
+			"death",
+			"elem",
+			"Cards",
+			"SelectedCard",
+			"card",
+			"cardDiv",
+			"ImgSrc",
+			"back",
+			"div",
+			"rank",
+			".Ranks",
+			"i",
+			"Ui",
+			"listItems[i]",
+			"25",
+			"Tribe]",
+			", City]",
+			"City",
+			"Start",
+			"symbols.png",
+			", BaseType",
+			"person",
+			"Skills",
+			"skills",
+			"Skills",
+			"skills",
+			"Skills",
+			"skills",
+			"Skills",
+			"skills",
+			"Skills",
+			"skills",
+			"Skills",
+			"skills",
+			"distributeSkills",
+			"skill",
+			"this",
+			"trait",
+			"Trait",
+			"trait",
+			"CityTraits",
+			"Attributes",
+			"obj[key]",
+			"Ui.L",
+			"UI.L",
+			"Ui.L",
+			"UI",
+			"Ui",
+			"UI",
+			"Ui",
+			"CreateTag",
+			"titleNode",
+			"UISymbol",
+			"CreateSymbol",
+			"CreateLinkFor",
+			"TraitArray",
+			"Skill",
+			"hasTrait",
+			"trait",
+			"Max Population",
+			"skill",
+			"array",
+			"new Skill",
+			"Skill",
+			"isStatic",
+			"type",
+			"attr",
+			"i",
+			"person",
+			"Skill"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Interface",
+			"Traits",
+			"traits",
+			"Tactics",
+			"calcScore",
+			".IsAlive",
+			"objectLink",
+			"className"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 10,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1025,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								933,
+								933
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 90.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "data.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1547,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "table.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1201,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1174,
+								1174
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/GameDev/Cardmaster/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1186,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								459,
+								459
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "style.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 762,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								605,
+								605
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/GameDev/Cardmaster/cardmaster.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 776,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								568,
+								470
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "netstate.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3339,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2238,
+								2238
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 945.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Libraries/peer.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 74953,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12576,
+								12576
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/C/GameDev/Cardmaster/card.class.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3745,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2541,
+								2405
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 135.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Libraries/functions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3246,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1383,
+								1383
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 292.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "interface.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5407,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2682,
+								2682
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1485.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/C/GameDev/Cardmaster/interface.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 176,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "/C/GameDev/Cardmaster/data.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1547,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 160,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								160,
+								160
+							]
+						],
+						"settings":
+						{
+							"auto_name": "1",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "/C/Users/Manuel/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 214,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								211,
+								211
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2960,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										188,
+										193
+									],
+									[
+										359,
+										364
+									],
+									[
+										523,
+										528
+									],
+									[
+										710,
+										715
+									],
+									[
+										864,
+										869
+									],
+									[
+										1037,
+										1042
+									],
+									[
+										1262,
+										1267
+									],
+									[
+										1437,
+										1442
+									],
+									[
+										1773,
+										1778
+									],
+									[
+										2088,
+										2093
+									],
+									[
+										2263,
+										2268
+									],
+									[
+										2599,
+										2604
+									],
+									[
+										2853,
+										2858
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 675.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 21,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 99,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								65,
+								65
+							]
+						],
+						"settings":
+						{
+							"auto_name": "var x = (a, b) ==> a * b;",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 22,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "objhandle.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1382,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								675,
+								675
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "/C/xampp/apache/conf/extra/httpd-vhosts.conf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1718,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1698,
+								1698
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "/C/GameDev/Cardmaster/session.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5119,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "Objects/common.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1717,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								282,
+								282
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "Objects/document.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 22,
+					"file": "Objects/token.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1022,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								887,
+								887
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "/C/Downloads/quill.tar/quill/quill/quill.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 320397,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 24,
+					"type": "text"
+				},
+				{
+					"buffer": 24,
+					"file": "Libraries/quill.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 320397,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								435,
+								440
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 151316.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 23,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 21.0
+	},
+	"input":
+	{
+		"height": 29.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "cardmaster.sublime-project",
+	"replace":
+	{
+		"height": 38.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 244.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
