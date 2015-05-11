@@ -32,7 +32,7 @@ NetState.prototype.Join = function(id)
   var conn = this.Network.connect(id);
   this.Peers[id] = conn;
   conn.on('data', this.OnDataReceived.bind(this, conn));
-  conn.on('open', function(){ conn.send(["state-request"]); });
+  conn.on('open', function(){ conn.send(["join-session"]); });
 }
 
 NetState.prototype.OnPeerConnected = function(conn)
@@ -48,11 +48,28 @@ NetState.prototype.RequestState = function()
 
 NetState.prototype.OnDataReceived = function(conn, pack)
 {
-  console.log("Input:", pack);
+  console.log("Input:", conn.peer, pack);
   var type = pack[0];
   if(type === "chat")
   {
     console.log(pack[1]);
+    return;
+  }
+
+  if(type === "join-session")
+  {
+    for(var id in this.Peers)
+      this.Peers[id].send(["joined-session", conn.peer]);
+    conn.send(["set-state", this.State]);
+    return;
+  }
+
+  if(type === "joined-session")
+  {
+    var id = pack[1];
+    var conn = this.Network.connect(id);
+    this.Peers[id] = conn;
+    conn.on('data', this.OnDataReceived.bind(this, conn));
     return;
   }
 
@@ -85,8 +102,8 @@ NetState.prototype.OnDataReceived = function(conn, pack)
 
   if(type === "update-object")
   {
-    var time = pack[1]; 
-  	var obj  = this.State.Objects[pack[2]];
+    var time  = pack[1]; 
+  	var obj   = this.State.Objects[pack[2]];
     var delta = pack[3];
     if(obj) this.UpdateObjectState(obj, delta, "network");
     else console.log("Trying to update non-existant object.", pack[2]);

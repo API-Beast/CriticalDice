@@ -20,9 +20,9 @@ Interface.prototype.Init = function(table)
   this.Table.addEventListener('mouseup',   this.OnRelease.bind(this));
 
   var preventDef = function(e){ e.preventDefault(); return false; };
-  this.Table.addEventListener('dragenter', preventDef);
-  this.Table.addEventListener('dragover',  preventDef);
-  this.Table.addEventListener('drop',      this.OnDropFile.bind(this));
+  this.Table.addEventListener('dragenter', preventDef, false);
+  this.Table.addEventListener('dragover',  preventDef, false);
+  this.Table.addEventListener('drop',      this.OnDropFile.bind(this), false);
 
 };
 
@@ -67,6 +67,8 @@ Interface.prototype.OnDropFile = function(event)
 					var response = JSON.parse(xhttp.responseText);
 					self.NetState.UpdateObjectState(token, {Texture: response.data.link}, self.InterfaceID);
 				}
+				else
+					self.NetState.RemoveObject(token, self.InterfaceID);
 			};
 			xhttp.send(fd);
 		}
