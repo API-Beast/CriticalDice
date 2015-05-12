@@ -12,17 +12,29 @@ document.onreadystatechange = function ()
   }
 }
 
+function SetActiveTab(tab)
+{
+	var parent = tab.parentNode;
+	var elements = parent.querySelectorAll("section");
+	for(var i = 0; i < elements.length; i++)
+	{
+		elements[i].className = "";
+	}
+	tab.className = "active-tab";
+}
+
 function GameInit(argument)
 {
 	document.getElementById("host-button").addEventListener('click', NewSession);
 	document.getElementById("join-button").addEventListener('click', JoinSession);
+
+	var elements = document.querySelectorAll(".tabbed section h2 a");
+	for (var i = 0; i < elements.length; i++)
+		elements[i].addEventListener("click", SetActiveTab.bind(undefined, elements[i].parentNode.parentNode));
 }
 
 function NewSession()
 {
-  var startDialog = document.getElementById("start-dialog");
-  startDialog.style.display = 'none';
-
 	var input = document.getElementById("host-id");
 	gNetState  = new NetState(input.value);
 	gInterface = new Interface(gNetState);
@@ -33,9 +45,6 @@ function NewSession()
 
 function JoinSession()
 {
-  var startDialog = document.getElementById("start-dialog");
-  startDialog.style.display = 'none';
-
 	var input = document.getElementById("join-id");
 	gNetState  = new NetState();
 	gInterface = new Interface(gNetState);

@@ -20,6 +20,7 @@ var NetState = function(id)
   this.OnObjectCreation = [];
   this.OnObjectRemoval  = [];
   this.OnStateReset     = [];
+  this.OnReceiveChat    = [];
 }
 
 NetState.prototype.Clock = function()
@@ -137,7 +138,7 @@ NetState.prototype.RemoveObject = function(obj, origin)
   delete this.State.Objects[obj.ID];
 
   if(origin != "network")
-    this.Broadcast(["remove-object", id]);
+    this.Broadcast(["remove-object", obj.ID]);
 
   CallAll(this.OnObjectRemoval, obj.ID);
 };

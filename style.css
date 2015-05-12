@@ -1,8 +1,3 @@
-body
-{
-	background: url("Table/background.jpg");
-}
-
 .dialog
 {
 	border: 2px solid white;
@@ -45,4 +40,35 @@ body
 .token.placeholder img
 {
 	opacity: 0.5;
+}
+
+#table
+{
+	width: 70%;
+	height: 100%;
+	background: url("Table/background.jpg");
+	box-sizing: border-box;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#table.drag
+{
+	border: 4px dashed yellow;
+}
+
+#sidebar
+{
+	width: 30%;
+	background: rgb(107, 41, 41);
+	position: absolute;
+	/* left: 70%; */
+	height: 100%;
+	right: 0;
+	top: 0;
+	overflow: hidden;
+	border-left: 4px solid rgb(181, 108, 108);
+	box-shadow: -2px 0px 5px rgba(40,0,0,0.8);
+	box-sizing: border-box;
 }

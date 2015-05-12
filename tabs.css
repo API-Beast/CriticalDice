@@ -1,0 +1,80 @@
+.tabbed
+{
+	position: relative;
+}
+
+.tabbed section
+{
+	position: absolute;
+	top: 34px;
+	z-index: 10;
+	height: 100%;
+	width: 100%;
+	background: rgb(249, 245, 244);
+	padding: 10px;
+}
+
+.tabbed section h2
+{
+	position: absolute;
+	top: -28px;
+	left: 4px;
+	width: 80px;
+	height: 24px;
+	background: rgba(255, 208, 175, 0.51);
+	margin: 0;
+	z-index: 10;
+	padding-left: 5px;
+	box-sizing: border-box;
+
+	/* border-top: 1px solid gray; */
+	/* border-left: 1px solid gray; */
+	/* border-right: 1px solid gray; */
+
+	/* border-top-right-radius: 5px; */
+	/* border-top-left-radius: 5px; */
+
+	/* box-shadow: 4px -5px 7px -5px rgba(0, 0, 0, 0.5); */
+}
+
+.tabbed section h2 a
+{
+	font-size: 18px;
+	font-weight: normal;
+	text-decoration: none;
+	text-align: center;
+	width: 70px;
+	display: inline-block;
+	cursor: pointer;
+	padding: 2px;
+	opacity: 0.7;
+}
+
+.tabbed section:nth-child(2) h2
+{
+  left: 88px;
+  z-index: 9;
+}
+
+.tabbed section:nth-child(3) h2
+{
+  left: 174px;
+  z-index: 8;
+}
+
+.tabbed section.active-tab
+{
+	z-index: 11;
+}
+
+.tabbed section.active-tab h2
+{
+	/* background: rgba(219, 205, 193, 0.25); */
+	background: rgba(255, 208, 175, 0.70);
+}
+
+.tabbed section.active-tab h2 a
+{
+    opacity: 1;
+
+}
