@@ -19,16 +19,18 @@ Interface.prototype.Init = function(table)
   this.Table.addEventListener('mousemove', this.OnMove.bind(this));
   this.Table.addEventListener('mouseup',   this.OnRelease.bind(this));
 
-  var preventDef = function(e){ e.preventDefault(); return false; };
-  this.Table.addEventListener('dragenter', preventDef, false);
-  this.Table.addEventListener('dragover',  preventDef, false);
-  this.Table.addEventListener('drop',      this.OnDropFile.bind(this), false);
+  // What the actual fucking fuck HTML5?! You have to change className for Drag & Drop to work
+  // ...and no, it doesn't work with classList.
+  // Also don't forget eating out a virgin at full moon and sacrifcing it afterwards to the dark IE gods.
+	this.Table.addEventListener('dragenter', function(e){ this.className = "drag"; e.preventDefault(); });
+  this.Table.addEventListener('dragend',   function(e){ this.className = "";     e.preventDefault(); });
+  this.Table.addEventListener('dragover',  function(e){ e.preventDefault(); });
+  this.Table.addEventListener('drop',      this.OnDropFile.bind(this));
 
 };
 
 Interface.prototype.OnDropFile = function(event)
 {
-	event.stopPropagation();
 	event.preventDefault();
 	var files = event.dataTransfer.files;
 	for (var i = 0; i < files.length; i++)
