@@ -1,15 +1,14 @@
 "use strict";
 
-var NetState = function(id)
+var NetState = function(name)
 {
-  if(id)
-    this.Network = new Peer(id, {key: '53po7kdyuv1gu8fr'});
-  else 
-    this.Network = new Peer({key: '53po7kdyuv1gu8fr'});
+  this.Network = new Peer({key: '53po7kdyuv1gu8fr'});
 
   this.Network.on("open", this.OnNetworkEtablished.bind(this));
 	this.Network.on("connection", this.OnPeerConnected.bind(this));
 	this.Peers = Object.create(null);
+
+  this.Metadata = {Nick: name};
 
 	this.State = {};
 	this.State.Objects = {};
@@ -33,12 +32,12 @@ NetState.prototype.Clock = function()
 
 NetState.prototype.Join = function(id)
 {
-  var conn = this.Network.connect(id);
+  var conn = this.Network.connect(id, {metadata: this.Metadata});
   this.Peers[id] = conn;
   conn.on('data', this.OnDataReceived.bind(this, conn));
   conn.on('close', this.OnPeerDisconnected.bind(this, conn));
   conn.on('open', function(){ conn.send(["join-session"]); });
-  CallAll(this.OnStatusText, "Joined "+id);
+  CallAll(this.OnStatusText, tr("Joined <b>{0}</b>'s Session.", [conn.metadata.Nick]));
 }
 
 NetState.prototype.Leave = function()
@@ -63,7 +62,7 @@ NetState.prototype.OnPeerConnected = function(conn)
 
 NetState.prototype.OnPeerDisconnected = function(conn)
 {
-  CallAll(this.OnStatusText, conn.peer+" was disconnected.");
+  CallAll(this.OnStatusText, tr("<b>{0}</b> was disconnected.", [conn.metadata.Nick]));
 }
 
 NetState.prototype.OnDataReceived = function(conn, pack)
@@ -84,27 +83,35 @@ NetState.prototype.OnDataReceived = function(conn, pack)
         this.Peers[id].send(["joined-session", conn.peer]);
     }
     conn.send(["set-state", this.State]);
-    CallAll(this.OnStatusText, id+" joined the session.");
+    CallAll(this.OnStatusText, tr("<b>{0}</b> joined the session.", [conn.metadata.Nick]));
     return;
   }
 
   if(type === "joined-session")
   {
     var id = pack[1];
-    var conn = this.Network.connect(id);
+    var conn = this.Network.connect(id, {metadata: this.Metadata});
     this.Peers[id] = conn;
     conn.on('data', this.OnDataReceived.bind(this, conn));
-    CallAll(this.OnStatusText, id+" joined the session.");
+    CallAll(this.OnStatusText, tr("<b>{0}</b> joined the session.", [conn.metadata.Nick]));
     return;
   }
 
   if(type === "leave-session")
   {
     conn.close();
-    CallAll(this.OnStatusText, conn.peer+" leaved the session.");
+    CallAll(this.OnStatusText, tr("<b>{0}</b> left the session.", [conn.metadata.Nick]));
     delete this.Peers[conn.peer];
   }
 
+  if(type === "change-nick")
+  {
+    var oldName = conn.metadata.Nick;
+    var newName = pack[1];
+    if(oldName !== newName)
+      CallAll(this.OnStatusText, tr("<b>{0}</b> changed their Nick to <b>{1}</b>.", [oldName, newName]));
+    conn.metadata.Nick = newName;
+  }
 
   if(type === "state-request")
   {
@@ -160,9 +167,21 @@ NetState.prototype.CreateObject = function(obj, id, origin)
   CallAll(this.OnObjectCreation, id, obj);
 
   if(origin != "network")
+  {
     this.Broadcast(["create-object", id, obj]);
+  }
 
   return obj;
+}
+
+NetState.prototype.ChangeNick = function(newName)
+{
+  if(this.Metadata.Nick !== newName)
+  {
+    this.Metadata.Nick = newName;
+    this.Broadcast(["change-nick", newName]);
+    CallAll(this.OnStatusText, tr("You changed your Nick to <b>{0}</b>.", [newName]));
+  }
 }
 
 NetState.prototype.RemoveObject = function(obj, origin)

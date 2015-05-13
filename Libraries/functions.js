@@ -19,6 +19,11 @@ Array.prototype.shuffle = function()
   return copy;
 }
 
+Array.prototype.randomElement = function()
+{
+  return this[Math.floor(Math.random() * this.length)];
+};
+
 String.prototype.beforeLastIndex = function (delimiter) {
     return this.split(delimiter).slice(0,-1).join(delimiter) || this + ""
 }
@@ -141,4 +146,27 @@ function IsEmptyObject(obj)
     if(Object.prototype.hasOwnProperty.call(obj, prop))
       return false;
   return true;
+}
+
+function RandomName()
+{
+  var a = ["Apple", "Blazing", "Orange", "Red", "White", "Blue", "Fierce", "Bright", "Dark", "Green", "Amazing", "Tiny", "Huge", "Silver", "Bronze", "Iron", "Doom", "Cute"];
+  var b = ["Turtle", "Goblin", "Shark", "Elemental", "Spy", "Pirate", "Orb", "Golem", "Pillager", "Orphan", "Hammer", "Killer", "Minotaur", "Kobold", "Dwarf", "Giant", "Lizard", "Dragon", "Rabbit"];
+  return a.randomElement() + " " + b.randomElement();
+}
+
+function GetStored(key)
+{
+  var val = localStorage.getItem(key);
+  if(!val)
+    return undefined;
+  return JSON.parse(val);
+}
+
+function SetStored(key, value)
+{
+  if(value === undefined)
+    localStorage.removeItem(key);
+  else
+    localStorage.setItem(key, JSON.stringify(value));
 }
