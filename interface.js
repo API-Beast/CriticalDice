@@ -14,6 +14,7 @@ Interface.prototype.Init = function(table)
 	this.Table = table;
 	this.NetState.OnObjectChange  .push(this.OnObjectChange  .bind(this));
 	this.NetState.OnObjectCreation.push(this.OnObjectCreation.bind(this));
+	this.NetState.OnObjectRemoval .push(this.OnObjectRemoval .bind(this));
 	this.NetState.OnStateReset    .push(this.OnStateReset    .bind(this));
 
   this.Table.addEventListener('mousemove', this.OnMove.bind(this));
@@ -64,13 +65,16 @@ Interface.prototype.OnDropFile = function(event)
 			xhttp.setRequestHeader('Authorization', 'Client-ID c7a1ef740b6ffdd');
 			xhttp.onreadystatechange = function()
 			{
-				if(xhttp.status === 200 && xhttp.readyState === 4)
+				if(xhttp.readyState === 4)
 				{
-					var response = JSON.parse(xhttp.responseText);
-					self.NetState.UpdateObjectState(token, {Texture: response.data.link}, self.InterfaceID);
+					if(xhttp.status === 200)
+					{
+						var response = JSON.parse(xhttp.responseText);
+						self.NetState.UpdateObjectState(token, {Texture: response.data.link}, self.InterfaceID);
+					}
+					else
+						self.NetState.RemoveObject(token, self.InterfaceID);
 				}
-				else
-					self.NetState.RemoveObject(token, self.InterfaceID);
 			};
 			xhttp.send(fd);
 		}
@@ -89,6 +93,13 @@ Interface.prototype.OnObjectCreation = function(id, data)
 	obj.Div.addEventListener('mousedown', this.OnClick.bind(this, obj));
 	obj.Div.addEventListener('dblclick',  this.OnDoubleClick.bind(this, obj));
 	this.Handles[id] = obj;
+}
+
+Interface.prototype.OnObjectRemoval = function(id)
+{
+	var div = this.Handles[id].Div;
+	div.parentNode.removeChild(div);
+	delete this.Handles[id];
 }
 
 Interface.prototype.OnStateReset = function(state)

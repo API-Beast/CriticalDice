@@ -7,6 +7,7 @@ var NetState = function(id)
   else 
     this.Network = new Peer({key: '53po7kdyuv1gu8fr'});
 
+  this.Network.on("open", this.OnNetworkEtablished.bind(this));
 	this.Network.on("connection", this.OnPeerConnected.bind(this));
 	this.Peers = Object.create(null);
 
@@ -16,6 +17,8 @@ var NetState = function(id)
 	this.ClockStartTime = performance.now();
 	this.NetworkInputSmoothingDelay = 150;
 
+  this.OnEtablishedSession = [];
+  this.OnStatusText     = [];
   this.OnObjectChange   = [];
   this.OnObjectCreation = [];
   this.OnObjectRemoval  = [];
@@ -33,8 +36,24 @@ NetState.prototype.Join = function(id)
   var conn = this.Network.connect(id);
   this.Peers[id] = conn;
   conn.on('data', this.OnDataReceived.bind(this, conn));
+  conn.on('close', this.OnPeerDisconnected.bind(this, conn));
   conn.on('open', function(){ conn.send(["join-session"]); });
+  CallAll(this.OnStatusText, "Joined "+id);
 }
+
+NetState.prototype.Leave = function()
+{
+  for(var id in this.Peers)
+  {
+    this.Peers[id].send(["leave-session"]);
+    //this.Peers[id].close();
+  }
+};
+
+NetState.prototype.OnNetworkEtablished = function(id)
+{
+  CallAll(this.OnEtablishedSession, id);
+};
 
 NetState.prototype.OnPeerConnected = function(conn)
 {
@@ -42,9 +61,9 @@ NetState.prototype.OnPeerConnected = function(conn)
   conn.on('data', this.OnDataReceived.bind(this, conn));
 }
 
-NetState.prototype.RequestState = function()
+NetState.prototype.OnPeerDisconnected = function(conn)
 {
-  //this.Peers[Object.keys(this.Peers)[0]].send(["state-request"]);
+  CallAll(this.OnStatusText, conn.peer+" was disconnected.");
 }
 
 NetState.prototype.OnDataReceived = function(conn, pack)
@@ -60,8 +79,12 @@ NetState.prototype.OnDataReceived = function(conn, pack)
   if(type === "join-session")
   {
     for(var id in this.Peers)
-      this.Peers[id].send(["joined-session", conn.peer]);
+    {
+      if(id != conn.peer)
+        this.Peers[id].send(["joined-session", conn.peer]);
+    }
     conn.send(["set-state", this.State]);
+    CallAll(this.OnStatusText, id+" joined the session.");
     return;
   }
 
@@ -71,8 +94,17 @@ NetState.prototype.OnDataReceived = function(conn, pack)
     var conn = this.Network.connect(id);
     this.Peers[id] = conn;
     conn.on('data', this.OnDataReceived.bind(this, conn));
+    CallAll(this.OnStatusText, id+" joined the session.");
     return;
   }
+
+  if(type === "leave-session")
+  {
+    conn.close();
+    CallAll(this.OnStatusText, conn.peer+" leaved the session.");
+    delete this.Peers[conn.peer];
+  }
+
 
   if(type === "state-request")
   {

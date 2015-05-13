@@ -12,6 +12,7 @@
 	width: 100%;
 	background: rgb(249, 245, 244);
 	padding: 10px;
+	box-sizing: border-box;
 }
 
 .tabbed section h2
@@ -70,7 +71,7 @@
 .tabbed section.active-tab h2
 {
 	/* background: rgba(219, 205, 193, 0.25); */
-	background: rgba(255, 208, 175, 0.70);
+	background: rgba(255, 183, 183, 1);
 }
 
 .tabbed section.active-tab h2 a

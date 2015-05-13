@@ -44,26 +44,26 @@
 
 #table
 {
-	width: 70%;
+	/* width: 100%; */
 	height: 100%;
 	background: url("Table/background.jpg");
 	box-sizing: border-box;
 	position: absolute;
 	top: 0;
 	left: 0;
+	right: 450px;
 }
 
 #table.drag
 {
-	border: 4px dashed yellow;
+	/* border: 4px dashed yellow; */
 }
 
 #sidebar
 {
-	width: 30%;
+	width: 450px;
 	background: rgb(107, 41, 41);
 	position: absolute;
-	/* left: 70%; */
 	height: 100%;
 	right: 0;
 	top: 0;
@@ -71,4 +71,44 @@
 	border-left: 4px solid rgb(181, 108, 108);
 	box-shadow: -2px 0px 5px rgba(40,0,0,0.8);
 	box-sizing: border-box;
+}
+
+.status {
+    background: rgb(255, 189, 160);
+    border: 2px solid rgb(82, 19, 19);
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+#chat-area {
+    padding: 10px;
+    /* position: relative; */
+}
+
+#loading
+{
+    background: #400710 url("Table/load.gif") center no-repeat;
+    /* width: 100%; */
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 450px;#
+}
+
+#loading.finished
+{
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.35s, opacity 0.35s linear;
+}
+
+#chat-line {
+    position: absolute;
+    /* bottom: 60px; */
+    left: 0;
+    right: 0;
+    height: 20px;
+    display: block;
+    width: 100%;
 }
