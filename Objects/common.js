@@ -127,36 +127,3 @@ ObjHandle.Actions["Delete"] =
 		env.RemoveObject(action.Target);
 	}
 }
-
-
-ObjHandle.Actions["Copy"] =
-{
-	Label: "Copy",
-	Type: "Single",
-	Icon: "fa-copy",
-	Shortcut: [17, 67], // Ctrl-C
-	Hidden: true,
-	OnExecute: function(action, x, y, env)
-	{
-		var copy = Merge(action.Target);
-		delete copy.ID;
-		SetStored("clipboard", copy);
-	}
-}
-
-
-ObjHandle.Actions["Cut"] =
-{
-	Label: "Cut",
-	Type: "Single",
-	Icon: "fa-cut",
-	Shortcut: [17, 88], // Ctrl-X
-	Hidden: true,
-	OnExecute: function(action, x, y, env)
-	{
-		var copy = Merge(action.Target);
-		delete copy.ID;
-		SetStored("clipboard", copy);
-		env.RemoveObject(action.Target);
-	}
-}

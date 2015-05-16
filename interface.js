@@ -6,9 +6,10 @@ var Interface = function(netstate)
 	this.NetState      = netstate;
 	this.CurrentAction = null;
 	this.Selection     = null;
-	this.InterfaceID   = "dummy";	
 	this.Handles       = Object.create(null);
 	this.ActionBar     = null;
+	this.MouseX        = 0;
+	this.MouseY        = 0;
 }
 
 Interface.prototype.Init = function(table)
@@ -29,9 +30,45 @@ Interface.prototype.Init = function(table)
   this.Table.addEventListener('dragend',   function(e){ this.className = "";     e.preventDefault(); });
   this.Table.addEventListener('dragover',  function(e){ e.preventDefault(); });
   this.Table.addEventListener('drop',      this.OnDropFile.bind(this));
+  window.addEventListener('keydown',   this.OnKeyPress.bind(this));
 
   this.ActionBar = document.createElement("div");
   this.ActionBar.className = "actionbar right";
+};
+
+Interface.prototype.OnKeyPress = function(e)
+{
+	if(e.repeat) return;
+
+	// Copy
+	if(e.which === 67 && e.ctrlKey)
+	{
+		if(this.Selection)
+			SetStored("clipboard", this.Selection.Data);
+	}
+	// Cut
+	if(e.which === 88 && e.ctrlKey)
+	{
+		if(this.Selection)
+		{
+			SetStored("clipboard", this.Selection.Data);
+			this.NetState.RemoveObject(this.Selection.Data);
+		}
+	}
+	// Paste
+	if(e.which === 86 && e.ctrlKey)
+	{
+		var copy = GetStored("clipboard");
+		delete copy.ID;
+		if(copy)
+		{
+			copy.X = this.MouseX;
+			copy.Y = this.MouseY;
+			this.NetState.CreateObject(copy);
+			var handle = this.Handles[copy.ID];
+			this.SetCenterPos(handle, this.MouseX, this.MouseY);
+		}
+	}
 };
 
 Interface.prototype.ExecuteAction = function(object, action, mouseX, mouseY)
@@ -107,7 +144,7 @@ Interface.prototype.OnDropFile = function(e)
 		if(url.match(/.(\.png|\.jpg|\.jpeg|\.gif|\.apng)/))
 		{
 			var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
-			this.NetState.CreateObject(token, undefined, this.InterfaceID);
+			this.NetState.CreateObject(token);
 		}
 	}
 	else // Firefox sends Images also as Files, o_O, so we have to do a either or
@@ -123,7 +160,7 @@ Interface.prototype.OnDropFile = function(e)
 
 				var reader = new FileReader();
 				var token = {Type: "Token", X: e.pageX+(i*40), Y: e.pageY};
-				this.NetState.CreateObject(token, undefined, this.InterfaceID);
+				this.NetState.CreateObject(token);
 
 				var image = new Image();
 				reader.onload = function()
@@ -220,6 +257,9 @@ Interface.prototype.OnDoubleClick = function(obj, e)
 
 Interface.prototype.OnMove = function(e)
 {
+	this.MouseX = e.pageX;
+	this.MouseY = e.pageY;
+
 	if(this.CurrentAction === null) return false;
 
 	this.ActionCallBack("OnGrabbing", this.CurrentAction, e.pageX, e.pageY, this);
@@ -248,14 +288,25 @@ Interface.prototype.ActionCallBack = function(fname, act)
 		if(!IsEmptyObject(act.Result))
 		{
 			var delta = Merge(prevResult, act.Result);
-			this.NetState.UpdateObjectState(act.Target, delta, this.InterfaceID);
+			this.NetState.UpdateObjectState(act.Target, delta);
 		}
 	}
 }
 
 Interface.prototype.RemoveObject = function(obj)
 {
-	this.NetState.RemoveObject(obj, this.InterfaceID);
+	this.NetState.RemoveObject(obj);
+};
+
+Interface.prototype.SetCenterPos = function(handle, x, y)
+{
+	var rect    = handle.Div.getBoundingClientRect();
+	var centerX = (rect.left + rect.right)/2;
+	var centerY = (rect.top  + rect.bottom)/2;
+	var dataX   = handle.Data.X;
+	var dataY   = handle.Data.Y;
+	var delta   = {X: x + (dataX - centerX), Y: y + (dataY - centerY)};
+	this.NetState.UpdateObjectState(handle.Data, delta);
 };
 
 Interface.prototype.getStackHeightAt = function(x, y, target)
