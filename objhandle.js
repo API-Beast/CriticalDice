@@ -8,6 +8,10 @@ var ObjHandle = function(state)
 	this.call("Initialize", this);
 	this.enableInteraction(this.Type.ClickAction);
 
+	var menu = this.Type.MenuActions;
+	for(var i = 0; i < menu.length; i++)
+		this.enableInteraction(menu[i]);
+
 	this.initHTML();
 }
 
@@ -23,6 +27,7 @@ ObjHandle.prototype.enableInteraction = function(interaction)
 ObjHandle.prototype.initHTML = function()
 {
 	this.Div = document.createElement("div");
+	this.Div.classList.add("obj");
 	this.call("InitHTML",   this, this.Div);
 	this.updateHTML();
 	return this.Div;
@@ -38,9 +43,16 @@ ObjHandle.prototype.updateHTML = function()
 		this.Div.style.left = this.Data.X+"px";
 		this.Div.style.top  = this.Data.Y+"px";
 	}
+	var transform = "";
 	if(this.Data.Z      !== undefined) this.Div.style.zIndex = this.Data.Z;
 	if(this.Data.Width  !== undefined) this.Div.style.width  = this.Data.Width +"px";
 	if(this.Data.Height !== undefined) this.Div.style.height = this.Data.Height+"px";
+	if(this.Data.ScaleX !== undefined) transform += "scaleX("+this.Data.ScaleX+") ";
+	if(this.Data.ScaleY !== undefined) transform += "scaleY("+this.Data.ScaleY+") ";
+	if(this.Data.Rotation !== undefined) transform += "rotate("+this.Data.Rotation+"deg) ";
+
+	if(transform !== "")
+		this.Div.style.transform = transform;
 
 	this.call("UpdateHTML", this, this.Div);
 };

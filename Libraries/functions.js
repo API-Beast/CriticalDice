@@ -170,3 +170,15 @@ function SetStored(key, value)
   else
     localStorage.setItem(key, JSON.stringify(value));
 }
+
+function Round(a, precision)
+{
+  var half = precision/2;
+  return a+half - (a+half) % precision;
+}
+
+function RemoveDiv(div)
+{
+  if(div.parentNode)
+    div.parentNode.removeChild(div);
+}

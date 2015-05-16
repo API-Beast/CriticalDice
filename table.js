@@ -72,7 +72,7 @@ function SessionInit(id)
 		gNetState.Join(hash);
 	else
 		gNetState.CreateObject({Type: "Token", X: 200, Y: 200, Texture: "Content/coinToken.png"});
-	
+
 	var loading = document.getElementById("loading");
 	loading.className = "finished";
 	window.addEventListener('beforeunload', SessionExit);

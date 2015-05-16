@@ -4,7 +4,7 @@ ObjHandle.Types["Token"] =
 {
 	Type: "Simple",
 	ClickAction: "Move",
-	MenuActions: ["Rotate", "Scale"],
+	MenuActions: ["Move", "Rotate", "Scale", "Delete", "Copy", "Cut"],
 	Initialize: function(handle)
 	{
 		handle.Data.Texture = handle.Data.Texture || null;

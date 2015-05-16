@@ -5,8 +5,10 @@ var Interface = function(netstate)
 	this.Table         = null;
 	this.NetState      = netstate;
 	this.CurrentAction = null;
+	this.Selection     = null;
 	this.InterfaceID   = "dummy";	
 	this.Handles       = Object.create(null);
+	this.ActionBar     = null;
 }
 
 Interface.prototype.Init = function(table)
@@ -20,7 +22,7 @@ Interface.prototype.Init = function(table)
   this.Table.addEventListener('mousemove', this.OnMove.bind(this));
   this.Table.addEventListener('mouseup',   this.OnRelease.bind(this));
 
-  // What the actual fucking fuck HTML5?! You have to change className for Drag & Drop to work
+  // What the actual fucking fuck HTML5?! You have to change className for Grab & Drop to work
   // ...and no, it doesn't work with classList.
   // Also don't forget eating out a virgin at full moon and sacrifcing it afterwards to the dark IE gods.
 	this.Table.addEventListener('dragenter', function(e){ this.className = "drag"; e.preventDefault(); });
@@ -28,57 +30,136 @@ Interface.prototype.Init = function(table)
   this.Table.addEventListener('dragover',  function(e){ e.preventDefault(); });
   this.Table.addEventListener('drop',      this.OnDropFile.bind(this));
 
+  this.ActionBar = document.createElement("div");
+  this.ActionBar.className = "actionbar right";
 };
 
-Interface.prototype.OnDropFile = function(event)
+Interface.prototype.ExecuteAction = function(object, action, mouseX, mouseY)
 {
-	event.preventDefault();
-	var files = event.dataTransfer.files;
-	for (var i = 0; i < files.length; i++)
+	var act = {};
+	act.Handle  = object;
+	act.Target  = object.Data;
+	act.OriginalState = Merge(object.Data);
+	act.Result  = {};
+	act.Type    = action;
+	console.log("Start action ", action.Label);
+
+	var rect = object.Div.getBoundingClientRect();
+	act.CenterX = (rect.left + rect.right)/2;
+	act.CenterY = (rect.top  + rect.bottom)/2;
+
+	this.CurrentAction = act;
+
+	if(action.Type === "Single")
 	{
-		var file = files[i];
-		if(file.type.match(/image.*/))
+		this.ActionCallBack("OnExecute", this.CurrentAction, mouseX, mouseY, this);
+		this.CurrentAction = null;
+	}
+	else
+		this.ActionCallBack("OnStartGrab", this.CurrentAction, mouseX, mouseY, this);
+};
+
+Interface.prototype.UpdateActionBar = function()
+{
+	RemoveDiv(this.ActionBar);
+	this.ActionBar.innerHTML = "";
+
+	if(this.Selection)
+	{
+		this.Selection.Div.appendChild(this.ActionBar);
+
+		var menu = this.Selection.Type.MenuActions;
+		for(var i = 0; i < menu.length; i++)
 		{
-			var self  = this;
+			var act = ObjHandle.Actions[menu[i]];
+			var span = document.createElement('span');
+			span.className = "item fa "+act.Icon;
+			this.ActionBar.appendChild(span);
 
-			var reader = new FileReader();
-			var token = {Type: "Token", X: event.pageX+(i*40), Y: event.pageY};
+			var mdown = function(act, obj, e)
+			{
+				if(e.button !== 0) return false;
+
+				e.stopPropagation();
+				e.preventDefault();
+				this.ExecuteAction(obj, act, e.pageX, e.pageY);
+			};
+
+			span.addEventListener("mousedown", mdown.bind(this, act, this.Selection));
+		};
+		
+	}
+}
+
+Interface.prototype.OnDropFile = function(e)
+{
+	e.preventDefault();
+	this.Table.className = "";
+	
+	// URL-Drop
+	// "URL"-Datatype is the first valid URL in a "text/uri-list" according to MDN
+	var url = e.dataTransfer.getData("URL");
+	if(url)
+	{
+		// Only create token if the URL is for a image.
+		// Scrap that... Everyone but Imgur denies our Cross-URL XHTTP-requests.
+		// Just check if the URL "looks" like a image.
+		if(url.match(/.(\.png|\.jpg|\.jpeg|\.gif|\.apng)/))
+		{
+			var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
 			this.NetState.CreateObject(token, undefined, this.InterfaceID);
-
-			var image = new Image();
-			reader.onload = function()
-			{
-				image.onload = function()
-				{
-					self.NetState.UpdateObjectState(token, {Width: image.width, Height: image.height}, self.InterfaceID);
-				};
-				image.src = reader.result;
-				self.Handles[token.ID].PlaceholderSrc = reader.result;
-			};
-			reader.readAsDataURL(file);
-			
-
-			var xhttp = new XMLHttpRequest();
-			var fd    = new FormData();
-			fd.append('image', file);
-			xhttp.open('POST', 'https://api.imgur.com/3/image');
-			xhttp.setRequestHeader('Authorization', 'Client-ID c7a1ef740b6ffdd');
-			xhttp.onreadystatechange = function()
-			{
-				if(xhttp.readyState === 4)
-				{
-					if(xhttp.status === 200)
-					{
-						var response = JSON.parse(xhttp.responseText);
-						self.NetState.UpdateObjectState(token, {Texture: response.data.link}, self.InterfaceID);
-					}
-					else
-						self.NetState.RemoveObject(token, self.InterfaceID);
-				}
-			};
-			xhttp.send(fd);
 		}
-	};
+	}
+	else // Firefox sends Images also as Files, o_O, so we have to do a either or
+	{
+		// File upload
+		var files = e.dataTransfer.files;
+		for (var i = 0; i < files.length; i++)
+		{
+			var file = files[i];
+			if(file.type.match(/image.*/))
+			{
+				var self  = this;
+
+				var reader = new FileReader();
+				var token = {Type: "Token", X: e.pageX+(i*40), Y: e.pageY};
+				this.NetState.CreateObject(token, undefined, this.InterfaceID);
+
+				var image = new Image();
+				reader.onload = function()
+				{
+					image.onload = function()
+					{
+						self.NetState.UpdateObjectState(token, {Width: image.width, Height: image.height}, self.InterfaceID);
+					};
+					image.src = reader.result;
+					self.Handles[token.ID].PlaceholderSrc = reader.result;
+				};
+				reader.readAsDataURL(file);
+				
+
+				var xhttp = new XMLHttpRequest();
+				var fd    = new FormData();
+				fd.append('image', file);
+				xhttp.open('POST', 'https://api.imgur.com/3/image');
+				xhttp.setRequestHeader('Authorization', 'Client-ID c7a1ef740b6ffdd');
+				xhttp.onreadystatechange = function()
+				{
+					if(this.readyState === 4)
+					{
+						if(this.status === 200)
+						{
+							var response = JSON.parse(this.responseText);
+							self.NetState.UpdateObjectState(token, {Texture: response.data.link}, self.InterfaceID);
+						}
+						else
+							self.NetState.RemoveObject(token, self.InterfaceID);
+					}
+				};
+				xhttp.send(fd);
+			}
+		};
+	}
 };
 
 Interface.prototype.OnObjectChange = function(id)
@@ -118,49 +199,44 @@ Interface.prototype.OnStateReset = function(state)
 	}
 }
 
-Interface.prototype.OnClick = function(obj, event)
+Interface.prototype.OnClick = function(obj, e)
 {
-	if(event.button !== 0) return false;
+	if(e.button !== 0) return false;
 	if(this.CurrentAction) return false;
 
-	event.stopImmediatePropagation();
-	event.preventDefault();
+	e.stopImmediatePropagation();
+	e.preventDefault();
 
-	var act = {};
-	act.Handle = obj;
-	act.Target = obj.Data;
-	act.OriginalState = Merge(obj.Data);
-	act.Result = {};
-	act.Type   = obj.Type.ClickAction;
-	this.CurrentAction = act;
+	this.ExecuteAction(obj, ObjHandle.Actions[obj.Type.ClickAction], e.pageX, e.pageY);
 
-	this.ActionCallBack("OnStartDrag", this.CurrentAction, event.pageX, event.pageY, this);
+	this.Selection = obj;
+	this.UpdateActionBar();
 };
 
-Interface.prototype.OnDoubleClick = function(obj, event)
+Interface.prototype.OnDoubleClick = function(obj, e)
 {
-	event.stopImmediatePropagation();
+	e.stopImmediatePropagation();
 };
 
-Interface.prototype.OnMove = function(event)
+Interface.prototype.OnMove = function(e)
 {
 	if(this.CurrentAction === null) return false;
 
-	this.ActionCallBack("OnDragging", this.CurrentAction, event.pageX, event.pageY, this);
+	this.ActionCallBack("OnGrabbing", this.CurrentAction, e.pageX, e.pageY, this);
 };
 
-Interface.prototype.OnRelease = function(event)
+Interface.prototype.OnRelease = function(e)
 {
 	if(this.CurrentAction === null) return false;
 
-	event.preventDefault();
-	this.ActionCallBack("OnStopDrag", this.CurrentAction, event.pageX, event.pageY, this);
+	e.preventDefault();
+	this.ActionCallBack("OnStopGrab", this.CurrentAction, e.pageX, e.pageY, this);
 	this.CurrentAction = null;
 };
 
 Interface.prototype.ActionCallBack = function(fname, act)
 {
-	var fn = ObjHandle.Actions[act.Type][fname];
+	var fn = act.Type[fname];
 	var args = Array.prototype.slice.call(arguments, 1);
 	var prevResult = act.Result;
 	act.Result = {};
@@ -176,6 +252,11 @@ Interface.prototype.ActionCallBack = function(fname, act)
 		}
 	}
 }
+
+Interface.prototype.RemoveObject = function(obj)
+{
+	this.NetState.RemoveObject(obj, this.InterfaceID);
+};
 
 Interface.prototype.getStackHeightAt = function(x, y, target)
 {

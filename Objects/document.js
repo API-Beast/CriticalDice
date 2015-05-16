@@ -35,7 +35,6 @@ ObjHandle.Actions["EditRichText"] =
 	},
 	OnLoseFocus: function(action)
 	{
-
 		action.Handle.Editor   = undefined;
 		action.Handle.EditMode = false;
 	}
