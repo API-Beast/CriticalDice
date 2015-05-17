@@ -10,14 +10,15 @@ ObjHandle.Actions["Move"] =
 	{
 		data.X = data.X || 0;
 		data.Y = data.Y || 0;
+		data.Z = data.Z || 0;
 	},
-	OnStartGrab: function(action, x, y, env)
+	OnStartGrab: function(action, x, y, ui, netstate)
 	{
 		action.StartX = x;
 		action.StartY = y;
 		action.DropOnTop = false;
 	},
-	OnGrabbing: function(action, x, y, env)
+	OnGrabbing: function(action, x, y, ui, netstate)
 	{
 		var deltaX = x - action.StartX;
 		var deltaY = y - action.StartY;
@@ -28,9 +29,10 @@ ObjHandle.Actions["Move"] =
 		{
 			action.DropOnTop       = true;
 			action.Result.Hovering = true;
+			action.Result.Z        = 1000;
 		}
 	},
-	OnStopGrab: function(action, x, y, env)
+	OnStopGrab: function(action, x, y, ui, netstate)
 	{
 		var deltaX = x - action.StartX;
 		var deltaY = y - action.StartY;
@@ -39,7 +41,7 @@ ObjHandle.Actions["Move"] =
 
 		if(action.DropOnTop)
 		{
-			action.Result.Z = env.getStackHeightAt(x, y, action.Handle)+1;
+			action.Result.Z = ui.CalcTopZIndexFor(action.Handle)+1;
 			action.Result.Hovering = false;
 		}
 	}
@@ -56,14 +58,14 @@ ObjHandle.Actions["Rotate"] =
 	{
 		data.Rotation = data.Rotation || 0;
 	},
-	OnStartGrab: function(action, x, y, env)
+	OnStartGrab: function(action, x, y, ui, netstate)
 	{
 		var distance = Distance(action.CenterX, action.CenterY, x, y);
 		var angle    = Angle(action.CenterX, action.CenterY, x, y);
 		if(distance > 7.5)
 			action.StartAngle = angle;
 	},
-	OnGrabbing: function(action, x, y, env)
+	OnGrabbing: function(action, x, y, ui, netstate)
 	{
 		var angle    = Angle(action.CenterX, action.CenterY, x, y);
 		var distance = Distance(action.CenterX, action.CenterY, x, y);
@@ -95,11 +97,11 @@ ObjHandle.Actions["Scale"] =
 		data.ScaleX = data.ScaleX || 1;
 		data.ScaleY = data.ScaleY || 1;
 	},
-	OnStartGrab: function(action, x, y, env)
+	OnStartGrab: function(action, x, y, ui, netstate)
 	{
 		action.StartDistance = Distance(action.CenterX, action.CenterY, x, y);
 	},
-	OnGrabbing: function(action, x, y, env)
+	OnGrabbing: function(action, x, y, ui, netstate)
 	{
 		var distanceFactor = Distance(action.CenterX, action.CenterY, x, y) / action.StartDistance;
 		if(distanceFactor < 0.5)
@@ -122,8 +124,8 @@ ObjHandle.Actions["Delete"] =
 	Type: "Single",
 	Icon: "fa-remove",
 	Shortcut: 46, // Delete-Key
-	OnExecute: function(action, x, y, env)
+	OnExecute: function(action, x, y, ui, netstate)
 	{
-		env.RemoveObject(action.Target);
+		netstate.RemoveObject(action.Target);
 	}
 }

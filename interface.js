@@ -89,11 +89,11 @@ Interface.prototype.ExecuteAction = function(object, action, mouseX, mouseY)
 
 	if(action.Type === "Single")
 	{
-		this.ActionCallBack("OnExecute", this.CurrentAction, mouseX, mouseY, this);
+		this.ActionCallBack("OnExecute", this.CurrentAction, mouseX, mouseY);
 		this.CurrentAction = null;
 	}
 	else
-		this.ActionCallBack("OnStartGrab", this.CurrentAction, mouseX, mouseY, this);
+		this.ActionCallBack("OnStartGrab", this.CurrentAction, mouseX, mouseY);
 };
 
 Interface.prototype.UpdateActionBar = function()
@@ -262,7 +262,7 @@ Interface.prototype.OnMove = function(e)
 
 	if(this.CurrentAction === null) return false;
 
-	this.ActionCallBack("OnGrabbing", this.CurrentAction, e.pageX, e.pageY, this);
+	this.ActionCallBack("OnGrabbing", this.CurrentAction, e.pageX, e.pageY);
 };
 
 Interface.prototype.OnRelease = function(e)
@@ -270,7 +270,7 @@ Interface.prototype.OnRelease = function(e)
 	if(this.CurrentAction === null) return false;
 
 	e.preventDefault();
-	this.ActionCallBack("OnStopGrab", this.CurrentAction, e.pageX, e.pageY, this);
+	this.ActionCallBack("OnStopGrab", this.CurrentAction, e.pageX, e.pageY);
 	this.CurrentAction = null;
 };
 
@@ -280,6 +280,8 @@ Interface.prototype.ActionCallBack = function(fname, act)
 	var args = Array.prototype.slice.call(arguments, 1);
 	var prevResult = act.Result;
 	act.Result = {};
+	args.push(this);
+	args.push(this.NetState);
 	// Note, fname is ignored, act is not.
 
 	if(fn)
@@ -293,11 +295,6 @@ Interface.prototype.ActionCallBack = function(fname, act)
 	}
 }
 
-Interface.prototype.RemoveObject = function(obj)
-{
-	this.NetState.RemoveObject(obj);
-};
-
 Interface.prototype.SetCenterPos = function(handle, x, y)
 {
 	var rect    = handle.Div.getBoundingClientRect();
@@ -309,36 +306,41 @@ Interface.prototype.SetCenterPos = function(handle, x, y)
 	this.NetState.UpdateObjectState(handle.Data, delta);
 };
 
-Interface.prototype.getStackHeightAt = function(x, y, target)
+Interface.prototype.CalcTopZIndexFor = function(target)
 {
-	/*
-	// Scan through the cards below this one, set Z so this one is above the others.
-  this.Selection.Card.Div.style.pointerEvents = 'none';
+	// Ignore this object when scanning the stack height.
+	var prevPointerEvents = target.Div.style.pointerEvents;
+  target.Div.style.pointerEvents = 'none';
 
-  var topLeft = GetDocumentOffset(this.Selection.Card.Div);
+  var topLeft = GetDocumentOffset(target.Div);
+  var width   = target.Div.clientWidth;
+  var height  = target.Div.clientHeight;
   // Check the 4 corners
   var positions = [topLeft];
   positions.push([topLeft[0]+width, topLeft[1]]);
   positions.push([topLeft[0],       topLeft[1]+height]);
   positions.push([topLeft[0]+width, topLeft[1]+height]);
 
+  var z = 0;
   for(var i = 0; i < positions.length; i++)
   {
-    // pointer-events is none, else we would get the card itself.
-    var cardBelow = document.elementFromPoint(positions[i][0], positions[i][1]);
+    var ele = document.elementFromPoint(positions[i][0], positions[i][1]);
     // We need to go through the parent elements so we know wheter this "thing" belongs to a card.
-    while(cardBelow instanceof Element)
+    while(ele instanceof Element)
     {
-      if(cardBelow.Card) break;
-      cardBelow = cardBelow.parentNode;
+      if(ele.GameHandle) break;
+      ele = ele.parentNode;
     }
 
-    if(cardBelow)
-    if(cardBelow.Card)
-      z = Math.max(z, cardBelow.Card.Z+1);
+    if(ele)
+    if(ele.GameHandle)
+      z = Math.max(z, ele.GameHandle.Data.Z);
   };
 
-  this.Selection.Card.Div.style.pointerEvents = '';
-  this.Selection.Card.Z = z;
-  */
+  if(!prevPointerEvents)
+  	target.Div.style.pointerEvents = '';
+  else
+  	target.Div.style.pointerEvents = prevPointerEvents;
+
+  return z;
 }

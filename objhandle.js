@@ -28,6 +28,7 @@ ObjHandle.prototype.initHTML = function()
 {
 	this.Div = document.createElement("div");
 	this.Div.classList.add("obj");
+	this.Div.GameHandle = this;
 	this.call("InitHTML",   this, this.Div);
 	this.updateHTML();
 	return this.Div;
