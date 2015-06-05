@@ -48,6 +48,46 @@ function GameInit(argument)
 	gInterface.Init(playfield);
 	gNetState.OnEtablishedSession.push(SessionInit);
 	gNetState.OnStatusText.push(Status);
+
+	var id = function(a){ return document.getElementById(a); };
+	id("save-session-button").addEventListener('click', SaveSession);
+	id("load-session-button").addEventListener('click', LoadSession);
+}
+
+function SaveSession()
+{
+	var link = document.createElement('a');
+	var data = JSON.stringify(gNetState.State);
+	link.download = "session-"+new Date().toLocaleDateString()+".json";
+	link.href = 'data:,'+data;
+	// Firefox doesn't emulate the click if the element isn't in the DOM
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+}
+
+function LoadSession()
+{
+	var input = document.createElement('input');
+	input.type = "file";
+	input.addEventListener("change", function(event){
+		var f = event.target.files[0];
+		if(f)
+		{
+			var r = new FileReader();
+			r.onload = function()
+			{
+				var contents = this.result;
+				var result = JSON.parse(contents);
+				gNetState.SetState(result);
+			};
+			r.readAsText(f);
+		}
+	});
+
+	document.body.appendChild(input);
+	input.click();
+	document.body.removeChild(input);
 }
 
 function OnStorageChange(event)
