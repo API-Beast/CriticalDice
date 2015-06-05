@@ -2,7 +2,7 @@
 
 ObjHandle.Types["Document"] = 
 {
-	Type: "Simple",
+	Mode: "Simple",
 	ClickAction: "Move",
 	DoubleAction: "EditRichText",
 	MenuActions: ["Rotate"],

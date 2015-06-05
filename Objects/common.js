@@ -4,7 +4,7 @@ ObjHandle.Actions["Move"] =
 {
 	Label: "Move",
 	Type: "Grab",
-	Icon: "fa-move",
+	Icon: "fa-arrows",
 	Shortcut: 71, // "g"-Key
 	Enable: function(data)
 	{

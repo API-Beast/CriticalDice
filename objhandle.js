@@ -11,8 +11,6 @@ var ObjHandle = function(state)
 	var menu = this.Type.MenuActions;
 	for(var i = 0; i < menu.length; i++)
 		this.enableInteraction(menu[i]);
-
-	this.initHTML();
 }
 
 ObjHandle.Types   = {};
@@ -24,17 +22,17 @@ ObjHandle.prototype.enableInteraction = function(interaction)
 	if(fn) fn(this.Data);
 }
 
-ObjHandle.prototype.initHTML = function()
+ObjHandle.prototype.initHTML = function(ui)
 {
 	this.Div = document.createElement("div");
 	this.Div.classList.add("obj");
 	this.Div.GameHandle = this;
-	this.call("InitHTML",   this, this.Div);
-	this.updateHTML();
+	this.call("InitHTML",   this, this.Div, ui);
+	this.updateHTML(ui);
 	return this.Div;
 };
 
-ObjHandle.prototype.updateHTML = function()
+ObjHandle.prototype.updateHTML = function(ui)
 {
 	this.call("OnUpdate", this);
 
@@ -55,7 +53,7 @@ ObjHandle.prototype.updateHTML = function()
 	if(transform !== "")
 		this.Div.style.transform = transform;
 
-	this.call("UpdateHTML", this, this.Div);
+	this.call("UpdateHTML", this, this.Div, ui);
 };
 
 ObjHandle.prototype.call = function(fn)

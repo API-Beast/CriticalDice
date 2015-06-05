@@ -2,7 +2,7 @@
 
 ObjHandle.Types["Token"] = 
 {
-	Type: "Simple",
+	Mode: "Simple",
 	ClickAction: "Move",
 	MenuActions: ["Move", "Rotate", "Scale", "Delete"],
 	Initialize: function(handle)

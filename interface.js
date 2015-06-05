@@ -103,29 +103,36 @@ Interface.prototype.UpdateActionBar = function()
 
 	if(this.Selection)
 	{
+		var mode = this.Selection.Type.Mode;
+		if(mode === "Window") return;
+
 		this.Selection.Div.appendChild(this.ActionBar);
 
 		var menu = this.Selection.Type.MenuActions;
-		for(var i = 0; i < menu.length; i++)
-		{
-			var act = ObjHandle.Actions[menu[i]];
-			var span = document.createElement('span');
-			span.className = "item fa "+act.Icon;
-			this.ActionBar.appendChild(span);
-
-			var mdown = function(act, obj, e)
-			{
-				if(e.button !== 0) return false;
-
-				e.stopPropagation();
-				e.preventDefault();
-				this.ExecuteAction(obj, act, e.pageX, e.pageY);
-			};
-
-			span.addEventListener("mousedown", mdown.bind(this, act, this.Selection));
-		};
-		
+		this.FillMenu(this.ActionBar, this.Selection, menu);
 	}
+}
+
+Interface.prototype.FillMenu = function(div, obj, menu)
+{
+	for(var i = 0; i < menu.length; i++)
+	{
+		var act = ObjHandle.Actions[menu[i]];
+		var span = document.createElement('span');
+		span.className = "item fa "+act.Icon;
+		div.appendChild(span);
+
+		var mdown = function(act, obj, e)
+		{
+			if(e.button !== 0) return false;
+
+			e.stopPropagation();
+			e.preventDefault();
+			this.ExecuteAction(obj, act, e.pageX, e.pageY);
+		};
+
+		span.addEventListener("mousedown", mdown.bind(this, act, obj));
+	};
 }
 
 Interface.prototype.OnDropFile = function(e)
@@ -145,6 +152,11 @@ Interface.prototype.OnDropFile = function(e)
 		{
 			var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
 			this.NetState.CreateObject(token);
+		}
+		else if(url.match(/.(\.mp3|\.ogg)/))
+		{
+			var player = {Type: "Player", X: e.pageX, Y: e.pageY, Source: url};
+			this.NetState.CreateObject(player);
 		}
 	}
 	else // Firefox sends Images also as Files, o_O, so we have to do a either or
@@ -207,10 +219,43 @@ Interface.prototype.OnObjectChange = function(id)
 Interface.prototype.OnObjectCreation = function(id, data)
 {
 	var obj = new ObjHandle(data);
+	obj.initHTML(this);
 	this.Table.appendChild(obj.Div);
 	obj.Div.addEventListener('mousedown', this.OnClick.bind(this, obj));
 	obj.Div.addEventListener('dblclick',  this.OnDoubleClick.bind(this, obj));
 	this.Handles[id] = obj;
+
+	var mode = obj.Type.Mode;
+	obj.Div.classList.add(mode);
+	if(mode === "Window")
+	{
+		obj.TitleBar = document.createElement("div");
+		obj.TitleBar.className = "title-bar";
+
+		obj.Title = document.createElement("input");
+		obj.Title.name        = "title";
+		obj.Title.innerHTML   = data.Title;
+		obj.Title.placeholder = "Untitled";
+
+		var stopPropagation = function(e){ e.stopImmediatePropagation(); };
+
+		obj.Title.addEventListener('mousedown', stopPropagation);
+		obj.Title.addEventListener('keydown', stopPropagation);
+
+		obj.TitleBar.appendChild(obj.Title);
+
+		obj.Menu = document.createElement("span");
+		obj.Menu.className = "buttons";
+		obj.TitleBar.appendChild(obj.Menu);
+
+
+		this.FillMenu(obj.Menu, obj, obj.Type.MenuActions);
+
+		if(obj.Div.firstChild)
+			obj.Div.insertBefore(obj.TitleBar, obj.Div.firstChild);
+		else
+			obj.Div.appendChild(obj.TitleBar);
+	}
 }
 
 Interface.prototype.OnObjectRemoval = function(id)
