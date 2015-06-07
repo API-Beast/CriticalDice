@@ -25,11 +25,11 @@ ObjHandle.Actions["Move"] =
 		action.Result.X = action.OriginalState.X + deltaX;
 		action.Result.Y = action.OriginalState.Y + deltaY;
 
-		if(Math.abs(deltaX) > 100 || Math.abs(deltaY) > 100)
+		if(Math.abs(deltaX) > 150 || Math.abs(deltaY) > 150)
 		{
 			action.DropOnTop       = true;
 			action.Result.Hovering = true;
-			action.Result.Z        = 1000;
+			action.Result.Z = ui.CalcTopZIndexFor(action.Handle)+1;
 		}
 	},
 	OnStopGrab: function(action, x, y, ui, netstate)

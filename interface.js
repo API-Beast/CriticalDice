@@ -357,19 +357,17 @@ Interface.prototype.CalcTopZIndexFor = function(target)
 	var prevPointerEvents = target.Div.style.pointerEvents;
   target.Div.style.pointerEvents = 'none';
 
-  var topLeft = GetDocumentOffset(target.Div);
-  var width   = target.Div.clientWidth;
-  var height  = target.Div.clientHeight;
-  // Check the 4 corners
-  var positions = [topLeft];
-  positions.push([topLeft[0]+width, topLeft[1]]);
-  positions.push([topLeft[0],       topLeft[1]+height]);
-  positions.push([topLeft[0]+width, topLeft[1]+height]);
+  var rect = target.Div.getBoundingClientRect();
+
+  var width   = rect.right - rect.left;
+  var height  = rect.bottom - rect.top;
 
   var z = 0;
-  for(var i = 0; i < positions.length; i++)
+
+  for(var y = rect.top; y < rect.bottom; y += 20)
+  for(var x = rect.left; x < rect.right;  x += 20)
   {
-    var ele = document.elementFromPoint(positions[i][0], positions[i][1]);
+    var ele = document.elementFromPoint(x, y);
     // We need to go through the parent elements so we know wheter this "thing" belongs to a card.
     while(ele instanceof Element)
     {
@@ -379,7 +377,13 @@ Interface.prototype.CalcTopZIndexFor = function(target)
 
     if(ele)
     if(ele.GameHandle)
-      z = Math.max(z, ele.GameHandle.Data.Z);
+  	if(z < ele.GameHandle.Data.Z)
+  	{
+  		// Ignore too small elements, they should stay on top.
+	    if((ele.getBoundingClientRect().width < rect.width/2))
+	    	continue;
+	    z = ele.GameHandle.Data.Z;
+  	}
   };
 
   if(!prevPointerEvents)
