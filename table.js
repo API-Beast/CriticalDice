@@ -25,11 +25,13 @@ function SetActiveTab(tab)
 
 function GameInit(argument)
 {
+	var id = function(a){ return document.getElementById(a); };
+
 	var elements = document.querySelectorAll(".tabbed section h2 a");
 	for (var i = 0; i < elements.length; i++)
 		elements[i].addEventListener("click", SetActiveTab.bind(undefined, elements[i].parentNode.parentNode));
 
-	var nameField = document.getElementById("name-input");
+	var nameField = id("name-input");
 	var name = GetStored("nick");
 	if(!name)
 	{ 
@@ -44,14 +46,40 @@ function GameInit(argument)
 
 	gNetState  = new NetState(name);
 	gInterface = new Interface(gNetState);
-	var playfield = document.getElementById("table");
-	gInterface.Init(playfield);
+	var playfield = id("table");
+	var svg = id("svg-overlay");
+	gInterface.Init(playfield, svg);
 	gNetState.OnEtablishedSession.push(SessionInit);
 	gNetState.OnStatusText.push(Status);
 
-	var id = function(a){ return document.getElementById(a); };
+
 	id("save-session-button").addEventListener('click', SaveSession);
 	id("load-session-button").addEventListener('click', LoadSession);
+
+
+	RequestLibrary(function()
+	{
+		var libraryList = id("library-list");
+
+		var prefabs = gLibrary.Prefab;
+
+		for(var i = 0; i < prefabs.length; i++)
+		{
+			var p = prefabs[i];
+			var item = document.createElement("div");
+			item.className = "item";
+			item.draggable = true;
+			item.innerHTML = p.Name;
+			item.addEventListener('dragstart',
+				function(p, e)
+				{
+					e.dataTransfer.setData('text/prs.prefab+json', JSON.stringify(p));
+				}.bind(null, p));
+
+			libraryList.appendChild(item);
+		};
+
+	});
 }
 
 function SaveSession()

@@ -87,6 +87,19 @@
 	box-sizing: border-box;
 }
 
+#svg-overlay
+{
+  position: absolute;
+  /* right: 450px; */
+  top: 0;
+  left: 0;
+  /* width: 100%; */
+  /* height: 100%; */
+  pointer-events: none;
+  overflow: visible;
+  z-index: 9999;
+}
+
 .status {
     background: rgb(255, 189, 160);
     border: 2px solid rgb(82, 19, 19);
@@ -205,4 +218,18 @@
     position: absolute;
     right: 2px;
     top: 2px;
+}
+
+#library-list .item {
+    background: white;
+    padding: 10px;
+    border: 1px solid grey;
+}
+
+.obj.die {
+    /* width: 50px; */
+    padding: 15px;
+    background-color: white;
+    border: 1px solid rgb(103, 103, 103);
+    border-radius: 5px;
 }

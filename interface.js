@@ -3,6 +3,7 @@
 var Interface = function(netstate)
 {
 	this.Table         = null;
+	this.SVGLayer      = null;
 	this.NetState      = netstate;
 	this.CurrentAction = null;
 	this.Selection     = null;
@@ -12,7 +13,7 @@ var Interface = function(netstate)
 	this.MouseY        = 0;
 }
 
-Interface.prototype.Init = function(table)
+Interface.prototype.Init = function(table, svgLayer)
 {
 	this.Table = table;
 	this.NetState.OnObjectChange  .push(this.OnObjectChange  .bind(this));
@@ -29,11 +30,13 @@ Interface.prototype.Init = function(table)
 	this.Table.addEventListener('dragenter', function(e){ this.className = "drag"; e.preventDefault(); });
   this.Table.addEventListener('dragend',   function(e){ this.className = "";     e.preventDefault(); });
   this.Table.addEventListener('dragover',  function(e){ e.preventDefault(); });
-  this.Table.addEventListener('drop',      this.OnDropFile.bind(this));
+  this.Table.addEventListener('drop',      this.OnDrop.bind(this));
   window.addEventListener('keydown',   this.OnKeyPress.bind(this));
 
   this.ActionBar = document.createElement("div");
   this.ActionBar.className = "actionbar right";
+
+  this.SVGLayer = svgLayer;
 };
 
 Interface.prototype.OnKeyPress = function(e)
@@ -135,11 +138,23 @@ Interface.prototype.FillMenu = function(div, obj, menu)
 	};
 }
 
-Interface.prototype.OnDropFile = function(e)
+Interface.prototype.OnDrop = function(e)
 {
 	e.preventDefault();
 	this.Table.className = "";
 	
+	// Prefab-Drop
+	// Internal, we won't get this from outside.
+	var prefab = e.dataTransfer.getData("text/prs.prefab+json");
+	if(prefab)
+	{
+		prefab = JSON.parse(prefab);
+		prefab.X = e.pageX;
+		prefab.Y = e.pageY;
+		this.NetState.CreateObject(prefab);
+		return;
+	}
+
 	// URL-Drop
 	// "URL"-Datatype is the first valid URL in a "text/uri-list" according to MDN
 	var url = e.dataTransfer.getData("URL");
@@ -392,4 +407,14 @@ Interface.prototype.CalcTopZIndexFor = function(target)
   	target.Div.style.pointerEvents = prevPointerEvents;
 
   return z;
+}
+
+Interface.prototype.AddSVG = function(element)
+{
+	this.SVGLayer.appendChild(element);
+}
+
+Interface.prototype.RemoveSVG = function(element)
+{
+	this.SVGLayer.removeChild(element);
 }

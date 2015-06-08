@@ -1,0 +1,24 @@
+.arrow
+{
+	stroke: white;
+	stroke-width: 6px;
+	fill: transparent;
+	marker-end: url("#Arrow1Lend");
+}
+
+.outline
+{
+	stroke: black;
+	stroke-width: 10px;
+	fill: transparent;
+}
+
+.marker
+{
+  fill: white;
+}
+
+.marker-outline
+{
+  fill: black;
+}

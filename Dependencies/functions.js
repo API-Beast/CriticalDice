@@ -182,3 +182,42 @@ function RemoveDiv(div)
   if(div.parentNode)
     div.parentNode.removeChild(div);
 }
+
+function HashInt(val)
+{
+  var a = new Uint32Array(1);
+  a[0] = val;
+  a[0] = (a[0]+0x7ed55d16) + (a[0]<<12);
+  a[0] = (a[0]^0xc761c23c) ^ (a[0]>>>19);
+  a[0] = (a[0]+0x165667b1) + (a[0]<<5);
+  a[0] = (a[0]+0xd3a2646c) ^ (a[0]<<9);
+  a[0] = (a[0]+0xfd7046c5) + (a[0]<<3);
+  a[0] = (a[0]^0xb55a4f09) ^ (a[0]>>>16);
+  return Number(a[0]);
+}
+
+function DetRNG(seed)
+{
+  var h = HashInt(seed);
+  var low  = h ^ 0x520AF59;
+  var high = h ^ 0x49616E42;
+  return {
+    seed: new Uint32Array([high, low]),
+    rand32Bit: function()
+    {
+      seed[0] = (seed[0] >>> 16) + (seed[0] << 16);
+      seed[0] += seed[1];
+      seed[1] += seed[0];
+      return seed[0];
+    },
+    rand: function()
+    {
+      return this.rand32Bit() / 4294967295.0;
+    },
+    randInt: function(min, max)
+    {
+      return ~~(min + this.rand() * ((max+1) - min));
+    },
+    rand
+  }
+}

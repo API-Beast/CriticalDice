@@ -1,35 +1,60 @@
 <head>
 	<title>The Table</title>
 
-	<script src="Libraries/functions.js"></script>
-	<script src="Libraries/xini.js"></script>
-	<script src="Libraries/peer.js"></script>
-	<script src="Libraries/quill.js"></script>
+	<script src="Dependencies/functions.js"></script>
+	<script src="Dependencies/xini.js"></script>
+	<script src="Dependencies/peer.js"></script>
+	<script src="Dependencies/quill.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="Libraries/quill.base.css"\>
+	<link rel="stylesheet" type="text/css" href="Dependencies/quill.base.css"\>
 
 	<script src="netstate.js"></script>
 	<script src="interface.js"></script>
-	<script src="data.js"></script>
+	<script src="library.js"></script>
 	<script src="tr.js"></script>
 
 	<script src="objhandle.js"></script>
 	<script src="Objects/common.js"></script>
 	<script src="Objects/token.js"></script>
 	<script src="Objects/audio.js"></script>
+	<script src="Objects/dice.js"></script>
 
 	<script src="table.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="style.css"\>
 	<link rel="stylesheet" type="text/css" href="tabs.css"\>
+	<link rel="stylesheet" type="text/css" href="svg.css"\>
 	<link rel="stylesheet" type="text/css" href="Table/font-awesome.css"\>
 
 </head>
 <body>
+
 	<div id="table">
+
 	</div>
+
+	<svg id="svg-overlay">
+		<defs>
+	    <marker
+	       style="overflow:visible;"
+	       id="Arrow1Lend"
+	       refX="-3"
+	       refY="0"
+	       orient="auto">
+			  <path
+			     class="marker"
+			     d="m -5.284493,0.03995682 -2,1.99999998 7.00000036,-1.99999998 -7.00000036,-2.00000002 2,2.00000002 z" />
+			  <path
+			  	 class="marker-outline"
+     			d="m -7.8256742,-2.4926836 c 0,0 1.6082826,1.60513792 1.6347656,1.62500002 L -6.5600492,-1.5864336 -0.45653364,0.03466022 -6.5600492,1.655754 -6.1909086,0.93700402 C -6.2173916,0.95686602 -7.8256742,2.562004 -7.8256742,2.562004 l 7.48242156,-2.38085938 0.265625,-0.097656 0.085938,-0.080078 -0.044922,0.00391 -0.158203,-0.048828 -0.148438,-0.070312 -7.48242156,-2.38085942 z"/>
+	    </marker>
+		</defs>
+	</svg>
+
 	<div id="loading">
+
 	</div>
+
 	<div id="sidebar" class="tabbed">
 
 		<section class="active-tab">
@@ -51,6 +76,13 @@
 			<div>
 				<button id="save-session-button">Save Session</button>
 				<button id="load-session-button">Load Session</button>
+			</div>
+		</section>
+
+		<section>
+			<h2><a>Library</a></h2>
+			<div id="library-list">
+
 			</div>
 		</section>
 	</div>
