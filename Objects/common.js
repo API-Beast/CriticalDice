@@ -22,8 +22,8 @@ ObjHandle.Actions["Move"] =
 	{
 		var deltaX = x - action.StartX;
 		var deltaY = y - action.StartY;
-		action.Result.X = action.OriginalState.X + deltaX;
-		action.Result.Y = action.OriginalState.Y + deltaY;
+		action.Result.X = action.Original.X + deltaX;
+		action.Result.Y = action.Original.Y + deltaY;
 
 		if(Math.abs(deltaX) > 150 || Math.abs(deltaY) > 150)
 		{
@@ -36,8 +36,8 @@ ObjHandle.Actions["Move"] =
 	{
 		var deltaX = x - action.StartX;
 		var deltaY = y - action.StartY;
-		action.Result.X = action.OriginalState.X + deltaX;
-		action.Result.Y = action.OriginalState.Y + deltaY;
+		action.Result.X = action.Original.X + deltaX;
+		action.Result.Y = action.Original.Y + deltaY;
 
 		if(action.DropOnTop)
 		{
@@ -77,7 +77,7 @@ ObjHandle.Actions["Rotate"] =
 		else
 		{
 			var deltaAngle = angle - action.StartAngle;
-			action.Result.Rotation = action.OriginalState.Rotation + deltaAngle;
+			action.Result.Rotation = action.Original.Rotation + deltaAngle;
 		}
 	},
 	OnStopGrab: function() {}
@@ -111,8 +111,8 @@ ObjHandle.Actions["Scale"] =
 		else
 			distanceFactor = Round(distanceFactor, 0.25);
 
-		action.Result.ScaleX = action.OriginalState.ScaleX * distanceFactor;
-		action.Result.ScaleY = action.OriginalState.ScaleY * distanceFactor;
+		action.Result.ScaleX = action.Original.ScaleX * distanceFactor;
+		action.Result.ScaleY = action.Original.ScaleY * distanceFactor;
 	},
 	OnStopGrab: function() {}
 }
@@ -126,6 +126,6 @@ ObjHandle.Actions["Delete"] =
 	Shortcut: 46, // Delete-Key
 	OnExecute: function(action, x, y, ui, netstate)
 	{
-		netstate.RemoveObject(action.Target);
+		netstate.Objects.Remove(action.Obj);
 	}
 }

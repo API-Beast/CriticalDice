@@ -69,7 +69,28 @@ function GameInit(argument)
 			var item = document.createElement("div");
 			item.className = "item";
 			item.draggable = true;
-			item.innerHTML = p.Name;
+
+			var icon;
+			if(typeof p.Icon === 'string')
+			{
+				icon = document.createElement("img");
+				icon.src = p.Icon;
+			}
+			else if(Array.isArray(p.Icon))
+			{
+				icon = document.createElement("span");
+				// p.Icon = [path, xOff, yOff, width, height]
+				icon.style.backgroundImage    = p.Icon[0];
+				icon.style.backgroundPosition = subs("-{1}px -{2}px", p.Icon);
+				icon.style.width  = p.Icon[3];
+				icon.style.height = p.Icon[4];
+			}
+			icon.className = "icon";
+			item.appendChild(icon);
+
+			var name = document.createTextNode(p.Name);
+			item.appendChild(name);
+
 			item.addEventListener('dragstart',
 				function(p, e)
 				{
@@ -139,7 +160,7 @@ function SessionInit(id)
 	if(hash)
 		gNetState.Join(hash);
 	else
-		gNetState.CreateObject({Type: "Token", X: 200, Y: 200, Texture: "Content/coinToken.png"});
+		/* Host new game. */;
 
 	var loading = document.getElementById("loading");
 	loading.className = "finished";

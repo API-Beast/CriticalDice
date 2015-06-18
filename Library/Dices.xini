@@ -1,4 +1,60 @@
 [Prefab]
-Type=Dice
-Name=White D6
-Faces=[1, 2, 3, 4, 5, 6]
+Type     = Dice
+Name     = White D6
+Icon     = Library/diceicon.png
+Face     = Library/d6facewhite.png
+Faces    = Library/d6faces.png
+FaceValues = [1, 2, 3, 4, 5, 6]
+FaceSize = [54, 54]
+NumFaces = 6
+
+[Prefab]
+Type     = Dice
+Name     = Red D6
+Icon     = Library/diceicon.png
+Face     = Library/d6facered.png
+Faces    = Library/d6faceswhite.png
+FaceValues = [1, 2, 3, 4, 5, 6]
+FaceSize = [54, 54]
+NumFaces = 6
+
+[Prefab]
+Type     = Dice
+Name     = Blue D6
+Icon     = Library/diceicon.png
+Face     = Library/d6faceblue.png
+Faces    = Library/d6faceswhite.png
+FaceValues = [1, 2, 3, 4, 5, 6]
+FaceSize = [54, 54]
+NumFaces = 6
+
+
+[Prefab]
+Type     = Dice
+Name     = White Fudge-Dice
+Icon     = Library/diceicon.png
+Face     = Library/d6facewhite.png
+Faces    = Library/fudgefaces.png
+FaceValues = [-1, 0, +1]
+FaceSize = [54, 54]
+NumFaces = 3
+
+[Prefab]
+Type     = Dice
+Name     = Red Fudge-Dice
+Icon     = Library/diceicon.png
+Face     = Library/d6facered.png
+Faces    = Library/fudgefaceswhite.png
+FaceValues = [-1, 0, +1]
+FaceSize = [54, 54]
+NumFaces = 3
+
+[Prefab]
+Type     = Dice
+Name     = Blue Fudge-Dice
+Icon     = Library/diceicon.png
+Face     = Library/d6faceblue.png
+Faces    = Library/fudgefaceswhite.png
+FaceValues = [-1, 0, +1]
+FaceSize = [54, 54]
+NumFaces = 3

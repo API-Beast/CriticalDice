@@ -1,5 +1,20 @@
 "use strict";
 
+// ------
+// Header
+// ------
+
+/*
+class Interface
+{
+	// TODO
+}
+*/
+
+// --------------
+// Implementation
+// --------------
+
 var Interface = function(netstate)
 {
 	this.Table         = null;
@@ -8,6 +23,7 @@ var Interface = function(netstate)
 	this.CurrentAction = null;
 	this.Selection     = null;
 	this.Handles       = Object.create(null);
+	this.Transitions   = Object.create(null);
 	this.ActionBar     = null;
 	this.MouseX        = 0;
 	this.MouseY        = 0;
@@ -16,10 +32,11 @@ var Interface = function(netstate)
 Interface.prototype.Init = function(table, svgLayer)
 {
 	this.Table = table;
-	this.NetState.OnObjectChange  .push(this.OnObjectChange  .bind(this));
-	this.NetState.OnObjectCreation.push(this.OnObjectCreation.bind(this));
-	this.NetState.OnObjectRemoval .push(this.OnObjectRemoval .bind(this));
-	this.NetState.OnStateReset    .push(this.OnStateReset    .bind(this));
+	this.NetState.Objects.OnUpdate  .push(this.OnObjectChange  .bind(this));
+	this.NetState.Objects.OnCreation.push(this.OnObjectCreation.bind(this));
+	this.NetState.Objects.OnRemoval .push(this.OnObjectRemoval .bind(this));
+
+	this.NetState.OnStateReset.push(this.OnStateReset.bind(this));
 
   this.Table.addEventListener('mousemove', this.OnMove.bind(this));
   this.Table.addEventListener('mouseup',   this.OnRelease.bind(this));
@@ -67,7 +84,7 @@ Interface.prototype.OnKeyPress = function(e)
 		{
 			copy.X = this.MouseX;
 			copy.Y = this.MouseY;
-			this.NetState.CreateObject(copy);
+			this.NetState.Objects.Create(copy);
 			var handle = this.Handles[copy.ID];
 			this.SetCenterPos(handle, this.MouseX, this.MouseY);
 		}
@@ -78,8 +95,8 @@ Interface.prototype.ExecuteAction = function(object, action, mouseX, mouseY)
 {
 	var act = {};
 	act.Handle  = object;
-	act.Target  = object.Data;
-	act.OriginalState = Merge(object.Data);
+	act.Obj     = object.Data;
+	act.Original = Merge(object.Data);
 	act.Result  = {};
 	act.Type    = action;
 	console.log("Start action ", action.Label);
@@ -151,7 +168,7 @@ Interface.prototype.OnDrop = function(e)
 		prefab = JSON.parse(prefab);
 		prefab.X = e.pageX;
 		prefab.Y = e.pageY;
-		this.NetState.CreateObject(prefab);
+		this.NetState.Objects.Create(prefab);
 		return;
 	}
 
@@ -166,12 +183,12 @@ Interface.prototype.OnDrop = function(e)
 		if(url.match(/.(\.png|\.jpg|\.jpeg|\.gif|\.apng)/))
 		{
 			var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
-			this.NetState.CreateObject(token);
+			this.NetState.Objects.Create(token);
 		}
 		else if(url.match(/.(\.mp3|\.ogg)/))
 		{
 			var player = {Type: "Player", X: e.pageX, Y: e.pageY, Source: url};
-			this.NetState.CreateObject(player);
+			this.NetState.Objects.Create(player);
 		}
 	}
 	else // Firefox sends Images also as Files, o_O, so we have to do a either or
@@ -187,14 +204,14 @@ Interface.prototype.OnDrop = function(e)
 
 				var reader = new FileReader();
 				var token = {Type: "Token", X: e.pageX+(i*40), Y: e.pageY};
-				this.NetState.CreateObject(token);
+				this.NetState.Objects.Create(token);
 
 				var image = new Image();
 				reader.onload = function()
 				{
 					image.onload = function()
 					{
-						self.NetState.UpdateObjectState(token, {Width: image.width, Height: image.height}, self.InterfaceID);
+						self.NetState.Objects.Update(token, {Width: image.width, Height: image.height}, self.InterfaceID);
 					};
 					image.src = reader.result;
 					self.Handles[token.ID].PlaceholderSrc = reader.result;
@@ -214,10 +231,10 @@ Interface.prototype.OnDrop = function(e)
 						if(this.status === 200)
 						{
 							var response = JSON.parse(this.responseText);
-							self.NetState.UpdateObjectState(token, {Texture: response.data.link}, self.InterfaceID);
+							self.NetState.Objects.Update(token, {Texture: response.data.link}, self.InterfaceID);
 						}
 						else
-							self.NetState.RemoveObject(token, self.InterfaceID);
+							self.NetState.Objects.Remove(token, self.InterfaceID);
 					}
 				};
 				xhttp.send(fd);
@@ -350,7 +367,7 @@ Interface.prototype.ActionCallBack = function(fname, act)
 		if(!IsEmptyObject(act.Result))
 		{
 			var delta = Merge(prevResult, act.Result);
-			this.NetState.UpdateObjectState(act.Target, delta);
+			this.NetState.Objects.Update(act.Obj, delta);
 		}
 	}
 }
@@ -363,7 +380,7 @@ Interface.prototype.SetCenterPos = function(handle, x, y)
 	var dataX   = handle.Data.X;
 	var dataY   = handle.Data.Y;
 	var delta   = {X: x + (dataX - centerX), Y: y + (dataY - centerY)};
-	this.NetState.UpdateObjectState(handle.Data, delta);
+	this.NetState.Objects.Update(handle.Data, delta);
 };
 
 Interface.prototype.CalcTopZIndexFor = function(target)

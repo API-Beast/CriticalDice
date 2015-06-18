@@ -201,23 +201,33 @@ function DetRNG(seed)
   var h = HashInt(seed);
   var low  = h ^ 0x520AF59;
   var high = h ^ 0x49616E42;
-  return {
-    seed: new Uint32Array([high, low]),
-    rand32Bit: function()
-    {
-      seed[0] = (seed[0] >>> 16) + (seed[0] << 16);
-      seed[0] += seed[1];
-      seed[1] += seed[0];
-      return seed[0];
-    },
-    rand: function()
-    {
-      return this.rand32Bit() / 4294967295.0;
-    },
-    randInt: function(min, max)
-    {
-      return ~~(min + this.rand() * ((max+1) - min));
-    },
-    rand
-  }
+  this.seed = new Uint32Array([high, low]);
 }
+
+DetRNG.prototype.rand32Bit = function()
+{
+  this.seed[0] = (this.seed[0] >>> 16) + (this.seed[0] << 16);
+  this.seed[0] += this.seed[1];
+  this.seed[1] += this.seed[0];
+  return this.seed[0];
+};
+
+DetRNG.prototype.rand = function()
+{
+  return this.rand32Bit() / 4294967295.0;
+};
+
+DetRNG.prototype.randInt = function(min, max)
+{
+  return ~~(min + this.rand() * ((max+1) - min));
+};
+
+function linear(start, end, factor)
+{
+  return start + (end - start) * factor;
+};
+
+function linear2(start, end, curT, startT, endT)
+{
+  return linear(start, end, (curT-startT)/(endT-startT));
+};

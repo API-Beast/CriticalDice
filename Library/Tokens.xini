@@ -1,4 +1,5 @@
 [Prefab]
-Texture="./Content/coinToken.png"
+Icon="./Library/coin.png"
+Texture="./Library/coin.png"
 Name=Coin
 Type=Token

@@ -13,8 +13,9 @@ var ObjHandle = function(state)
 		this.enableInteraction(menu[i]);
 }
 
-ObjHandle.Types   = {};
-ObjHandle.Actions = {};
+ObjHandle.Types       = {};
+ObjHandle.Actions     = {};
+ObjHandle.Transitions = {};
 
 ObjHandle.prototype.enableInteraction = function(interaction)
 {

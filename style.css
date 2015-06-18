@@ -224,12 +224,27 @@
     background: white;
     padding: 10px;
     border: 1px solid grey;
+    /* vertical-align: -webkit-baseline-middle; */
 }
 
 .obj.die {
     /* width: 50px; */
-    padding: 15px;
-    background-color: white;
-    border: 1px solid rgb(103, 103, 103);
-    border-radius: 5px;
+    /* padding: 15px; */
+    /* background-color: white; */
+    /* border: 1px solid rgb(103, 103, 103); */
+    /* border-radius: 5px; */
+    /* box-shadow: 0 0 4px black; */
+}
+
+.item img.icon {
+    height: 24px;
+    margin-right: 4px;
+    vertical-align: middle;
+    margin-bottom: 4px;
+}
+
+.die .result {
+    min-width: 100%;
+    min-height: 100%;
+    display: inline-block;
 }
