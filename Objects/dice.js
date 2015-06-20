@@ -32,9 +32,9 @@ ObjHandle.Types["Dice"] =
 			div.style.backgroundPosition = -(handle.Data.Tilted*handle.Data.FaceSize[0])+"px 0px";
 
 			if(handle.Data.Tilted === 1)
-				handle.Result.style.transform = "translateY(4px) translateX(3px) scale(0.8)";
+				handle.Result.style.transform = "translateY(4px) translateX(3px) scale(0.90)";
 			else
-				handle.Result.style.transform = "translateY(-4px) translateX(-3px) scale(0.8)";
+				handle.Result.style.transform = "translateY(-4px) translateX(-3px) scale(0.90)";
 
 			div.classList.add("tilted");
 		}

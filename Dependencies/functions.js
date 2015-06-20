@@ -176,6 +176,22 @@ function SetStored(key, value)
     localStorage.setItem(key, JSON.stringify(value));
 }
 
+function GetSessionStorage(key)
+{
+  var val = sessionStorage.getItem(key);
+  if(!val)
+    return undefined;
+  return JSON.parse(val);
+}
+
+function SetSessionStorage(key, value)
+{
+  if(value === undefined)
+    sessionStorage.removeItem(key);
+  else
+    sessionStorage.setItem(key, JSON.stringify(value));
+}
+
 function Round(a, precision)
 {
   var half = precision/2;

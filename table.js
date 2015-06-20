@@ -43,8 +43,13 @@ function GameInit(argument)
 	nameField.addEventListener('keydown', function(e){ if(e.which == 13 || e.keyCode == 13){ SetStored('nick', this.value); gNetState.ChangeNick(this.value); } });
 
 	window.addEventListener('storage', OnStorageChange, false);
+	window.addEventListener('unload', SessionExit, false);
+	var peerID = GetSessionStorage("PeerID");
+	if(peerID)
+		gNetState  = new NetState(name, peerID);
+	else
+		gNetState  = new NetState(name);
 
-	gNetState  = new NetState(name);
 	gInterface = new Interface(gNetState);
 	var playfield = id("table");
 	var svg = id("svg-overlay");
@@ -157,18 +162,46 @@ function SessionInit(id)
 	var url = loc.protocol+"//"+loc.hostname+loc.pathname+"#"+id;
 
 	Status(tr("Etablished Session.<br>Give other players this link to join you: <a href='{0}'>{0}</a>", [url]));
-	if(hash)
-		gNetState.Join(hash);
+
+	var sessionPeers = GetSessionStorage("Peers");
+	if(sessionPeers)
+	{
+		var joinNextPeer = function()
+		{
+			var peer = sessionPeers.pop();
+			if(peer)
+				gNetState.Join(peer, joinNextPeer);
+			else
+			{
+				Status(tr("No peer available. Restoring Auto-Save."));
+				gNetState.SetState(GetSessionStorage("AutoSave"));
+			}
+		};
+		joinNextPeer();
+	}
 	else
-		/* Host new game. */;
+	{
+		if(hash)
+			gNetState.Join(hash);
+		else
+			/* Host new game. */;
+	}
 
 	var loading = document.getElementById("loading");
 	loading.className = "finished";
 	window.addEventListener('beforeunload', SessionExit);
+
+	SetSessionStorage("PeerID", id);
 }
 
 function SessionExit()
 {
+	var peers = [];
+	for(var peer in gNetState.Peers)
+		peers.push(peer); // We only want the key, this is intended
+
+	SetSessionStorage("Peers", peers);
+	SetSessionStorage("AutoSave", gNetState.State);
 	gNetState.Leave();
 }
 

@@ -47,9 +47,12 @@ class NetState
 // Implementation
 // --------------
 
-var NetState = function(name)
+var NetState = function(name, id)
 {
-  this.Network = new Peer({key: '53po7kdyuv1gu8fr'});
+  if(id)
+    this.Network = new Peer(id, {key: '53po7kdyuv1gu8fr'});
+  else
+    this.Network = new Peer({key: '53po7kdyuv1gu8fr'});
 
   this.Network.on("open", this.OnNetworkEtablished.bind(this));
 	this.Network.on("connection", this.OnPeerConnected.bind(this));
@@ -68,15 +71,32 @@ var NetState = function(name)
   this.ClockStart = window.performance.now();
 }
 
-NetState.prototype.Join = function(id)
+NetState.prototype.Join = function(id, timeoutfn)
 {
   var conn = this.Network.connect(id, {metadata: this.Metadata});
-  this.Peers[id] = conn;
+  //this.Peers[id] = conn;
   conn.on('data',  this.OnDataReceived.bind(this, conn));
   conn.on('close', this.OnPeerDisconnected.bind(this, conn));
-  conn.on('open',  function(){ conn.send(["JoinSession"]); });
 
-  this.StatusText("Joined <b>{0}</b>'s Session.", conn.metadata.Nick);
+  conn.on('open',
+    function()
+    {
+      this.Peers[id] = conn;
+      this.StatusText("Joined <b>{0}</b>'s Session.", conn.metadata.Nick);
+      conn.send(["JoinSession"]); 
+    }.bind(this));
+  setTimeout(
+    function() {
+      if(!conn.open)
+      {
+        this.StatusText("Timeout while trying to connect to <b>{0}</b>.", id);
+        if(timeoutfn)
+          timeoutfn();
+      }
+    }.bind(this),
+    3000);
+
+  conn.on('error', console.warn);
 }
 
 NetState.prototype.Leave = function()
