@@ -244,10 +244,12 @@
     margin-bottom: 4px;
 }
 
-.die .result {
+.die .result, .die .overlay {
     min-width: 100%;
     min-height: 100%;
     display: inline-block;
+    position: absolute;
+    top: 0px;
 }
 
 .obj.die.tilted .actionbar.right {

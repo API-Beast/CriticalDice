@@ -23,6 +23,10 @@ ObjHandle.Types["Dice"] =
 		handle.Result = document.createElement("span");
 		handle.Result.classList.add("result");
 		div.appendChild(handle.Result);
+
+		handle.Overlay = document.createElement("span");
+		handle.Overlay.classList.add("overlay");
+		div.appendChild(handle.Overlay);
 	},
 	UpdateHTML: function(handle, div)
 	{
@@ -32,9 +36,9 @@ ObjHandle.Types["Dice"] =
 			div.style.backgroundPosition = -(handle.Data.Tilted*handle.Data.FaceSize[0])+"px 0px";
 
 			if(handle.Data.Tilted === 1)
-				handle.Result.style.transform = "translateY(4px) translateX(3px) scale(0.90)";
+				handle.Result.style.transform = "scale(0.80) translateY(8px) translateX(5px) rotate(-30deg)";
 			else
-				handle.Result.style.transform = "translateY(-4px) translateX(-3px) scale(0.90)";
+				handle.Result.style.transform = "scaleY(0.85) scaleX(0.80) translateY(-11px) translateX(-12px) rotate(25deg)";
 
 			div.classList.add("tilted");
 		}
@@ -46,11 +50,14 @@ ObjHandle.Types["Dice"] =
 
 			div.classList.remove("tilted");
 		}
-			
+
 		handle.Result.style.backgroundImage = "url("+handle.Data.Faces+")";
 		div.style.width  = handle.Data.FaceSize[0]+"px";
 		div.style.height = handle.Data.FaceSize[1]+"px";
 		handle.Result.style.backgroundPosition = (-handle.Data.FaceSize[0]*handle.Data.CurrentFace)+"px 0px";
+
+		handle.Overlay.style.backgroundImage    = "url("+handle.Data.Overlay+")";
+		handle.Overlay.style.backgroundPosition = div.style.backgroundPosition;
 	}
 };
 
@@ -96,8 +103,6 @@ ObjHandle.Actions["Throw"] =
 
 		var transition = {Type: "RollDice", Seed: Math.floor(Math.random()*10000), Bumps: 3 + dist/400, Duration: 400 + dist/2, Target: {X: targetX, Y: targetY, CurrentFace: rng.randInt(0, action.Original.NumFaces-1)}};
 		netstate.Transitions.Create(action.Obj, transition);
-
-		PlaySound("Library/diceThrow1.ogg");
 	}
 };
 
@@ -154,6 +159,8 @@ ObjHandle.Transitions["RollDice"] =
 
 		ts.Frames = frames;
 		ts.Obj.Tilted = tilt;
+
+		PlaySound("Library/diceThrow1.ogg");
 	},
 	OnGameTick: function(ts, time, netstate)
 	{
