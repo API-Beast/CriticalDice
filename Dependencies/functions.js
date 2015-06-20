@@ -83,6 +83,11 @@ function Angle(x, y, x2, y2)
   return Math.atan2(y2 - y, x2 - x) * 180 / Math.PI;
 }
 
+function Angle2(x, y, x2, y2)
+{
+  return Math.atan2(y2 - y, x2 - x);
+}
+
 function SetCSSAnimation(div, animation, time, direction)
 {
 	var propertyName = "";
@@ -222,12 +227,32 @@ DetRNG.prototype.randInt = function(min, max)
   return ~~(min + this.rand() * ((max+1) - min));
 };
 
+DetRNG.prototype.randFloat = function(min, max)
+{
+  return (min + this.rand() * ((max) - min));
+};
+
+DetRNG.prototype.randSign = function()
+{
+  if(this.rand() >= 0.5)
+    return 1;
+  return -1;
+};
+
 function linear(start, end, factor)
 {
   return start + (end - start) * factor;
 };
 
-function linear2(start, end, curT, startT, endT)
+function linear2(start, end, curT, startT, endT, fun)
 {
+  if(fun)
+    return linear(start, end, fun((curT-startT)/(endT-startT)))
   return linear(start, end, (curT-startT)/(endT-startT));
 };
+
+function PlaySound(src)
+{
+  var audio = new Audio(src);
+  audio.play();
+}

@@ -50,6 +50,8 @@ Interface.prototype.Init = function(table, svgLayer)
   this.Table.addEventListener('drop',      this.OnDrop.bind(this));
   window.addEventListener('keydown',   this.OnKeyPress.bind(this));
 
+  window.requestAnimationFrame(this.GameLoop.bind(this));
+
   this.ActionBar = document.createElement("div");
   this.ActionBar.className = "actionbar right";
 
@@ -305,10 +307,10 @@ Interface.prototype.OnStateReset = function(state)
   while(last = this.Table.lastChild)
   	this.Table.removeChild(last);
 
-	for(var id in state)
+	for(var id in state.Objects)
 	{
-		if(!Object.hasOwnProperty.call(state, id)) continue;
-		var obj = state[id];
+		if(!Object.hasOwnProperty.call(state.Objects, id)) continue;
+		var obj = state.Objects[id];
 		this.OnObjectCreation(id, obj);
 	}
 }
@@ -340,6 +342,12 @@ Interface.prototype.OnMove = function(e)
 	if(this.CurrentAction === null) return false;
 
 	this.ActionCallBack("OnGrabbing", this.CurrentAction, e.pageX, e.pageY);
+};
+
+Interface.prototype.GameLoop = function()
+{
+	this.NetState.GameTick(this);
+	window.requestAnimationFrame(this.GameLoop.bind(this));
 };
 
 Interface.prototype.OnRelease = function(e)

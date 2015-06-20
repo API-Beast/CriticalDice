@@ -1,10 +1,24 @@
 "use strict";
 
+/*
+class NetState.Transitions
+{
+  object Create(blueprint, id, origin);
+  void Update(object, delta, origin);
+  void Remove(object, origin);
+
+  any CallFunction(object, functionName, ...);
+
+  signal OnCreation;
+  signal OnUpdate;
+  signal OnRemoval;
+}
+*/
+
 NetState.Transitions = function(netstate)
 {
-	this.Net   = netstate;
-	this.State = netstate.State;
-	this.State.Transitions = {};
+	this.Net = netstate;
+	this.Net.State.Transitions = {};
 
 	// Events
 	this.OnCreation = [];
@@ -12,73 +26,110 @@ NetState.Transitions = function(netstate)
 	this.OnRemoval  = [];
 };
 
-NetState.Transitions.prototype.Create = function(target, obj, id, flags)
+NetState.Transitions.prototype.Create = function(obj, ts, id, flags)
 {
   if(!id)
   	id = Math.floor(Math.random()*32000000);
-  while(this.State.Transitions[id])
+  while(this.Net.State.Transitions[id])
   	id = Math.floor(Math.random()*32000000);
 
-  this.State.Transitions[id]    = obj;
-  this.State.Transitions[id].ID = id;
-  this.State.Transitions[id].Target = target;
+  this.Net.State.Transitions[id]    = ts;
+  ts.ID        = id;
+  ts.Obj       = obj;
+  ts.StartTime = this.Net.Clock();
+  ts.Original  = Merge(obj);
 
-  CallAll(this.OnCreation, id, obj, flags);
+  CallAll(this.OnCreation, id, ts, flags);
+
+  this.CallFunction(ts, "OnStart");
 
   if(!(flags & SOURCE_NETWORK))
-  	this.Net.Broadcast(["Transitions", "Create", obj]);
+  	this.Net.Broadcast(["Transitions", "Create", obj.ID, ts]);
 
-  return obj;
+  return ts;
 }
 
-NetState.Transitions.prototype.Update = function(obj, delta, flags)
+NetState.Transitions.prototype.Update = function(ts, delta, flags)
 {
   // With just one parameter this is basically a deep clone
-  var oldState = Merge(obj);
-	ApplyTemplate(obj, delta);
+  var oldState = Merge(ts);
+	ApplyTemplate(ts, delta);
 
-  CallAll(this.OnUpdate, obj.ID, oldState, obj, delta, flags);
+  CallAll(this.OnUpdate, ts.ID, oldState, ts, delta, flags);
+
+  this.CallFunction(ts, "OnUpdate", delta);
 
   if(!(flags & SOURCE_NETWORK))
-  	this.Net.Broadcast(["Transitions", "Update", obj.ID, delta]);
+  	this.Net.Broadcast(["Transitions", "Update", ts.ID, delta]);
 }
 
-NetState.Transitions.prototype.Remove = function(obj, flags)
+NetState.Transitions.prototype.Remove = function(ts, flags)
 {
-  delete this.State.Transitions[obj.ID];
+  delete this.Net.State.Transitions[ts.ID];
 
-  CallAll(this.OnRemoval, obj.ID, flags);
+  CallAll(this.OnRemoval, ts.ID, flags);
+
+  this.CallFunction(ts, "OnRemoved");
 
   if(!(flags & SOURCE_NETWORK))
-  	this.Net.Broadcast(["Transitions", "Remove", obj.ID]);
+  	this.Net.Broadcast(["Transitions", "Remove", ts.ID]);
 };
+
+NetState.Transitions.prototype.CallFunction = function(ts, fname)
+{
+  var fn = ObjHandle.Transitions[ts.Type][fname];
+
+  var args = Array.prototype.slice.call(arguments, 2);
+  args.unshift(ts);
+  args.push(this.Net);
+
+  if(fn)
+    return fn.apply(this, args);
+};
+
+NetState.Transitions.prototype.GameTick = function(time, ui)
+{
+  for(var id in this.Net.State.Transitions)
+  {
+    if(!Object.prototype.hasOwnProperty.call(this.Net.State.Transitions, id))
+      continue;
+
+    var ts = this.Net.State.Transitions[id];
+    if(this.CallFunction(ts, "OnGameTick", time))
+    {
+      this.CallFunction(ts, "OnEnd");
+      this.Remove(ts, SOURCE_NETWORK);
+    }
+    ui.OnObjectChange(ts.Obj.ID);
+  };
+}
 
 NetState.Transitions.prototype.HandlePackage = function(type, pack)
 {
   if(type === "Create")
   {
-    var obj = pack[0];
-    this.Create(obj, obj.ID, SOURCE_NETWORK);
+    var target = this.Net.State.Objects[pack[0]];
+    var ts = pack[1];
+    this.Create(target, ts, ts.ID, SOURCE_NETWORK);
     return;
   }
 
   if(type === "Update")
   {
-    var time  = pack[0]; 
-  	var obj   = this.State.Transitions[pack[1]];
-    var delta = pack[2];
-    if(obj)
-    	this.Update(obj, delta, SOURCE_NETWORK);
+  	var ts   = this.Net.State.Transitions[pack[0]];
+    var delta = pack[1];
+    if(ts)
+    	this.Update(ts, delta, SOURCE_NETWORK);
     else
-    	console.log("Trying to update non-existant object.", pack[1]);
+    	console.log("Trying to update non-existant object.", pack[0]);
     return;
 	}
 
   if(type === "Remove")
   {
-    var obj = this.State.Transitions[pack[0]];
-    if(obj)
-    	this.Remove(obj, SOURCE_NETWORK);
+    var ts = this.Net.State.Transitions[pack[0]];
+    if(ts)
+    	this.Remove(ts, SOURCE_NETWORK);
     else
     	console.log("Trying to remove non-existant object.", pack[0]);
     return;

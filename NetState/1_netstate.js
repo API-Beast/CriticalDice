@@ -23,6 +23,7 @@ class NetState
   State = {};
 
   signal OnEtablishedSession(peerID); // This signal is send when the network is initialized and ready to be used.
+  
                                       // peerID is the ID that was assigned to this computer.
   signal OnStatusText(htmlText);      // Is send whenever a status message should be displayed to the user.
   signal OnStateReset(newState);      // Is send whenever the state is overwritten.
@@ -63,6 +64,8 @@ var NetState = function(name)
   this.State = {};
   this.Objects     = new NetState.Objects(this);
   this.Transitions = new NetState.Transitions(this);
+
+  this.ClockStart = window.performance.now();
 }
 
 NetState.prototype.Join = function(id)
@@ -106,12 +109,27 @@ NetState.prototype.Broadcast = function(data)
 {
 	for(var peer in this.Peers)
 		this.Peers[peer].send(data);
-  console.log("Broadcast:", data);
 }
 
 NetState.prototype.StatusText = function(str)
 {
   CallAll(this.OnStatusText, tr(str, Array.prototype.slice.call(arguments, 1)));
+};
+
+NetState.prototype.GameTick = function(ui)
+{
+  var time = this.Clock();
+  var deltaTime = time - this.LastTick;
+
+  this.Objects.GameTick(time, ui);
+  this.Transitions.GameTick(time, ui);
+
+  this.LastTick = time;
+};
+
+NetState.prototype.Clock = function()
+{
+  return window.performance.now() - this.ClockStart;
 };
 
 // ---------
@@ -136,6 +154,8 @@ NetState.prototype.OnPeerDisconnected = function(conn)
 
 NetState.prototype.OnDataReceived = function(conn, pack)
 {
+  console.log(pack);
+  
   var type = pack[0];
   if(type === "Objects")     this.Objects    .HandlePackage(pack[1], pack.slice(2));
   if(type === "Transitions") this.Transitions.HandlePackage(pack[1], pack.slice(2));

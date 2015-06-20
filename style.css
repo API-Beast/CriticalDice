@@ -70,7 +70,7 @@
 
 #table.drag
 {
-	border: 4px dashed yellow;
+	/* border: 4px dashed yellow; */
 }
 
 #sidebar
@@ -247,4 +247,8 @@
     min-width: 100%;
     min-height: 100%;
     display: inline-block;
+}
+
+.obj.die.tilted .actionbar.right {
+    display: none;
 }
