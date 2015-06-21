@@ -35,17 +35,11 @@ ObjHandle.Types["Dice"] =
 			div.style.backgroundImage = "url("+handle.Data.Face+")";
 			div.style.backgroundPosition = -(handle.Data.Tilted*handle.Data.FaceSize[0])+"px 0px";
 
-			if(handle.Data.Tilted === 1)
-				handle.Result.style.transform = "scale(0.80) translateY(8px) translateX(5px) rotate(-30deg)";
-			else
-				handle.Result.style.transform = "scaleY(0.85) scaleX(0.80) translateY(-11px) translateX(-12px) rotate(25deg)";
-
 			div.classList.add("tilted");
 		}
 		else
 		{
 			div.style.backgroundImage = "url("+handle.Data.Face+")";
-			handle.Result.style.transform = "";
 			div.style.backgroundPosition = "";
 
 			div.classList.remove("tilted");
@@ -54,7 +48,7 @@ ObjHandle.Types["Dice"] =
 		handle.Result.style.backgroundImage = "url("+handle.Data.Faces+")";
 		div.style.width  = handle.Data.FaceSize[0]+"px";
 		div.style.height = handle.Data.FaceSize[1]+"px";
-		handle.Result.style.backgroundPosition = (-handle.Data.FaceSize[0]*handle.Data.CurrentFace)+"px 0px";
+		handle.Result.style.backgroundPosition = (-(handle.Data.FaceSize[0]*handle.Data.Tilted||0))+"px "+(-handle.Data.FaceSize[0]*handle.Data.CurrentFace)+"px";
 
 		handle.Overlay.style.backgroundImage    = "url("+handle.Data.Overlay+")";
 		handle.Overlay.style.backgroundPosition = div.style.backgroundPosition;
@@ -84,10 +78,6 @@ ObjHandle.Actions["Throw"] =
 	},
 	OnStopGrab: function(action, x, y, ui, netstate)
 	{
-		var rng = new DetRNG(Math.floor(Math.random()*10000));
-		action.Result.CurrentFace = rng.randInt(0, action.Original.NumFaces-1);
-		action.Result.Rotation = rng.randInt(-40, +40);
-
 		var deltaX = x - action.StartX;
 		var deltaY = y - action.StartY;
 		action.Result.X = action.Original.X + deltaX;
@@ -96,13 +86,16 @@ ObjHandle.Actions["Throw"] =
 		var dist  = Distance(0, 0, deltaX, deltaY);
 		var angle = Angle2(0, 0, deltaX, deltaY); 
 
-		dist = (dist + 400) / 3;
+		if(dist > 10)
+		{
+			dist = (dist + 200) / 2;
 
-		var targetX = action.Result.X + (Math.cos(angle) * dist);
-		var targetY = action.Result.Y + (Math.sin(angle) * dist);
+			var targetX = action.Result.X + (Math.cos(angle) * dist);
+			var targetY = action.Result.Y + (Math.sin(angle) * dist);
 
-		var transition = {Type: "RollDice", Seed: Math.floor(Math.random()*10000), Bumps: 3 + dist/400, Duration: 400 + dist/2, Target: {X: targetX, Y: targetY, CurrentFace: rng.randInt(0, action.Original.NumFaces-1)}};
-		netstate.Transitions.Create(action.Obj, transition);
+			var transition = {Type: "RollDice", Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Target: {X: targetX, Y: targetY}};
+			netstate.Transitions.Create(action.Obj, transition);
+		}
 	}
 };
 
@@ -137,7 +130,7 @@ ObjHandle.Transitions["RollDice"] =
 			frame.Y = startY + dist * Math.sin(angle);
 			frame.Rotation = rng.randInt(-40, +40);
 
-			do frame.Tilted = rng.randInt(1, 2);
+			do frame.Tilted = rng.randInt(1, ts.Obj.NumFrames-1);
 			while(frame.Tilted === lastFrame.Tilted);
 
 			do frame.Face = rng.randInt(0, ts.Obj.NumFaces-1);
@@ -149,7 +142,7 @@ ObjHandle.Transitions["RollDice"] =
 		// Last frame, final coordinates.
 		ts.Target.StartTime = lastFrame.EndTime;
 		ts.Target.EndTime   = ts.EndTime;
-		ts.Target.Face      = ts.Target.CurrentFace;
+		ts.Target.Face      = lastFrame.Face;
 		ts.Target.Rotation  = rng.randInt(-40, +40);
 		frames.push(ts.Target);
 
@@ -159,6 +152,7 @@ ObjHandle.Transitions["RollDice"] =
 
 		ts.Frames = frames;
 		ts.Obj.Tilted = tilt;
+		ts.Obj.Z = 1000;
 
 		PlaySound("Library/diceThrow1.ogg");
 	},
@@ -186,6 +180,6 @@ ObjHandle.Transitions["RollDice"] =
 		ts.Obj.X = ts.Target.X;
 		ts.Obj.Y = ts.Target.Y;
 		ts.Obj.Rotation = ts.Target.Rotation;
-		ts.Obj.CurrentFace = ts.Target.CurrentFace;
+		ts.Obj.CurrentFace = ts.Target.Face;
 	}
 }

@@ -1,5 +1,17 @@
 [Prefab]
 Type     = Dice
+Name     = White D20
+Icon     = Library/diceicon.png
+Face     = Library/D20White.png
+Overlay  = Library/D20Overlay.png
+Faces    = Library/D20Faces.png
+FaceValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+FaceSize = [80, 80]
+NumFaces = 20
+NumFrames = 3
+
+[Prefab]
+Type     = Dice
 Name     = White D6
 Icon     = Library/diceicon.png
 Face     = Library/D6White.png
@@ -8,6 +20,7 @@ Faces    = Library/D6Faces.png
 FaceValues = [1, 2, 3, 4, 5, 6]
 FaceSize = [60, 60]
 NumFaces = 6
+NumFrames = 3
 
 [Prefab]
 Type     = Dice
@@ -19,6 +32,7 @@ Faces    = Library/FudgeDiceFaces.png
 FaceValues = [-1, 0, +1]
 FaceSize = [60, 60]
 NumFaces = 3
+NumFrames = 3
 
 [Prefab]
 Type     = Dice
@@ -30,6 +44,7 @@ Faces    = Library/D6FacesWhite.png
 FaceValues = [1, 2, 3, 4, 5, 6]
 FaceSize = [60, 60]
 NumFaces = 6
+NumFrames = 3
 
 [Prefab]
 Type     = Dice
@@ -41,6 +56,7 @@ Faces    = Library/FudgeDiceFacesWhite.png
 FaceValues = [-1, 0, +1]
 FaceSize = [60, 60]
 NumFaces = 3
+NumFrames = 3
 
 [Prefab]
 Type     = Dice
@@ -52,6 +68,7 @@ Faces    = Library/D6FacesWhite.png
 FaceValues = [1, 2, 3, 4, 5, 6]
 FaceSize = [60, 60]
 NumFaces = 6
+NumFrames = 3
 
 [Prefab]
 Type     = Dice
@@ -63,3 +80,4 @@ Faces    = Library/FudgeDiceFacesWhite.png
 FaceValues = [-1, 0, +1]
 FaceSize = [60, 60]
 NumFaces = 3
+NumFrames = 3
