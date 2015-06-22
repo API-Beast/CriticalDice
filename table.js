@@ -65,47 +65,93 @@ function GameInit(argument)
 	RequestLibrary(function()
 	{
 		var libraryList = id("library-list");
+		libraryList.classList.add("library");
+
+		var folders = gLibrary.Folder;
+		for(var i = 0; i < folders.length; i++) {
+			var f = folders[i];
+			libraryList.appendChild(LibraryItem(f));
+		};
 
 		var prefabs = gLibrary.Prefab;
-
 		for(var i = 0; i < prefabs.length; i++)
 		{
 			var p = prefabs[i];
-			var item = document.createElement("div");
-			item.className = "item";
-			item.draggable = true;
-
-			var icon;
-			if(typeof p.Icon === 'string')
-			{
-				icon = document.createElement("img");
-				icon.src = p.Icon;
-			}
-			else if(Array.isArray(p.Icon))
-			{
-				icon = document.createElement("span");
-				// p.Icon = [path, xOff, yOff, width, height]
-				icon.style.backgroundImage    = p.Icon[0];
-				icon.style.backgroundPosition = subs("-{1}px -{2}px", p.Icon);
-				icon.style.width  = p.Icon[3];
-				icon.style.height = p.Icon[4];
-			}
-			icon.className = "icon";
-			item.appendChild(icon);
-
-			var name = document.createTextNode(p.Name);
-			item.appendChild(name);
-
-			item.addEventListener('dragstart',
-				function(p, e)
-				{
-					e.dataTransfer.setData('text/prs.prefab+json', JSON.stringify(p));
-				}.bind(null, p));
-
-			libraryList.appendChild(item);
+			libraryList.appendChild(LibraryItem(p));
 		};
 
 	});
+}
+
+function LibraryItem(p)
+{
+	var item = document.createElement("div");
+	var label = document.createElement("div");
+	label.className = "label";
+	item.appendChild(label);
+
+	var icon;
+	if(typeof p.Icon === 'string')
+	{
+		var colorRegEx = /^(#[a-f0-9]{6}|#[a-f0-9]{3}|rgb *\( *[0-9]{1,3}%? *, *[0-9]{1,3}%? *, *[0-9]{1,3}%? *\)|rgba *\( *[0-9]{1,3}%? *, *[0-9]{1,3}%? *, *[0-9]{1,3}%? *, *[0-9]{1,3}%? *\)|black|green|silver|gray|olive|white|yellow|maroon|navy|red|blue|purple|teal|fuchsia|aqua)$/i;
+	  if(p.Icon.match(colorRegEx)) // Color
+		{
+			icon = document.createElement("span");
+			icon.style.backgroundColor = p.Icon;
+			icon.classList.add("single-color");
+		}
+		else // URL
+		{
+			icon = document.createElement("img");
+			icon.src = p.Icon;
+		}
+	}
+	else if(Array.isArray(p.Icon)) // URL + Offset and Size
+	{
+		icon = document.createElement("span");
+		// p.Icon = [path, xOff, yOff, width, height]
+		icon.style.backgroundImage    = p.Icon[0];
+		icon.style.backgroundPosition = subs("-{1}px -{2}px", p.Icon);
+		icon.style.width  = p.Icon[3];
+		icon.style.height = p.Icon[4];
+	}
+	if(icon)
+	{
+		icon.classList.add("icon");
+		label.appendChild(icon);
+	}
+
+	var name = document.createTextNode(p.Title || p.Name);
+	label.appendChild(name);
+
+	if(p.Prefab || p.Folder)
+	{
+		item.className = "folder";
+		item.addEventListener('click',
+			function()
+			{
+				this.classList.toggle("open");
+			});
+
+		var contents = document.createElement("div");
+		contents.className = "contents";
+
+		if(p.Folder) for(var i = 0; i < p.Folder.length; i++) contents.appendChild(LibraryItem(p.Folder[i]));
+		if(p.Prefab) for(var i = 0; i < p.Prefab.length; i++) contents.appendChild(LibraryItem(p.Prefab[i]));
+
+		item.appendChild(contents);
+	}
+	else
+	{
+		item.className = "item";
+		item.draggable = true;
+		item.addEventListener('dragstart',
+			function(p, e)
+			{
+				e.dataTransfer.setData('text/prs.prefab+json', JSON.stringify(p));
+			}.bind(null, p));
+	}
+	return item;
 }
 
 function SaveSession()

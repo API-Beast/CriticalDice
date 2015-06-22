@@ -1,83 +1,87 @@
-[Prefab]
-Type     = Dice
-Name     = White D20
-Icon     = Library/diceicon.png
-Face     = Library/D20White.png
-Overlay  = Library/D20Overlay.png
-Faces    = Library/D20Faces.png
-FaceValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-FaceSize = [80, 80]
-NumFaces = 20
-NumFrames = 3
+Folder
+{
+	Name = Six-Sided Dice (D6)
 
-[Prefab]
-Type     = Dice
-Name     = White D6
-Icon     = Library/diceicon.png
-Face     = Library/D6White.png
-Overlay  = Library/D6Overlay.png
-Faces    = Library/D6Faces.png
-FaceValues = [1, 2, 3, 4, 5, 6]
-FaceSize = [60, 60]
-NumFaces = 6
-NumFrames = 3
+	[Prefab]
+	Type     = Dice
+	Name     = White D6
+	Title    = White
+	Icon     = rgb(200, 200, 200)
+	Face     = Library/D6White.png
+	Overlay  = Library/D6Overlay.png
+	Faces    = Library/D6Faces.png
+	FaceValues = [1, 2, 3, 4, 5, 6]
+	FaceSize = [60, 60]
+	NumFaces = 6
+	NumFrames = 3
 
-[Prefab]
-Type     = Dice
-Name     = White Fudge-Dice
-Icon     = Library/diceicon.png
-Face     = Library/D6White.png
-Overlay  = Library/D6Overlay.png
-Faces    = Library/FudgeDiceFaces.png
-FaceValues = [-1, 0, +1]
-FaceSize = [60, 60]
-NumFaces = 3
-NumFrames = 3
+	[Prefab]
+	Type     = Dice
+	Name     = Red D6
+	Title    = Red
+	Icon     = rgb(200, 40, 40)
+	Face     = Library/D6Red.png
+	Overlay  = Library/D6Overlay.png
+	Faces    = Library/D6FacesWhite.png
+	FaceValues = [1, 2, 3, 4, 5, 6]
+	FaceSize = [60, 60]
+	NumFaces = 6
+	NumFrames = 3
 
-[Prefab]
-Type     = Dice
-Name     = Red D6
-Icon     = Library/diceicon.png
-Face     = Library/D6Red.png
-Overlay  = Library/D6Overlay.png
-Faces    = Library/D6FacesWhite.png
-FaceValues = [1, 2, 3, 4, 5, 6]
-FaceSize = [60, 60]
-NumFaces = 6
-NumFrames = 3
+	[Prefab]
+	Type     = Dice
+	Name     = Blue D6
+	Title    = Blue
+	Icon     = rgb(40, 40, 200)
+	Face     = Library/D6Blue.png
+	Overlay  = Library/D6Overlay.png
+	Faces    = Library/D6FacesWhite.png
+	FaceValues = [1, 2, 3, 4, 5, 6]
+	FaceSize = [60, 60]
+	NumFaces = 6
+	NumFrames = 3
+}
 
-[Prefab]
-Type     = Dice
-Name     = Red Fudge-Dice
-Icon     = Library/diceicon.png
-Face     = Library/D6Red.png
-Overlay  = Library/D6Overlay.png
-Faces    = Library/FudgeDiceFacesWhite.png
-FaceValues = [-1, 0, +1]
-FaceSize = [60, 60]
-NumFaces = 3
-NumFrames = 3
+Folder
+{
+	Name = Fudge-Dice (D3 going from -1 to +1)
 
-[Prefab]
-Type     = Dice
-Name     = Blue D6
-Icon     = Library/diceicon.png
-Face     = Library/D6Blue.png
-Overlay  = Library/D6Overlay.png
-Faces    = Library/D6FacesWhite.png
-FaceValues = [1, 2, 3, 4, 5, 6]
-FaceSize = [60, 60]
-NumFaces = 6
-NumFrames = 3
+	[Prefab]
+	Type     = Dice
+	Name     = White Fudge-Dice
+	Title    = White
+	Icon     = rgb(200, 200, 200)
+	Face     = Library/D6White.png
+	Overlay  = Library/D6Overlay.png
+	Faces    = Library/FudgeDiceFaces.png
+	FaceValues = [-1, 0, +1]
+	FaceSize = [60, 60]
+	NumFaces = 3
+	NumFrames = 3
 
-[Prefab]
-Type     = Dice
-Name     = Blue Fudge-Dice
-Icon     = Library/diceicon.png
-Face     = Library/D6Blue.png
-Overlay  = Library/D6Overlay.png
-Faces    = Library/FudgeDiceFacesWhite.png
-FaceValues = [-1, 0, +1]
-FaceSize = [60, 60]
-NumFaces = 3
-NumFrames = 3
+	[Prefab]
+	Type     = Dice
+	Name     = Red Fudge-Dice
+	Title    = Red
+	Icon     = rgb(200, 40, 40)
+	Face     = Library/D6Red.png
+	Overlay  = Library/D6Overlay.png
+	Faces    = Library/FudgeDiceFacesWhite.png
+	FaceValues = [-1, 0, +1]
+	FaceSize = [60, 60]
+	NumFaces = 3
+	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Blue Fudge-Dice
+	Title    = Blue
+	Icon     = rgb(40, 40, 200)
+	Face     = Library/D6Blue.png
+	Overlay  = Library/D6Overlay.png
+	Faces    = Library/FudgeDiceFacesWhite.png
+	FaceValues = [-1, 0, +1]
+	FaceSize = [60, 60]
+	NumFaces = 3
+	NumFrames = 3
+}
