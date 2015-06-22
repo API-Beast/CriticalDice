@@ -7,7 +7,7 @@ ObjHandle.Types["Dice"] =
 	MenuActions: ["Move", "Rotate", "Delete"],
 	Initialize: function(handle)
 	{
-		handle.Data.CurrentFace = handle.Data.CurrentFace || 0;
+		handle.Data.CurrentFace = handle.Data.CurrentFace || rng.randInt(1, ts.Obj.NumFrames-1);
 		/*Face     = Library/d6facered.png
 		Faces    = Library/d6faces.png
 		FaceValues = [1, 2, 3, 4, 5, 6]
@@ -106,7 +106,7 @@ ObjHandle.Transitions["RollDice"] =
 		ts.EndTime = ts.StartTime + ts.Duration;
 		var rng = new DetRNG(ts.Seed);
 		var tilt = rng.randInt(1, 2);
-		var lastFrame = { X: ts.Original.X, Y: ts.Original.Y, Face: ts.Original.CurrentFace, Tilted: tilt, Rotation: ts.Original.Rotation, EndTime: ts.StartTime};
+		var lastFrame = { X: ts.Original.X, Y: ts.Original.Y, Face: undefined, Tilted: tilt, Rotation: ts.Original.Rotation, EndTime: ts.StartTime};
 		var bounce = rng.randSign() * Math.PI/10;
 		var frames = [];
 		for(var i = 0; i < ts.Bumps; i++)
