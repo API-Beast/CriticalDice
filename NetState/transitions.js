@@ -33,17 +33,17 @@ NetState.Transitions.prototype.Create = function(obj, ts, id, flags)
   while(this.Net.State.Transitions[id])
   	id = Math.floor(Math.random()*32000000);
 
-  this.Net.State.Transitions[id]    = ts;
-  ts.ID        = id;
-  ts.Obj       = obj;
-  ts.StartTime = this.Net.Clock();
-  ts.Original  = Merge(obj);
+  this.Net.State.Transitions[id] = ts;
+  ts.ID            = id;
+  ts.Target        = obj;
+  ts.StartTime     = this.Net.Clock();
+  ts.OriginalState = Merge(obj);
 
   CallAll(this.OnCreation, id, ts, flags);
 
-  this.CallFunction(ts, "OnStart");
+  this.CallFunction(ts, "Start");
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
   	this.Net.Broadcast(["Transitions", "Create", obj.ID, ts]);
 
   return ts;
@@ -57,9 +57,9 @@ NetState.Transitions.prototype.Update = function(ts, delta, flags)
 
   CallAll(this.OnUpdate, ts.ID, oldState, ts, delta, flags);
 
-  this.CallFunction(ts, "OnUpdate", delta);
+  this.CallFunction(ts, "Update", delta);
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
   	this.Net.Broadcast(["Transitions", "Update", ts.ID, delta]);
 }
 
@@ -69,22 +69,22 @@ NetState.Transitions.prototype.Remove = function(ts, flags)
 
   CallAll(this.OnRemoval, ts.ID, flags);
 
-  this.CallFunction(ts, "OnRemoved");
+  this.CallFunction(ts, "Removed");
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
   	this.Net.Broadcast(["Transitions", "Remove", ts.ID]);
 };
 
 NetState.Transitions.prototype.CallFunction = function(ts, fname)
 {
-  var fn = ObjHandle.Transitions[ts.Type][fname];
+  var prototype = DereferenceDotSyntax(ObjHandle.Types, ts.Type);
+  var fn = prototype[fname];
 
   var args = Array.prototype.slice.call(arguments, 2);
-  args.unshift(ts);
   args.push(this.Net);
 
   if(fn)
-    return fn.apply(this, args);
+    return fn.apply(ts, args);
 };
 
 NetState.Transitions.prototype.GameTick = function(time, ui)
@@ -95,12 +95,12 @@ NetState.Transitions.prototype.GameTick = function(time, ui)
       continue;
 
     var ts = this.Net.State.Transitions[id];
-    if(this.CallFunction(ts, "OnGameTick", time))
+    if(this.CallFunction(ts, "GameTick", time))
     {
-      this.CallFunction(ts, "OnEnd");
-      this.Remove(ts, SOURCE_NETWORK);
+      this.CallFunction(ts, "Finish");
+      this.Remove(ts, NO_BROADCAST);
     }
-    ui.OnObjectChange(ts.Obj.ID);
+    ui.OnObjectChange(ts.Target.ID);
   };
 }
 
@@ -110,7 +110,7 @@ NetState.Transitions.prototype.HandlePackage = function(type, pack)
   {
     var target = this.Net.State.Objects[pack[0]];
     var ts = pack[1];
-    this.Create(target, ts, ts.ID, SOURCE_NETWORK);
+    this.Create(target, ts, ts.ID, NO_BROADCAST);
     return;
   }
 
@@ -119,7 +119,7 @@ NetState.Transitions.prototype.HandlePackage = function(type, pack)
   	var ts   = this.Net.State.Transitions[pack[0]];
     var delta = pack[1];
     if(ts)
-    	this.Update(ts, delta, SOURCE_NETWORK);
+    	this.Update(ts, delta, NO_BROADCAST);
     else
     	console.log("Trying to update non-existant object.", pack[0]);
     return;
@@ -129,7 +129,7 @@ NetState.Transitions.prototype.HandlePackage = function(type, pack)
   {
     var ts = this.Net.State.Transitions[pack[0]];
     if(ts)
-    	this.Remove(ts, SOURCE_NETWORK);
+    	this.Remove(ts, NO_BROADCAST);
     else
     	console.log("Trying to remove non-existant object.", pack[0]);
     return;

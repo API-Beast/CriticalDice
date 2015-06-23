@@ -25,7 +25,7 @@ NetState.Objects.prototype.Create = function(obj, id, flags)
 
   CallAll(this.OnCreation, id, obj, flags);
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
   	this.Net.Broadcast(["Objects", "Create", obj]);
 
   return obj;
@@ -39,7 +39,7 @@ NetState.Objects.prototype.Update = function(obj, delta, flags)
 
   CallAll(this.OnUpdate, obj.ID, oldState, obj, delta, flags);
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
   	this.Net.Broadcast(["Objects", "Update", obj.ID, delta]);
 }
 
@@ -49,7 +49,7 @@ NetState.Objects.prototype.Remove = function(obj, flags)
 
   CallAll(this.OnRemoval, obj.ID, flags);
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
   	this.Net.Broadcast(["Objects", "Remove", obj.ID]);
 };
 
@@ -62,7 +62,7 @@ NetState.Objects.prototype.HandlePackage = function(type, pack)
   if(type === "Create")
   {
     var obj = pack[0];
-    this.Create(obj, obj.ID, SOURCE_NETWORK);
+    this.Create(obj, obj.ID, NO_BROADCAST);
     return;
   }
 
@@ -71,7 +71,7 @@ NetState.Objects.prototype.HandlePackage = function(type, pack)
   	var obj   = this.Net.State.Objects[pack[0]];
     var delta = pack[1];
     if(obj)
-    	this.Update(obj, delta, SOURCE_NETWORK);
+    	this.Update(obj, delta, NO_BROADCAST);
     else
     	console.log("Trying to update non-existant object.", pack[0]);
     return;
@@ -81,7 +81,7 @@ NetState.Objects.prototype.HandlePackage = function(type, pack)
   {
     var obj = this.Net.State.Objects[pack[0]];
     if(obj)
-    	this.Remove(obj, SOURCE_NETWORK);
+    	this.Remove(obj, NO_BROADCAST);
     else
     	console.log("Trying to remove non-existant object.", pack[0]);
     return;

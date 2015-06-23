@@ -1,131 +1,166 @@
 "use strict";
 
-ObjHandle.Actions["Move"] = 
+// ------------
+// Type: Common
+// ------------
+var Common = {};
+ObjHandle.RegisterObjectType("Common", Common);
+
+Common.Initialize = function()
 {
-	Label: "Move",
-	Type: "Grab",
-	Icon: "fa-arrows",
-	Shortcut: 71, // "g"-Key
-	Enable: function(data)
-	{
-		data.X = data.X || 0;
-		data.Y = data.Y || 0;
-		data.Z = data.Z || 0;
-	},
-	OnStartGrab: function(action, x, y, ui, netstate)
-	{
-		action.StartX = x;
-		action.StartY = y;
-		action.DropOnTop = false;
-	},
-	OnGrabbing: function(action, x, y, ui, netstate)
-	{
-		var deltaX = x - action.StartX;
-		var deltaY = y - action.StartY;
-		action.Result.X = action.Original.X + deltaX;
-		action.Result.Y = action.Original.Y + deltaY;
+	this.State.X   = this.State.X || 0;
+	this.State.Y   = this.State.Y || 0;
+	this.State.Z   = this.State.Z || 0;
 
-		if(Math.abs(deltaX) > 150 || Math.abs(deltaY) > 150)
-		{
-			action.DropOnTop       = true;
-			action.Result.Hovering = true;
-			action.Result.Z = ui.CalcTopZIndexFor(action.Handle)+1;
-		}
-	},
-	OnStopGrab: function(action, x, y, ui, netstate)
-	{
-		var deltaX = x - action.StartX;
-		var deltaY = y - action.StartY;
-		action.Result.X = action.Original.X + deltaX;
-		action.Result.Y = action.Original.Y + deltaY;
-
-		if(action.DropOnTop)
-		{
-			action.Result.Z = ui.CalcTopZIndexFor(action.Handle)+1;
-			action.Result.Hovering = false;
-		}
-	}
-};
-
-
-ObjHandle.Actions["Rotate"] = 
-{
-	Label: "Rotate",
-	Type: "Grab",
-	Icon: "fa-rotate-right",
-	Shortcut: 82, // "r"-Key
-	Enable: function(data)
-	{
-		data.Rotation = data.Rotation || 0;
-	},
-	OnStartGrab: function(action, x, y, ui, netstate)
-	{
-		var distance = Distance(action.CenterX, action.CenterY, x, y);
-		var angle    = Angle(action.CenterX, action.CenterY, x, y);
-		if(distance > 7.5)
-			action.StartAngle = angle;
-	},
-	OnGrabbing: function(action, x, y, ui, netstate)
-	{
-		var angle    = Angle(action.CenterX, action.CenterY, x, y);
-		var distance = Distance(action.CenterX, action.CenterY, x, y);
-		if(!action.StartAngle)
-		{
-			if(distance > 7.5)
-				action.StartAngle = angle;
-		}
-		else
-		{
-			var deltaAngle = angle - action.StartAngle;
-			action.Result.Rotation = action.Original.Rotation + deltaAngle;
-		}
-	},
-	OnStopGrab: function() {}
-};
-
-
-ObjHandle.Actions["Scale"] =
-{
-	Label: "Scale",
-	Type: "Grab",
-	Icon: "fa-expand",
-	Shortcut: 83, // "s"-Key
-	Enable: function(data)
-	{
-		data.X      = data.X || 0;
-		data.Y      = data.Y || 0;
-		data.ScaleX = data.ScaleX || 1;
-		data.ScaleY = data.ScaleY || 1;
-	},
-	OnStartGrab: function(action, x, y, ui, netstate)
-	{
-		action.StartDistance = Distance(action.CenterX, action.CenterY, x, y);
-	},
-	OnGrabbing: function(action, x, y, ui, netstate)
-	{
-		var distanceFactor = Distance(action.CenterX, action.CenterY, x, y) / action.StartDistance;
-		if(distanceFactor < 0.5)
-			distanceFactor = 0.5;
-		else if(distanceFactor > 2.0)
-			distanceFactor = 2.0;
-		else
-			distanceFactor = Round(distanceFactor, 0.25);
-
-		action.Result.ScaleX = action.Original.ScaleX * distanceFactor;
-		action.Result.ScaleY = action.Original.ScaleY * distanceFactor;
-	},
-	OnStopGrab: function() {}
+	this.State.Rotation = this.State.Rotation || 0;
+	this.State.ScaleX   = this.State.ScaleX   || 1;
+	this.State.ScaleY   = this.State.ScaleY   || 1;
 }
 
+Common.UpdateHTML = function(div)
+{
+	this.Div.style.position = "absolute";
+	this.Div.style.left = this.State.X+"px";
+	this.Div.style.top  = this.State.Y+"px";
+	this.Div.style.zIndex = this.State.Z;
 
-ObjHandle.Actions["Delete"] =
+	var transform = "";
+	transform += "scaleX("+this.State.ScaleX+") ";
+	transform += "scaleY("+this.State.ScaleY+") ";
+	transform += "rotate("+this.State.Rotation+"deg) ";
+	this.Div.style.transform = transform;
+
+	if(this.State.Width  !== undefined) this.Div.style.width  = this.State.Width +"px";
+	if(this.State.Height !== undefined) this.Div.style.height = this.State.Height+"px";
+}
+
+// ------------------
+// Action: Common.Move
+// ------------------
+Common.Move =
+{
+	Label: "Move",
+	Type : "MultiDrag",
+	Icon : "fa-arrows",
+	Shortcut: 71 // "g"	
+};
+
+Common.Move.Update = function(target, x, y, ui, netstate)
+{
+	var deltaX = x - this.StartX;
+	var deltaY = y - this.StartY;
+	target.State.X = target.OriginalState.X + deltaX;
+	target.State.Y = target.OriginalState.Y + deltaY;
+
+	if(Math.abs(deltaX) > 150 || Math.abs(deltaY) > 150)
+	{
+		this.DropOnTop  = true;
+		target.State.Hovering = true;
+		target.State.Z = ui.CalcTopZIndexFor(target.Handle)+1;
+	}
+};
+
+Common.Move.Finish = function(target, x, y, ui, netstate)
+{
+	this.Update(target, x, y, ui, netstate);
+	if(this.DropOnTop)
+	{
+		target.State.Z = ui.CalcTopZIndexFor(target.Handle)+1;
+		target.State.Hovering = false;
+	}
+};
+
+// ---------------------
+// Action: Common.Rotate
+// ---------------------
+Common.Rotate =
+{
+	Label: "Rotate",
+	Type : "MultiDrag",
+	Icon : "fa-rotate-right",
+	Shortcut: 82, // "r"
+};
+
+Common.Rotate.Update = function(target, x, y, ui, netstate)
+{
+	var angle    = Angle(this.CenterX, this.CenterY, x, y);
+	var distance = Distance(this.CenterX, this.CenterY, x, y);
+
+	if(!this.StartAngle && distance > 7.5)
+		this.StartAngle = angle;
+
+	if(this.StartAngle)
+	{
+		var deltaAngle = angle - this.StartAngle;
+		target.State.Rotation = target.OriginalState.Rotation + deltaAngle;
+
+		// Angle2 returns radians, Angle degrees.
+		// This is because CSS uses degrees, but Math.sin/Math.cos uses radians.
+		var targetAngle    = Angle2  (0, 0, target.OffsetX, target.OffsetY);
+		var targetDistance = Distance(0, 0, target.OffsetX, target.OffsetY);
+		target.State.X = target.OriginalState.X + Math.cos(targetAngle + deltaAngle) * targetDistance;
+		target.State.Y = target.OriginalState.Y + Math.sin(targetAngle + deltaAngle) * targetDistance;
+	}
+};
+
+// --------------------
+// Action: Common.Scale
+// --------------------
+Common.Scale =
+{
+	Label: "Scale",
+	Type : "MultiDrag",
+	Icon : "fa-expand",
+	Shortcut: 83, // "s"
+};
+
+Common.Scale.Init = function(x, y, ui, netstate)
+{
+	this.StartDistance = Distance(this.CenterX, this.CenterY, x, y);
+};
+
+Common.Scale.Update = function(target, x, y, ui, netstate) 
+{
+	var distanceFactor = Distance(this.CenterX, this.CenterY, x, y) / this.StartDistance;
+
+	target.State.ScaleX = target.Original.ScaleX * distanceFactor;
+	target.State.ScaleY = target.Original.ScaleY * distanceFactor;
+
+	target.State.X = this.CenterX + target.OffsetX * distanceFactor;
+	target.State.Y = this.CenterY + target.OffsetY * distanceFactor;
+};
+
+// ------------------
+// Action: Common.Resize
+// ------------------
+Common.Resize =
+{
+	Label: "Resize",
+	Type : "MultiDrag",
+	Icon : "fa-compress"
+};
+
+Common.Resize.Update = function(target, x, y, ui, netstate)
+{
+	var deltaX = x - this.StartX;
+	var deltaY = y - this.StartY;
+
+	target.State.Width  = target.OriginalState.Width  + deltaX;
+	target.State.Height = target.OriginalState.Height + deltaY;
+};
+
+// ---------------------
+// Action: Common.Remove
+// ---------------------
+Common.Remove =
 {
 	Label: "Remove",
-	Type: "Single",
+	Type: "ClickOnce",
 	Icon: "fa-remove",
 	Shortcut: 46, // Delete-Key
-	OnExecute: function(action, x, y, ui, netstate)
-	{
-		netstate.Objects.Remove(action.Obj);
-	}
+};
+
+Common.Remove.Execute = function(target, x, y, ui, netstate)
+{
+	netstate.Objects.Remove(target.State, NO_BROADCAST);
 }

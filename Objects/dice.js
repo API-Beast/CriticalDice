@@ -1,185 +1,199 @@
 "use strict";
 
-ObjHandle.Types["Dice"] = 
+// ----------
+// Type: Dice
+// ----------
+var Dice =
 {
-	Mode: "Simple",
-	ClickAction: "Throw",
-	MenuActions: ["Move", "Rotate", "Delete"],
-	Initialize: function(handle)
-	{
-		handle.Data.CurrentFace = handle.Data.CurrentFace || rng.randInt(1, ts.Obj.NumFrames-1);
-		/*Face     = Library/d6facered.png
-		Faces    = Library/d6faces.png
-		FaceValues = [1, 2, 3, 4, 5, 6]
-		FaceSize = [64, 64]
-		NumFaces = 6*/
-	},
-	OnUpdate: function(handle)
-	{
-	},
-	InitHTML: function(handle, div)
-	{
-		div.classList.add("die");
-		handle.Result = document.createElement("span");
-		handle.Result.classList.add("result");
-		div.appendChild(handle.Result);
-
-		handle.Overlay = document.createElement("span");
-		handle.Overlay.classList.add("overlay");
-		div.appendChild(handle.Overlay);
-	},
-	UpdateHTML: function(handle, div)
-	{
-		if(handle.Data.Tilted)
-		{
-			div.style.backgroundImage = "url("+handle.Data.Face+")";
-			div.style.backgroundPosition = -(handle.Data.Tilted*handle.Data.FaceSize[0])+"px 0px";
-
-			div.classList.add("tilted");
-		}
-		else
-		{
-			div.style.backgroundImage = "url("+handle.Data.Face+")";
-			div.style.backgroundPosition = "";
-
-			div.classList.remove("tilted");
-		}
-
-		handle.Result.style.backgroundImage = "url("+handle.Data.Faces+")";
-		div.style.width  = handle.Data.FaceSize[0]+"px";
-		div.style.height = handle.Data.FaceSize[1]+"px";
-		handle.Result.style.backgroundPosition = (-(handle.Data.FaceSize[0]*handle.Data.Tilted||0))+"px "+(-handle.Data.FaceSize[0]*handle.Data.CurrentFace)+"px";
-
-		handle.Overlay.style.backgroundImage    = "url("+handle.Data.Overlay+")";
-		handle.Overlay.style.backgroundPosition = div.style.backgroundPosition;
-	}
+	ClickAction: "Dice.Throw",
+	MenuActions: ["Common.Move", "Common.Rotate", "Common.Remove"],
+	Inheritance: ["Common"]
 };
+ObjHandle.RegisterObjectType("Dice", Dice);
 
-ObjHandle.Actions["Throw"] = 
+
+Dice.Initialize = function()
+{
+	var rng = new DetRNG(this.State.ID);
+	this.State.CurrentFace = this.State.CurrentFace || rng.randInt(1, this.State.NumFrames-1);
+}
+
+Dice.InitHTML = function(div)
+{
+	div.classList.add("die");
+
+	this.Result = document.createElement("span");
+	this.Result.classList.add("result");
+	div.appendChild(this.Result);
+
+	this.Overlay = document.createElement("span");
+	this.Overlay.classList.add("overlay");
+	div.appendChild(this.Overlay);
+}
+
+Dice.UpdateHTML = function(div)
+{
+	if(this.State.Tilted)
+	{
+		div.style.backgroundImage = "url("+this.State.Face+")";
+		div.style.backgroundPosition = -(this.State.Tilted*this.State.FaceSize[0])+"px 0px";
+
+		div.classList.add("tilted");
+	}
+	else
+	{
+		div.style.backgroundImage = "url("+this.State.Face+")";
+		div.style.backgroundPosition = "";
+
+		div.classList.remove("tilted");
+	}
+
+	div.style.width  = this.State.FaceSize[0]+"px";
+	div.style.height = this.State.FaceSize[1]+"px";
+
+	this.Result.style.backgroundImage = "url("+this.State.Faces+")";
+	this.Result.style.backgroundPosition = (-(this.State.FaceSize[0]*this.State.Tilted||0))+"px "+(-this.State.FaceSize[0]*this.State.CurrentFace)+"px";
+
+	this.Overlay.style.backgroundImage    = "url("+this.State.Overlay+")";
+	this.Overlay.style.backgroundPosition = div.style.backgroundPosition;
+}
+
+// ------------------
+// Action: Dice.Throw
+// ------------------
+Dice.Throw =
 {
 	Label: "Roll",
-	Type: "Grab",
-	Icon: "fa-random",
-	Shortcut: 71, // "g"-Key
-	Enable: function(data)
-	{
-	},
-	OnStartGrab: function(action, x, y, ui, netstate)
-	{
-		action.StartX = x;
-		action.StartY = y;
-	},
-	OnGrabbing: function(action, x, y, ui, netstate)
-	{
-		var deltaX = x - action.StartX;
-		var deltaY = y - action.StartY;
-		action.Result.X = action.Original.X + deltaX;
-		action.Result.Y = action.Original.Y + deltaY;
-	},
-	OnStopGrab: function(action, x, y, ui, netstate)
-	{
-		var deltaX = x - action.StartX;
-		var deltaY = y - action.StartY;
-		action.Result.X = action.Original.X + deltaX;
-		action.Result.Y = action.Original.Y + deltaY;
+	Type : "MultiDrag",
+	Icon : "fa-random"
+};
 
-		var dist  = Distance(0, 0, deltaX, deltaY);
-		var angle = Angle2(0, 0, deltaX, deltaY); 
 
-		if(dist > 10)
-		{
-			dist = (dist + 200) / 2;
+Dice.Throw.Update = function(target, x, y, ui, netstate)
+{
+	var deltaX = x - this.StartX;
+	var deltaY = y - this.StartY;
+	target.State.X = target.OriginalState.X + deltaX;
+	target.State.Y = target.OriginalState.Y + deltaY;
+	target.State.Z = ui.CalcTopZIndexFor(this.Handle)+1;
+};
 
-			var targetX = action.Result.X + (Math.cos(angle) * dist);
-			var targetY = action.Result.Y + (Math.sin(angle) * dist);
+Dice.Throw.Finish = function(target, x, y, ui, netstate)
+{
+	var deltaX = x - this.StartX;
+	var deltaY = y - this.StartY;
+	target.State.X = target.OriginalState.X + deltaX;
+	target.State.Y = target.OriginalState.Y + deltaY;
 
-			var transition = {Type: "RollDice", Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Target: {X: targetX, Y: targetY}};
-			netstate.Transitions.Create(action.Obj, transition);
-		}
+	var dist  = Distance(0, 0, deltaX, deltaY);
+	var angle = Angle2(0, 0, deltaX, deltaY); 
+
+	if(dist > 10)
+	{
+		dist = (dist + 200) / 2;
+
+		var goalX = target.State.X + (Math.cos(angle) * dist);
+		var goalY = target.State.Y + (Math.sin(angle) * dist);
+
+		var transition = {Type: "Dice.Roll", Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
+		netstate.Transitions.Create(target.State, transition);
 	}
 };
 
-ObjHandle.Transitions["RollDice"] =
+// ---------------------
+// Transition: Dice.Roll
+// ---------------------
+// Moves the dice from it current position to the target position, rolling a random number in the process.
+// {
+//   Type:     "Dice.Roll",
+//   Seed:     int,             // The Seed to use for the Random Numbers used by this Transition.
+//   Bumps:    int,             // How often the Dice will jump, 4 are recommended for short rolls, slightly more for long rolls.
+//   Duration: int,             // How many milliseconds until the transition is finished.
+//   Goal:   {X: int, Y: int} // Position the dice will land on in the end.
+// }
+Dice.Roll = {};
+
+Dice.Roll.Start = function(netstate)
 {
-	OnStart: function(ts, netstate)
+	this.EndTime = this.StartTime + this.Duration;
+	var rng = new DetRNG(this.Seed);
+	var tilt = rng.randInt(1, 2);
+	var lastFrame = { X: this.OriginalState.X, Y: this.OriginalState.Y, Face: undefined, Tilted: tilt, Rotation: this.OriginalState.Rotation, EndTime: this.StartTime};
+	var bounce = rng.randSign() * Math.PI/10;
+	var frames = [];
+	for(var i = 0; i < this.Bumps; i++)
 	{
-		ts.EndTime = ts.StartTime + ts.Duration;
-		var rng = new DetRNG(ts.Seed);
-		var tilt = rng.randInt(1, 2);
-		var lastFrame = { X: ts.Original.X, Y: ts.Original.Y, Face: undefined, Tilted: tilt, Rotation: ts.Original.Rotation, EndTime: ts.StartTime};
-		var bounce = rng.randSign() * Math.PI/10;
-		var frames = [];
-		for(var i = 0; i < ts.Bumps; i++)
-		{
-			var factor = i/(ts.Bumps+1);
-			var frame = {};
-			frame.StartTime = lastFrame.EndTime;
-			frame.EndTime   = ts.StartTime + ts.Duration * factor;
+		var factor = i/(this.Bumps+1);
+		var frame = {};
+		frame.StartTime = lastFrame.EndTime;
+		frame.EndTime   = this.StartTime + this.Duration * factor;
 
-			var startX = lastFrame.X;
-			var startY = lastFrame.Y;
-			var endX   = ts.Original.X*(1-factor) + ts.Target.X*factor;
-			var endY   = ts.Original.Y*(1-factor) + ts.Target.Y*factor;
-			var dist   = Distance(startX, startY, endX, endY);
-			var angle  = Angle2(startX, startY, endX, endY);
-			angle += bounce;
-			bounce += rng.randFloat(-Math.PI/20, Math.PI/20);
-			dist *= (1.2 + factor/2.0);
+		var startX = lastFrame.X;
+		var startY = lastFrame.Y;
+		var endX   = this.OriginalState.X*(1-factor) + this.Goal.X*factor;
+		var endY   = this.OriginalState.Y*(1-factor) + this.Goal.Y*factor;
+		var dist   = Distance(startX, startY, endX, endY);
+		var angle  = Angle2(startX, startY, endX, endY);
+		angle += bounce;
+		bounce += rng.randFloat(-Math.PI/20, Math.PI/20);
+		dist *= (1.2 + factor/2.0);
 
-			frame.X = startX + dist * Math.cos(angle);
-			frame.Y = startY + dist * Math.sin(angle);
-			frame.Rotation = rng.randInt(-40, +40);
+		frame.X = startX + dist * Math.cos(angle);
+		frame.Y = startY + dist * Math.sin(angle);
+		frame.Rotation = rng.randInt(-40, +40);
 
-			do frame.Tilted = rng.randInt(1, ts.Obj.NumFrames-1);
-			while(frame.Tilted === lastFrame.Tilted);
+		do frame.Tilted = rng.randInt(1, this.Target.NumFrames-1);
+		while(frame.Tilted === lastFrame.Tilted);
 
-			do frame.Face = rng.randInt(0, ts.Obj.NumFaces-1);
-			while(lastFrame.Face === frame.Face);
+		do frame.Face = rng.randInt(0, this.Target.NumFaces-1);
+		while(lastFrame.Face === frame.Face);
 
-			frames.push(frame);
-			lastFrame = frame;
-		};
-		// Last frame, final coordinates.
-		ts.Target.StartTime = lastFrame.EndTime;
-		ts.Target.EndTime   = ts.EndTime;
-		ts.Target.Face      = lastFrame.Face;
-		ts.Target.Rotation  = rng.randInt(-40, +40);
-		frames.push(ts.Target);
+		frames.push(frame);
+		lastFrame = frame;
+	};
+	// Last frame, final coordinates.
+	this.Goal.StartTime = lastFrame.EndTime;
+	this.Goal.EndTime   = this.EndTime;
+	this.Goal.Face      = lastFrame.Face;
+	this.Goal.Rotation  = rng.randInt(-40, +40);
+	frames.push(this.Goal);
 
-		ts.LastFrame = {};
-		ts.LastFrame.X = ts.Original.X;
-		ts.LastFrame.Y = ts.Original.Y;
+	this.LastFrame = {};
+	this.LastFrame.X = this.OriginalState.X;
+	this.LastFrame.Y = this.OriginalState.Y;
 
-		ts.Frames = frames;
-		ts.Obj.Tilted = tilt;
-		ts.Obj.Z = 1000;
+	this.Frames        = frames;
+	this.Target.Tilted = tilt;
 
-		PlaySound("Library/diceThrow1.ogg");
-	},
-	OnGameTick: function(ts, time, netstate)
+	PlaySound("Library/diceThrow1.ogg");
+};
+
+Dice.Roll.GameTick = function(time, netstate)
+{
+	console.log(this, time);
+	var curFrame = this.Frames[0];
+
+	this.Target.X = linear2(this.LastFrame.X, curFrame.X, time, curFrame.StartTime, curFrame.EndTime);
+	this.Target.Y = linear2(this.LastFrame.Y, curFrame.Y, time, curFrame.StartTime, curFrame.EndTime);
+
+	if(time > curFrame.EndTime)
 	{
-		var curFrame = ts.Frames[0];
-
-		ts.Obj.X = linear2(ts.LastFrame.X, curFrame.X, time, curFrame.StartTime, curFrame.EndTime);
-		ts.Obj.Y = linear2(ts.LastFrame.Y, curFrame.Y, time, curFrame.StartTime, curFrame.EndTime);
-
-		if(time > curFrame.EndTime)
-		{
-			ts.Frames.shift();
-			ts.LastFrame = curFrame;
-			ts.Obj.CurrentFace = curFrame.Face;
-			ts.Obj.Rotation = curFrame.Rotation;
-			ts.Obj.Tilted   = curFrame.Tilted;
-		}
-		if(time > ts.EndTime)
-			return 1;
-	},
-	OnEnd: function(ts, netstate)
-	{
-		ts.Obj.Tilted = 0;
-		ts.Obj.X = ts.Target.X;
-		ts.Obj.Y = ts.Target.Y;
-		ts.Obj.Rotation = ts.Target.Rotation;
-		ts.Obj.CurrentFace = ts.Target.Face;
+		this.Frames.shift();
+		this.LastFrame = curFrame;
+		this.Target.CurrentFace = curFrame.Face;
+		this.Target.Rotation = curFrame.Rotation;
+		this.Target.Tilted   = curFrame.Tilted;
 	}
-}
+	if(time > this.EndTime)
+		return 1;
+};
+
+Dice.Roll.Finish = function(netstate)
+{
+	this.Target.Tilted = 0;
+	this.Target.X = this.Goal.X;
+	this.Target.Y = this.Goal.Y;
+	this.Target.Rotation = this.Goal.Rotation;
+	this.Target.CurrentFace = this.Goal.Face;
+	//this.Target.Z = gInterface.CalcTopZIndexFor(this.Handle)+1; // Terrible Hack.
+};

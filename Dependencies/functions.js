@@ -272,3 +272,17 @@ function PlaySound(src)
   var audio = new Audio(src);
   audio.play();
 }
+
+// Resolve the string "A.B.C" to the value of obj.A.B.C
+function DereferenceDotSyntax(obj, str)
+{
+  var keys = str.split('.');
+  for(var x = 0; x < keys.length; x++)
+  {
+    var result = obj[keys[x]];
+    if(result === undefined)
+      return undefined;
+    obj = result;
+  }
+  return obj;
+}

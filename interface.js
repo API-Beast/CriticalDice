@@ -66,15 +66,15 @@ Interface.prototype.OnKeyPress = function(e)
 	if(e.which === 67 && e.ctrlKey)
 	{
 		if(this.Selection)
-			SetStored("clipboard", this.Selection.Data);
+			SetStored("clipboard", this.Selection.State);
 	}
 	// Cut
 	if(e.which === 88 && e.ctrlKey)
 	{
 		if(this.Selection)
 		{
-			SetStored("clipboard", this.Selection.Data);
-			this.NetState.RemoveObject(this.Selection.Data);
+			SetStored("clipboard", this.Selection.State);
+			this.NetState.RemoveObject(this.Selection.State);
 		}
 	}
 	// Paste
@@ -96,26 +96,31 @@ Interface.prototype.OnKeyPress = function(e)
 Interface.prototype.ExecuteAction = function(object, action, mouseX, mouseY)
 {
 	var act = {};
-	act.Handle  = object;
-	act.Obj     = object.Data;
-	act.Original = Merge(object.Data);
-	act.Result  = {};
-	act.Type    = action;
-	console.log("Start action ", action.Label);
+	var prototype = DereferenceDotSyntax(ObjHandle.Types, action);
+	Object.setPrototypeOf(act, prototype);
+
+	act.Handle   = object;
+	act.Target   =
+	{
+		State: object.State,
+		Handle: object,
+		OffsetX: 0,
+		OffsetY: 0,
+		OriginalState: Merge(object.State)
+	};
 
 	var rect = object.Div.getBoundingClientRect();
+	act.StartX  = mouseX;
+	act.StartY  = mouseY;
 	act.CenterX = (rect.left + rect.right)/2;
 	act.CenterY = (rect.top  + rect.bottom)/2;
 
 	this.CurrentAction = act;
 
-	if(action.Type === "Single")
-	{
-		this.ActionCallBack("OnExecute", this.CurrentAction, mouseX, mouseY);
-		this.CurrentAction = null;
-	}
-	else
-		this.ActionCallBack("OnStartGrab", this.CurrentAction, mouseX, mouseY);
+	if(action.Type === "ClickOnce" && act.Execute)
+		act.Execute(this.CurrentAction.Target, mouseX, mouseY, this, this.NetState);
+	else if(act.Start)
+		act.Start(this.CurrentAction.Target, mouseX, mouseY, this.NetState);
 };
 
 Interface.prototype.UpdateActionBar = function()
@@ -139,9 +144,12 @@ Interface.prototype.FillMenu = function(div, obj, menu)
 {
 	for(var i = 0; i < menu.length; i++)
 	{
-		var act = ObjHandle.Actions[menu[i]];
+		var act = menu[i];
+		var prototype = DereferenceDotSyntax(ObjHandle.Types, act);
+		if(!prototype) continue;
+
 		var span = document.createElement('span');
-		span.className = "item fa "+act.Icon;
+		span.className = "item fa "+prototype.Icon;
 		div.appendChild(span);
 
 		var mdown = function(act, obj, e)
@@ -323,7 +331,7 @@ Interface.prototype.OnClick = function(obj, e)
 	e.stopImmediatePropagation();
 	e.preventDefault();
 
-	this.ExecuteAction(obj, ObjHandle.Actions[obj.Type.ClickAction], e.pageX, e.pageY);
+	this.ExecuteAction(obj, obj.Type.ClickAction, e.pageX, e.pageY);
 
 	this.Selection = obj;
 	this.UpdateActionBar();
@@ -341,7 +349,11 @@ Interface.prototype.OnMove = function(e)
 
 	if(this.CurrentAction === null) return false;
 
-	this.ActionCallBack("OnGrabbing", this.CurrentAction, e.pageX, e.pageY);
+	if(this.CurrentAction.Update)
+	{
+		this.CurrentAction.Update(this.CurrentAction.Target, e.pageX, e.pageY, this, this.NetState);
+		this.CurrentAction.Target.Handle.updateHTML(this);
+	}
 };
 
 Interface.prototype.GameLoop = function()
@@ -355,40 +367,22 @@ Interface.prototype.OnRelease = function(e)
 	if(this.CurrentAction === null) return false;
 
 	e.preventDefault();
-	this.ActionCallBack("OnStopGrab", this.CurrentAction, e.pageX, e.pageY);
+
+	if(this.CurrentAction.Finish)
+		this.CurrentAction.Finish(this.CurrentAction.Target, e.pageX, e.pageY, this, this.NetState);
+
 	this.CurrentAction = null;
 };
-
-Interface.prototype.ActionCallBack = function(fname, act)
-{
-	var fn = act.Type[fname];
-	var args = Array.prototype.slice.call(arguments, 1);
-	var prevResult = act.Result;
-	act.Result = {};
-	args.push(this);
-	args.push(this.NetState);
-	// Note, fname is ignored, act is not.
-
-	if(fn)
-	{
-		fn.apply(this, args);
-		if(!IsEmptyObject(act.Result))
-		{
-			var delta = Merge(prevResult, act.Result);
-			this.NetState.Objects.Update(act.Obj, delta);
-		}
-	}
-}
 
 Interface.prototype.SetCenterPos = function(handle, x, y)
 {
 	var rect    = handle.Div.getBoundingClientRect();
 	var centerX = (rect.left + rect.right)/2;
 	var centerY = (rect.top  + rect.bottom)/2;
-	var dataX   = handle.Data.X;
-	var dataY   = handle.Data.Y;
+	var dataX   = handle.State.X;
+	var dataY   = handle.State.Y;
 	var delta   = {X: x + (dataX - centerX), Y: y + (dataY - centerY)};
-	this.NetState.Objects.Update(handle.Data, delta);
+	this.NetState.Objects.Update(handle.State, delta);
 };
 
 Interface.prototype.CalcTopZIndexFor = function(target)
@@ -417,12 +411,12 @@ Interface.prototype.CalcTopZIndexFor = function(target)
 
     if(ele)
     if(ele.GameHandle)
-  	if(z < ele.GameHandle.Data.Z)
+  	if(z < ele.GameHandle.State.Z)
   	{
   		// Ignore too small elements, they should stay on top.
 	    if((ele.getBoundingClientRect().width < rect.width/2))
 	    	continue;
-	    z = ele.GameHandle.Data.Z;
+	    z = ele.GameHandle.State.Z;
   	}
   };
 

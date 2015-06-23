@@ -5,8 +5,8 @@
 // ------
 
 // Origin flags.
-var SOURCE_INTERFACE = 0;
-var SOURCE_NETWORK   = 1; // If the origin is the network, it won't be broadcast
+var BROADCAST = 0;
+var NO_BROADCAST = 1;
 
 /*
 class NetState
@@ -16,7 +16,7 @@ class NetState
 
   void Leave();                    // Disconnect from all peers in the current session.
   void ChangeNick(newNick);        // Inform all other peers that your nick has changed.
-  void SetState(newState, origin); // Set state. This will be broadcast to all other peers unless origin is SOURCE_NETWORK.
+  void SetState(newState, origin); // Set state. This will be broadcast to all other peers unless origin is NO_BROADCAST.
   void Broadcast(packet);          // Send the packet to all other peers you are connected to.
   void StatusText(str, ...);       // Display a status text, this has internal purposes and won't be broadcast.
 
@@ -31,7 +31,7 @@ class NetState
 
   class Objects
   {
-    // All these will be broadcast to all other peers unless origin is SOURCE_NETWORK.
+    // All these will be broadcast to all other peers unless origin is NO_BROADCAST.
     object Create(blueprint, id, origin); // Register a new game object.
     void Update(object, delta, origin);   // Apply the delta to the object.
     void Remove(object, origin);          // Remove the object from the State again
@@ -119,7 +119,7 @@ NetState.prototype.SetState = function(newState, flags)
 {
   this.State = newState;
 
-  if(!(flags & SOURCE_NETWORK))
+  if(!(flags & NO_BROADCAST))
     this.Broadcast(["SetState", newState]);
 
   CallAll(this.OnStateReset, this.State);
@@ -219,7 +219,7 @@ NetState.prototype.OnDataReceived = function(conn, pack)
 
   if(type === "SetState")
   {
-    this.SetState(pack[1], SOURCE_NETWORK);
+    this.SetState(pack[1], NO_BROADCAST);
     return;
   }
 }

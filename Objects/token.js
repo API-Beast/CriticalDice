@@ -1,50 +1,58 @@
 "use strict";
 
-ObjHandle.Types["Token"] = 
+// ----------
+// Type: Token
+// ----------
+var Token =
 {
-	Mode: "Simple",
-	ClickAction: "Move",
-	MenuActions: ["Rotate", "Scale", "Delete"],
-	Initialize: function(handle)
+	ClickAction: "Common.Move",
+	MenuActions: ["Common.Move", "Common.Rotate", "Common.Remove"],
+	Inheritance: ["Common"]
+};
+ObjHandle.RegisterObjectType("Token", Token);
+
+Token.Initialize = function()
+{
+	this.State.Texture = this.State.Texture || null;
+	if(!this.State.Texture)
 	{
-		handle.Data.Texture = handle.Data.Texture || null;
-		if(!handle.Data.Texture)
-		{
-			handle.Data.Width   = handle.Data.Width  || 64;
-			handle.Data.Height  = handle.Data.Height || 64;
-		}
-	},
-	OnUpdate: function(handle)
+		this.State.Width   = this.State.Width  || 64;
+		this.State.Height  = this.State.Height || 64;
+	}
+};
+
+Token.UpdateState = function()
+{
+	if(!this.State.Texture)
 	{
-		if(!handle.Data.Texture)
-		{
-			handle.Data.Width   = handle.Data.Width  || 64;
-			handle.Data.Height  = handle.Data.Height || 64;
-		}
-		else
-		{
-			delete handle.Data.Width;
-			delete handle.Data.Height;
-		}
-	},
-	InitHTML: function(handle, div)
+		this.State.Width   = this.State.Width  || 64;
+		this.State.Height  = this.State.Height || 64;
+	}
+	else
 	{
-		handle.Img = document.createElement("img");
-		div.appendChild(handle.Img);
-		div.classList.add('token');
-	},
-	UpdateHTML: function(handle, div)
+		delete this.State.Width;
+		delete this.State.Height;
+	}
+};
+
+Token.InitHTML = function(div)
+{
+	this.Img = document.createElement("img");
+	div.appendChild(this.Img);
+	div.classList.add('token');
+};
+
+Token.UpdateHTML = function(div)
+{
+	if(this.State.Texture)
 	{
-		if(handle.Data.Texture)
-		{
-			div.classList.remove('placeholder');
-			handle.Img.src = handle.Data.Texture;
-		}
-		else
-		{
-			if(handle.PlaceholderSrc)
-				handle.Img.src = handle.PlaceholderSrc;
-			div.classList.add('placeholder');
-		}
+		div.classList.remove('placeholder');
+		this.Img.src = this.State.Texture;
+	}
+	else
+	{
+		if(this.PlaceholderSrc)
+			this.Img.src = this.PlaceholderSrc;
+		div.classList.add('placeholder');
 	}
 };
