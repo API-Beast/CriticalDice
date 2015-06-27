@@ -23,7 +23,7 @@ class NetState
   State = {};
 
   signal OnEtablishedSession(peerID); // This signal is send when the network is initialized and ready to be used.
-  
+
                                       // peerID is the ID that was assigned to this computer.
   signal OnStatusText(htmlText);      // Is send whenever a status message should be displayed to the user.
   signal OnStateReset(newState);      // Is send whenever the state is overwritten.
@@ -65,8 +65,7 @@ var NetState = function(name, id)
   this.OnStateReset = [];
 
   this.State = {};
-  this.Objects     = new NetState.Objects(this);
-  this.Transitions = new NetState.Transitions(this);
+  this.Script = new NetState.Script(this);
 
   this.ClockStart = window.performance.now();
 }
@@ -83,7 +82,7 @@ NetState.prototype.Join = function(id, timeoutfn)
     {
       this.Peers[id] = conn;
       this.StatusText("Joined <b>{0}</b>'s Session.", conn.metadata.Nick);
-      conn.send(["JoinSession"]); 
+      conn.send(["JoinSession"]);
     }.bind(this));
   setTimeout(
     function() {
@@ -118,9 +117,9 @@ NetState.prototype.ChangeNick = function(newName)
 NetState.prototype.SetState = function(newState, flags)
 {
   this.State = newState;
+  this.Script.StateReset(newState);
 
-  if(!(flags & NO_BROADCAST))
-    this.Broadcast(["SetState", newState]);
+  if(!(flags & NO_BROADCAST)) this.Broadcast(["SetState", newState]);
 
   CallAll(this.OnStateReset, this.State);
 };
@@ -141,8 +140,7 @@ NetState.prototype.GameTick = function(ui)
   var time = this.Clock();
   var deltaTime = time - this.LastTick;
 
-  this.Objects.GameTick(time, ui);
-  this.Transitions.GameTick(time, ui);
+  this.Script.GameTick(time, ui);
 
   this.LastTick = time;
 };
@@ -175,10 +173,9 @@ NetState.prototype.OnPeerDisconnected = function(conn)
 NetState.prototype.OnDataReceived = function(conn, pack)
 {
   console.log(pack);
-  
+
   var type = pack[0];
-  if(type === "Objects")     this.Objects    .HandlePackage(pack[1], pack.slice(2));
-  if(type === "Transitions") this.Transitions.HandlePackage(pack[1], pack.slice(2));
+  if(type === "Script") this.Script.HandlePackage(pack[1], pack.slice(2));
 
   if(type === "JoinSession")
   {

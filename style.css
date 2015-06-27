@@ -166,6 +166,9 @@ body
 
 .obj {
     /* image-rendering: pixelated; */
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 .obj.player {

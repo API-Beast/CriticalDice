@@ -7,9 +7,10 @@ var Dice =
 {
 	ClickAction: "Dice.Throw",
 	MenuActions: ["Common.Move", "Common.Rotate", "Common.Remove"],
-	Inheritance: ["Common"]
+	Inheritance: ["Common"],
+	Interface:   "Object"
 };
-ObjHandle.RegisterObjectType("Dice", Dice);
+Script.Register("Dice", Dice);
 
 
 Dice.Initialize = function()
@@ -18,8 +19,9 @@ Dice.Initialize = function()
 	this.State.CurrentFace = this.State.CurrentFace || rng.randInt(1, this.State.NumFrames-1);
 }
 
-Dice.InitHTML = function(div)
+Dice.InitHTML = function()
 {
+	var div = this.HTMLDiv;
 	div.classList.add("die");
 
 	this.Result = document.createElement("span");
@@ -31,8 +33,9 @@ Dice.InitHTML = function(div)
 	div.appendChild(this.Overlay);
 }
 
-Dice.UpdateHTML = function(div)
+Dice.UpdateHTML = function()
 {
+	var div = this.HTMLDiv;
 	if(this.State.Tilted)
 	{
 		div.style.backgroundImage = "url("+this.State.Face+")";
@@ -65,11 +68,12 @@ Dice.Throw =
 {
 	Label: "Roll",
 	Type : "MultiDrag",
-	Icon : "fa-random"
+	Icon : "fa-random",
+	Interface: "Action"
 };
 
 
-Dice.Throw.Update = function(target, x, y, ui, netstate)
+Dice.Throw.Update = function(target, x, y)
 {
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
@@ -78,7 +82,7 @@ Dice.Throw.Update = function(target, x, y, ui, netstate)
 	target.State.Z = ui.CalcTopZIndexFor(this.Handle)+1;
 };
 
-Dice.Throw.Finish = function(target, x, y, ui, netstate)
+Dice.Throw.Finish = function(target, x, y)
 {
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
@@ -86,7 +90,7 @@ Dice.Throw.Finish = function(target, x, y, ui, netstate)
 	target.State.Y = target.OriginalState.Y + deltaY;
 
 	var dist  = Distance(0, 0, deltaX, deltaY);
-	var angle = Angle2(0, 0, deltaX, deltaY); 
+	var angle = Angle2(0, 0, deltaX, deltaY);
 
 	if(dist > 10)
 	{
@@ -95,8 +99,8 @@ Dice.Throw.Finish = function(target, x, y, ui, netstate)
 		var goalX = target.State.X + (Math.cos(angle) * dist);
 		var goalY = target.State.Y + (Math.sin(angle) * dist);
 
-		var transition = {Type: "Dice.Roll", Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
-		netstate.Transitions.Create(target.State, transition);
+		var transition = {Type: "Dice.Roll", Target: target.State.ID, Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
+		Script.API.NetState.Script.Create("Transition", transition);
 	}
 };
 
@@ -111,7 +115,7 @@ Dice.Throw.Finish = function(target, x, y, ui, netstate)
 //   Duration: int,             // How many milliseconds until the transition is finished.
 //   Goal:   {X: int, Y: int} // Position the dice will land on in the end.
 // }
-Dice.Roll = {};
+Dice.Roll = {Interface: "Transition"};
 
 Dice.Roll.Start = function(netstate)
 {

@@ -121,7 +121,7 @@ function GetDocumentOffset(obj)
   	left += obj.offsetLeft;
   	top  += obj.offsetTop;
   	obj   = obj.offsetParent;
-  } 
+  }
   return [left, top];
 }
 
@@ -134,7 +134,7 @@ function LoadTextFiles(relPath, src, callback)
 		var finished = function()
 		{
 			numFiles--;
-			callback(this.responseText, numFiles, _file); 
+			callback(this.responseText, numFiles, _file);
 		}
 
 		var request = new XMLHttpRequest();
@@ -274,15 +274,68 @@ function PlaySound(src)
 }
 
 // Resolve the string "A.B.C" to the value of obj.A.B.C
-function DereferenceDotSyntax(obj, str)
+function DereferenceDotSyntax(obj, str, create)
 {
   var keys = str.split('.');
   for(var x = 0; x < keys.length; x++)
   {
     var result = obj[keys[x]];
     if(result === undefined)
-      return undefined;
+        return undefined;
+
     obj = result;
   }
   return obj;
 }
+
+// Resolve the string "A.B.C" to the value of obj.A.B.C
+function DotSyntaxSetValue(obj, str, value)
+{
+  var keys = str.split('.');
+  for(var x = 0; x < keys.length-1; x++)
+  {
+    var result = obj[keys[x]];
+    if(result === undefined)
+        result = obj[keys[x]] = {};
+    obj = result;
+  }
+  obj[keys[keys.length-1]] = value;
+}
+
+var ClaimInheritance = function(first, inherited)
+{
+  for(var key in inherited)
+  {
+    if(first[key])
+    {
+      if(inherited[key] === first[key]) // The same, do nothing.
+      {
+        continue;
+      }
+      else if(typeof(first[key]) === "function") // A function, extend.
+      {
+        var combined = function (fn, fn2)
+        {
+          return function()
+            {
+              fn2.apply(this, arguments);
+              return fn.apply(this, arguments);
+            };
+        }
+
+        first[key] = combined(first[key], inherited[key]);
+      }
+      else if(typeof(first[key]) === "object") // A object, make it inherit too.
+      {
+        first[key] = ClaimInheritance(first[key], inherited[key]);
+      }
+      // Any other type: first[key] overwrites inherited[key]
+      else
+      {
+        continue;
+      }
+    }
+    else
+      first[key] = inherited[key];
+  }
+};

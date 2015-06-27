@@ -3,8 +3,8 @@
 // ------------
 // Type: Common
 // ------------
-var Common = {};
-ObjHandle.RegisterObjectType("Common", Common);
+var Common = { Interface: "Object" };
+Script.Register("Common", Common);
 
 Common.Initialize = function()
 {
@@ -17,21 +17,19 @@ Common.Initialize = function()
 	this.State.ScaleY   = this.State.ScaleY   || 1;
 }
 
-Common.UpdateHTML = function(div)
+Common.UpdateHTML = function()
 {
-	this.Div.style.position = "absolute";
-	this.Div.style.left = this.State.X+"px";
-	this.Div.style.top  = this.State.Y+"px";
-	this.Div.style.zIndex = this.State.Z;
+	var div = this.HTMLDiv;
 
 	var transform = "";
+	transform += "translate3d("+Math.floor(this.State.X)+"px, "+Math.floor(this.State.Y)+"px, "+this.State.Z+"px) ";
 	transform += "scaleX("+this.State.ScaleX+") ";
 	transform += "scaleY("+this.State.ScaleY+") ";
 	transform += "rotate("+this.State.Rotation+"deg) ";
-	this.Div.style.transform = transform;
+	div.style.transform = transform;
 
-	if(this.State.Width  !== undefined) this.Div.style.width  = this.State.Width +"px";
-	if(this.State.Height !== undefined) this.Div.style.height = this.State.Height+"px";
+	if(this.State.Width  !== undefined) div.style.width  = this.State.Width +"px";
+	if(this.State.Height !== undefined) div.style.height = this.State.Height+"px";
 }
 
 // ------------------
@@ -42,30 +40,37 @@ Common.Move =
 	Label: "Move",
 	Type : "MultiDrag",
 	Icon : "fa-arrows",
-	Shortcut: 71 // "g"	
+	Shortcut: 71, // "g"
+	Interface: "Action"
 };
 
-Common.Move.Update = function(target, x, y, ui, netstate)
+Common.Move.Update = function(target, x, y)
 {
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
 	target.State.X = target.OriginalState.X + deltaX;
 	target.State.Y = target.OriginalState.Y + deltaY;
+	if(target.State.X === NaN)
+	{
+		console.error(target.State.X, NaN, this, arguments);
+		target.State.X = 0;
+		target.State.Y = 0;
+	}
 
 	if(Math.abs(deltaX) > 150 || Math.abs(deltaY) > 150)
 	{
 		this.DropOnTop  = true;
 		target.State.Hovering = true;
-		target.State.Z = ui.CalcTopZIndexFor(target.Handle)+1;
+		//target.State.Z = Script.API.Interface.CalcTopZIndexFor(target.Handle)+1;
 	}
 };
 
-Common.Move.Finish = function(target, x, y, ui, netstate)
+Common.Move.Finish = function(target, x, y)
 {
-	this.Update(target, x, y, ui, netstate);
+	this.Update(target, x, y);
 	if(this.DropOnTop)
 	{
-		target.State.Z = ui.CalcTopZIndexFor(target.Handle)+1;
+		//target.State.Z = Script.API.Interface.CalcTopZIndexFor(target.Handle)+1;
 		target.State.Hovering = false;
 	}
 };
@@ -79,11 +84,12 @@ Common.Rotate =
 	Type : "MultiDrag",
 	Icon : "fa-rotate-right",
 	Shortcut: 82, // "r"
+	Interface: "Action"
 };
 
-Common.Rotate.Update = function(target, x, y, ui, netstate)
+Common.Rotate.Update = function(target, x, y)
 {
-	var angle    = Angle(this.CenterX, this.CenterY, x, y);
+	var angle    =    Angle(this.CenterX, this.CenterY, x, y);
 	var distance = Distance(this.CenterX, this.CenterY, x, y);
 
 	if(!this.StartAngle && distance > 7.5)
@@ -112,19 +118,21 @@ Common.Scale =
 	Type : "MultiDrag",
 	Icon : "fa-expand",
 	Shortcut: 83, // "s"
+	Interface: "Action"
 };
 
-Common.Scale.Init = function(x, y, ui, netstate)
+Common.Scale.Init = function(x, y)
 {
-	this.StartDistance = Distance(this.CenterX, this.CenterY, x, y);
+	this.StartDistance = Distance(this.CenterX, this.CenterY, this.StartX, this.StartY);
 };
 
-Common.Scale.Update = function(target, x, y, ui, netstate) 
+Common.Scale.Update = function(target, x, y)
 {
 	var distanceFactor = Distance(this.CenterX, this.CenterY, x, y) / this.StartDistance;
+	distanceFactor = Round(distanceFactor, 0.25);
 
-	target.State.ScaleX = target.Original.ScaleX * distanceFactor;
-	target.State.ScaleY = target.Original.ScaleY * distanceFactor;
+	target.State.ScaleX = target.OriginalState.ScaleX * distanceFactor;
+	target.State.ScaleY = target.OriginalState.ScaleY * distanceFactor;
 
 	target.State.X = this.CenterX + target.OffsetX * distanceFactor;
 	target.State.Y = this.CenterY + target.OffsetY * distanceFactor;
@@ -137,10 +145,11 @@ Common.Resize =
 {
 	Label: "Resize",
 	Type : "MultiDrag",
-	Icon : "fa-compress"
+	Icon : "fa-compress",
+	Interface: "Action"
 };
 
-Common.Resize.Update = function(target, x, y, ui, netstate)
+Common.Resize.Update = function(target, x, y)
 {
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
@@ -158,9 +167,10 @@ Common.Remove =
 	Type: "ClickOnce",
 	Icon: "fa-remove",
 	Shortcut: 46, // Delete-Key
+	Interface: "Action"
 };
 
-Common.Remove.Execute = function(target, x, y, ui, netstate)
+Common.Remove.Execute = function(target)
 {
-	netstate.Objects.Remove(target.State, NO_BROADCAST);
+	Script.API.NetState.Script.Remove(target.Handle, NO_BROADCAST);
 }

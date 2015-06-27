@@ -6,10 +6,11 @@
 var Token =
 {
 	ClickAction: "Common.Move",
-	MenuActions: ["Common.Move", "Common.Rotate", "Common.Remove"],
-	Inheritance: ["Common"]
+	MenuActions: ["Common.Move", "Common.Rotate", "Common.Scale", "Common.Remove"],
+	Inheritance: ["Common"],
+	Interface:   "Object"
 };
-ObjHandle.RegisterObjectType("Token", Token);
+Script.Register("Token", Token);
 
 Token.Initialize = function()
 {
@@ -35,15 +36,17 @@ Token.UpdateState = function()
 	}
 };
 
-Token.InitHTML = function(div)
+Token.InitHTML = function()
 {
+	var div = this.HTMLDiv;
 	this.Img = document.createElement("img");
 	div.appendChild(this.Img);
 	div.classList.add('token');
 };
 
-Token.UpdateHTML = function(div)
+Token.UpdateHTML = function()
 {
+	var div = this.HTMLDiv;
 	if(this.State.Texture)
 	{
 		div.classList.remove('placeholder');

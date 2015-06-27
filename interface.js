@@ -22,19 +22,18 @@ var Interface = function(netstate)
 	this.NetState      = netstate;
 	this.CurrentAction = null;
 	this.Selection     = null;
-	this.Handles       = Object.create(null);
-	this.Transitions   = Object.create(null);
 	this.ActionBar     = null;
 	this.MouseX        = 0;
 	this.MouseY        = 0;
+	Script.API.Interface = this;
 }
 
 Interface.prototype.Init = function(table, svgLayer)
 {
 	this.Table = table;
-	this.NetState.Objects.OnUpdate  .push(this.OnObjectChange  .bind(this));
-	this.NetState.Objects.OnCreation.push(this.OnObjectCreation.bind(this));
-	this.NetState.Objects.OnRemoval .push(this.OnObjectRemoval .bind(this));
+	this.NetState.Script.OnUpdate  .push(this.OnObjectChange  .bind(this));
+	this.NetState.Script.OnCreation.push(this.OnObjectCreation.bind(this));
+	this.NetState.Script.OnRemoval .push(this.OnObjectRemoval .bind(this));
 
 	this.NetState.OnStateReset.push(this.OnStateReset.bind(this));
 
@@ -62,6 +61,9 @@ Interface.prototype.OnKeyPress = function(e)
 {
 	if(e.repeat) return;
 
+	// ---------
+	// TODO: Fix
+	// ---------
 	// Copy
 	if(e.which === 67 && e.ctrlKey)
 	{
@@ -86,41 +88,26 @@ Interface.prototype.OnKeyPress = function(e)
 		{
 			copy.X = this.MouseX;
 			copy.Y = this.MouseY;
-			this.NetState.Objects.Create(copy);
+			this.NetState.Script.Create(copy);
 			var handle = this.Handles[copy.ID];
 			this.SetCenterPos(handle, this.MouseX, this.MouseY);
 		}
 	}
 };
 
-Interface.prototype.ExecuteAction = function(object, action, mouseX, mouseY)
+Interface.prototype.ExecuteAction = function(handle, action, mouseX, mouseY)
 {
-	var act = {};
-	var prototype = DereferenceDotSyntax(ObjHandle.Types, action);
-	Object.setPrototypeOf(act, prototype);
-
-	act.Handle   = object;
-	act.Target   =
-	{
-		State: object.State,
-		Handle: object,
-		OffsetX: 0,
-		OffsetY: 0,
-		OriginalState: Merge(object.State)
+	var rect = handle.HTMLDiv.getBoundingClientRect();
+	var blueprint = {
+		Type:    action,
+		StartX:  mouseX,
+		StartY:  mouseY,
+		CenterX: (rect.left + rect.right )/2,
+		CenterY: (rect.top  + rect.bottom)/2
 	};
-
-	var rect = object.Div.getBoundingClientRect();
-	act.StartX  = mouseX;
-	act.StartY  = mouseY;
-	act.CenterX = (rect.left + rect.right)/2;
-	act.CenterY = (rect.top  + rect.bottom)/2;
-
-	this.CurrentAction = act;
-
-	if(action.Type === "ClickOnce" && act.Execute)
-		act.Execute(this.CurrentAction.Target, mouseX, mouseY, this, this.NetState);
-	else if(act.Start)
-		act.Start(this.CurrentAction.Target, mouseX, mouseY, this.NetState);
+	blueprint.Targets = [];
+	blueprint.Targets.push({ID: handle.State.ID, OffsetX: 0, OffsetY: 0});
+	this.CurrentAction = this.NetState.Script.Create("Action", blueprint);
 };
 
 Interface.prototype.UpdateActionBar = function()
@@ -130,12 +117,12 @@ Interface.prototype.UpdateActionBar = function()
 
 	if(this.Selection)
 	{
-		var mode = this.Selection.Type.Mode;
+		var mode = this.Selection.Mode;
 		if(mode === "Window") return;
 
-		this.Selection.Div.appendChild(this.ActionBar);
+		this.Selection.HTMLDiv.appendChild(this.ActionBar);
 
-		var menu = this.Selection.Type.MenuActions;
+		var menu = this.Selection.MenuActions;
 		this.FillMenu(this.ActionBar, this.Selection, menu);
 	}
 }
@@ -145,7 +132,7 @@ Interface.prototype.FillMenu = function(div, obj, menu)
 	for(var i = 0; i < menu.length; i++)
 	{
 		var act = menu[i];
-		var prototype = DereferenceDotSyntax(ObjHandle.Types, act);
+		var prototype = this.NetState.Script.GetPrototype(act);
 		if(!prototype) continue;
 
 		var span = document.createElement('span');
@@ -169,7 +156,7 @@ Interface.prototype.OnDrop = function(e)
 {
 	e.preventDefault();
 	this.Table.className = "";
-	
+
 	// Prefab-Drop
 	// Internal, we won't get this from outside.
 	var prefab = e.dataTransfer.getData("text/prs.prefab+json");
@@ -178,7 +165,7 @@ Interface.prototype.OnDrop = function(e)
 		prefab = JSON.parse(prefab);
 		prefab.X = e.pageX;
 		prefab.Y = e.pageY;
-		this.NetState.Objects.Create(prefab);
+		this.NetState.Script.Create("Object", prefab);
 		return;
 	}
 
@@ -193,12 +180,12 @@ Interface.prototype.OnDrop = function(e)
 		if(url.match(/.(\.png|\.jpg|\.jpeg|\.gif|\.apng)/))
 		{
 			var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
-			this.NetState.Objects.Create(token);
+			this.NetState.Script.Create("Object", token);
 		}
 		else if(url.match(/.(\.mp3|\.ogg)/))
 		{
 			var player = {Type: "Player", X: e.pageX, Y: e.pageY, Source: url};
-			this.NetState.Objects.Create(player);
+			this.NetState.Script.Create("Object", player);
 		}
 	}
 	else // Firefox sends Images also as Files, o_O, so we have to do a either or
@@ -214,20 +201,20 @@ Interface.prototype.OnDrop = function(e)
 
 				var reader = new FileReader();
 				var token = {Type: "Token", X: e.pageX+(i*40), Y: e.pageY};
-				this.NetState.Objects.Create(token);
+				this.NetState.Script.Create("Object", token);
 
 				var image = new Image();
 				reader.onload = function()
 				{
 					image.onload = function()
 					{
-						self.NetState.Objects.Update(token, {Width: image.width, Height: image.height}, self.InterfaceID);
+						self.NetState.Script.Update(token, {Width: image.width, Height: image.height}, self.InterfaceID);
 					};
 					image.src = reader.result;
 					self.Handles[token.ID].PlaceholderSrc = reader.result;
 				};
 				reader.readAsDataURL(file);
-				
+
 
 				var xhttp = new XMLHttpRequest();
 				var fd    = new FormData();
@@ -241,10 +228,10 @@ Interface.prototype.OnDrop = function(e)
 						if(this.status === 200)
 						{
 							var response = JSON.parse(this.responseText);
-							self.NetState.Objects.Update(token, {Texture: response.data.link}, self.InterfaceID);
+							self.NetState.Script.Update(token, {Texture: response.data.link}, self.InterfaceID);
 						}
 						else
-							self.NetState.Objects.Remove(token, self.InterfaceID);
+							self.NetState.Script.Remove(token, self.InterfaceID);
 					}
 				};
 				xhttp.send(fd);
@@ -253,74 +240,34 @@ Interface.prototype.OnDrop = function(e)
 	}
 };
 
-Interface.prototype.OnObjectChange = function(id)
+Interface.prototype.OnObjectChange = function(iface, handle, oldState, delta)
 {
-	this.Handles[id].updateHTML();
+	if(iface !== "Object") return;
+
+	handle.UpdateState(delta);
+	handle.UpdateHTML(handle.HTMLDiv);
 }
 
-Interface.prototype.OnObjectCreation = function(id, data)
+Interface.prototype.OnObjectCreation = function(iface, handle)
 {
-	var obj = new ObjHandle(data);
-	obj.initHTML(this);
-	this.Table.appendChild(obj.Div);
-	obj.Div.addEventListener('mousedown', this.OnClick.bind(this, obj));
-	obj.Div.addEventListener('dblclick',  this.OnDoubleClick.bind(this, obj));
-	this.Handles[id] = obj;
+	if(iface !== "Object") return;
 
-	var mode = obj.Type.Mode;
-	obj.Div.classList.add(mode);
-	if(mode === "Window")
-	{
-		obj.TitleBar = document.createElement("div");
-		obj.TitleBar.className = "title-bar";
-
-		obj.Title = document.createElement("input");
-		obj.Title.name        = "title";
-		obj.Title.innerHTML   = data.Title;
-		obj.Title.placeholder = "Untitled";
-
-		var stopPropagation = function(e){ e.stopImmediatePropagation(); };
-
-		obj.Title.addEventListener('mousedown', stopPropagation);
-		obj.Title.addEventListener('keydown', stopPropagation);
-
-		obj.TitleBar.appendChild(obj.Title);
-
-		obj.Menu = document.createElement("span");
-		obj.Menu.className = "buttons";
-		obj.TitleBar.appendChild(obj.Menu);
-
-
-		this.FillMenu(obj.Menu, obj, obj.Type.MenuActions);
-
-		if(obj.Div.firstChild)
-			obj.Div.insertBefore(obj.TitleBar, obj.Div.firstChild);
-		else
-			obj.Div.appendChild(obj.TitleBar);
-	}
+	this.Table.appendChild(handle.HTMLDiv);
+	handle.HTMLDiv.addEventListener('mousedown', this.OnClick.bind(this, handle));
+	handle.HTMLDiv.addEventListener('dblclick',  this.OnDoubleClick.bind(this, handle));
 }
 
-Interface.prototype.OnObjectRemoval = function(id)
+Interface.prototype.OnObjectRemoval = function(iface, handle)
 {
-	var div = this.Handles[id].Div;
+	if(iface !== "Object") return;
+
+	var div = handle.HTMLDiv;
 	div.parentNode.removeChild(div);
-	delete this.Handles[id];
 }
 
 Interface.prototype.OnStateReset = function(state)
 {
-	this.Handles = Object.create(null);
-
-  var last;
-  while(last = this.Table.lastChild)
-  	this.Table.removeChild(last);
-
-	for(var id in state.Objects)
-	{
-		if(!Object.hasOwnProperty.call(state.Objects, id)) continue;
-		var obj = state.Objects[id];
-		this.OnObjectCreation(id, obj);
-	}
+	/* TODO */
 }
 
 Interface.prototype.OnClick = function(obj, e)
@@ -331,7 +278,7 @@ Interface.prototype.OnClick = function(obj, e)
 	e.stopImmediatePropagation();
 	e.preventDefault();
 
-	this.ExecuteAction(obj, obj.Type.ClickAction, e.pageX, e.pageY);
+	this.ExecuteAction(obj, obj.ClickAction, e.pageX, e.pageY);
 
 	this.Selection = obj;
 	this.UpdateActionBar();
@@ -349,17 +296,13 @@ Interface.prototype.OnMove = function(e)
 
 	if(this.CurrentAction === null) return false;
 
-	if(this.CurrentAction.Update)
-	{
-		this.CurrentAction.Update(this.CurrentAction.Target, e.pageX, e.pageY, this, this.NetState);
-		this.CurrentAction.Target.Handle.updateHTML(this);
-	}
+	this.CurrentAction.MouseInput(this.NetState.Clock()+100, this.MouseX, this.MouseY);
 };
 
 Interface.prototype.GameLoop = function()
 {
-	this.NetState.GameTick(this);
 	window.requestAnimationFrame(this.GameLoop.bind(this));
+	this.NetState.GameTick(this);
 };
 
 Interface.prototype.OnRelease = function(e)
@@ -368,9 +311,8 @@ Interface.prototype.OnRelease = function(e)
 
 	e.preventDefault();
 
-	if(this.CurrentAction.Finish)
-		this.CurrentAction.Finish(this.CurrentAction.Target, e.pageX, e.pageY, this, this.NetState);
-
+	this.CurrentAction.MouseInput(this.NetState.Clock()+100, e.pageX, e.pageY);
+	this.CurrentAction.FinishTime = this.NetState.Clock()+100;
 	this.CurrentAction = null;
 };
 
@@ -382,16 +324,17 @@ Interface.prototype.SetCenterPos = function(handle, x, y)
 	var dataX   = handle.State.X;
 	var dataY   = handle.State.Y;
 	var delta   = {X: x + (dataX - centerX), Y: y + (dataY - centerY)};
-	this.NetState.Objects.Update(handle.State, delta);
+	this.NetState.Script.Update(handle.State, delta);
 };
 
 Interface.prototype.CalcTopZIndexFor = function(target)
 {
 	// Ignore this object when scanning the stack height.
-	var prevPointerEvents = target.Div.style.pointerEvents;
-  target.Div.style.pointerEvents = 'none';
+	var div = target.HTMLDiv;
+	var prevPointerEvents = div.style.pointerEvents;
+  div.style.pointerEvents = 'none';
 
-  var rect = target.Div.getBoundingClientRect();
+  var rect = div.getBoundingClientRect();
 
   var width   = rect.right - rect.left;
   var height  = rect.bottom - rect.top;
@@ -421,9 +364,9 @@ Interface.prototype.CalcTopZIndexFor = function(target)
   };
 
   if(!prevPointerEvents)
-  	target.Div.style.pointerEvents = '';
+  	div.style.pointerEvents = '';
   else
-  	target.Div.style.pointerEvents = prevPointerEvents;
+  	div.style.pointerEvents = prevPointerEvents;
 
   return z;
 }

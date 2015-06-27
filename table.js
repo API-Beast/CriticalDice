@@ -34,7 +34,7 @@ function GameInit(argument)
 	var nameField = id("name-input");
 	var name = GetStored("nick");
 	if(!name)
-	{ 
+	{
 		name = RandomName();
 		SetStored('nick', name);
 	}
@@ -219,8 +219,14 @@ function SessionInit(id)
 				gNetState.Join(peer, joinNextPeer);
 			else
 			{
-				Status(tr("No peer available. Restoring Auto-Save."));
-				gNetState.SetState(GetSessionStorage("AutoSave"));
+        var autoSave = GetSessionStorage("AutoSave");
+        if(autoSave)
+        {
+          Status(tr("No peer available. Restoring Auto-Save."));
+				  gNetState.SetState(autoSave);
+        }
+        else
+          Status(tr("No Auto-Save that can be restored available."));
 			}
 		};
 		joinNextPeer();
