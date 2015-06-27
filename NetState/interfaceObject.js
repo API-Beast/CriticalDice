@@ -19,6 +19,9 @@ objIface.FixPrototype = function(proto)
 	proto.UpdateHTML   = proto.UpdateHTML   || dummy;
 	proto.UpdateState  = proto.UpdateState  || dummy;
 	proto.Deinitialize = proto.Deinitialize || dummy;
+
+	if(proto.Volatile === undefined)
+		proto.Volatile = false;
 };
 
 objIface.Creation = function(handle)

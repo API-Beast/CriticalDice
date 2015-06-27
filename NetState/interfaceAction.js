@@ -17,12 +17,17 @@ actionIface.FixPrototype = function(proto)
 	proto.Finish  = proto.Finish  || dummy;
 	proto.Undo    = proto.Undo    || dummy;
 	proto.Execute = proto.Execute || dummy;
+
+	// Volatile objects don't have permanent state
+	// and will be destroyed during state resets.
+	if(proto.Volatile === undefined)
+		proto.Volatile = true;
+
 	proto.MouseInput = function(time, x, y)
 	{
 		this.XKeyframes.insert(time, x);
 		this.YKeyframes.insert(time, y);
 	};
-	console.log("Fixing Action ", proto);
 };
 
 actionIface.Creation = function(handle)
@@ -32,7 +37,7 @@ actionIface.Creation = function(handle)
 	for(var i = 0; i < handle.State.Targets.length; i++)
 	{
 		var t = handle.State.Targets[i];
-		handle.Targets[i] = t;
+		handle.Targets[i] = Merge(t);
 		handle.Targets[i].Handle = Script.API.NetState.Script.GetHandleByID(t.ID);
 		handle.Targets[i].State  = handle.Targets[i].Handle.State;
 		handle.Targets[i].OriginalState = Merge(handle.Targets[i].State);

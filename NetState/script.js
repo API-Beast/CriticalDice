@@ -34,7 +34,23 @@ NetState.Script.prototype.Create = function(iface, state, id, flags)
 
 	var proto  = this.GetPrototype(state.Type);
   var handle = Object.create(proto);
-	handle.State = state;
+  var originalState = Merge(state);
+
+  if(handle.Volatile)
+  {
+    ApplyTemplate(handle, state);
+    handle.State = state; // For compatiblity reasons
+  }
+  else
+  {
+    handle.State = state;
+
+    if(!this.Net.State[iface])
+      this.Net.State[iface] = {};
+    this.Net.State[iface][id] = state;
+  }
+  this.Handles[id] = handle;
+  Script.Interfaces[iface].Creation(handle);
 
   if(handle.Interface !== iface)
   {
@@ -42,17 +58,9 @@ NetState.Script.prototype.Create = function(iface, state, id, flags)
     iface = handle.Interface;
   }
 
-  if(!this.Net.State[iface])
-    this.Net.State[iface] = {};
-
-  this.Net.State[iface][id] = state;
-  this.Handles[id]          = handle;
-
-	Script.Interfaces[iface].Creation(handle);
-
 	// Callbacks
   CallAll(this.OnCreation, iface, handle, flags);
-  if(!(flags & NO_BROADCAST)) this.Net.Broadcast(["Script", "Create", iface, state]);
+  if(!(flags & NO_BROADCAST)) this.Net.Broadcast(["Script", "Create", iface, originalState]);
 
   return handle;
 }
@@ -73,9 +81,10 @@ NetState.Script.prototype.Update = function(handle, delta, flags)
 
 NetState.Script.prototype.Remove = function(handle, flags)
 {
-	//
-  delete this.Net.State[handle.Interface][handle.State.ID];
-	delete this.Handles[handle.State.ID];
+  if(!handle.Volatile)
+    delete this.Net.State[handle.Interface][handle.State.ID];
+	
+  delete this.Handles[handle.State.ID];
 	Script.Interfaces[handle.Interface].Deletion(handle);
 
 	// Callbacks

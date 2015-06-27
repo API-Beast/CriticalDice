@@ -79,7 +79,6 @@ Dice.Throw.Update = function(target, x, y)
 	var deltaY = y - this.StartY;
 	target.State.X = target.OriginalState.X + deltaX;
 	target.State.Y = target.OriginalState.Y + deltaY;
-	target.State.Z = ui.CalcTopZIndexFor(this.Handle)+1;
 };
 
 Dice.Throw.Finish = function(target, x, y)
@@ -115,7 +114,7 @@ Dice.Throw.Finish = function(target, x, y)
 //   Duration: int,             // How many milliseconds until the transition is finished.
 //   Goal:   {X: int, Y: int} // Position the dice will land on in the end.
 // }
-Dice.Roll = {Interface: "Transition"};
+Dice.Roll = {Interface: "Transition" };
 
 Dice.Roll.Start = function(netstate)
 {
@@ -166,7 +165,7 @@ Dice.Roll.Start = function(netstate)
 	this.LastFrame.X = this.OriginalState.X;
 	this.LastFrame.Y = this.OriginalState.Y;
 
-	this.Frames        = frames;
+	this.Frames  = frames;
 	this.Target.Tilted = tilt;
 
 	PlaySound("Library/diceThrow1.ogg");
@@ -174,8 +173,10 @@ Dice.Roll.Start = function(netstate)
 
 Dice.Roll.GameTick = function(time, netstate)
 {
-	console.log(this, time);
 	var curFrame = this.Frames[0];
+
+	if(!curFrame || time > this.EndTime)
+		return 1;
 
 	this.Target.X = linear2(this.LastFrame.X, curFrame.X, time, curFrame.StartTime, curFrame.EndTime);
 	this.Target.Y = linear2(this.LastFrame.Y, curFrame.Y, time, curFrame.StartTime, curFrame.EndTime);
@@ -185,11 +186,9 @@ Dice.Roll.GameTick = function(time, netstate)
 		this.Frames.shift();
 		this.LastFrame = curFrame;
 		this.Target.CurrentFace = curFrame.Face;
-		this.Target.Rotation = curFrame.Rotation;
-		this.Target.Tilted   = curFrame.Tilted;
-	}
-	if(time > this.EndTime)
-		return 1;
+		this.Target.Rotation    = curFrame.Rotation;
+		this.Target.Tilted      = curFrame.Tilted;
+	}		
 };
 
 Dice.Roll.Finish = function(netstate)

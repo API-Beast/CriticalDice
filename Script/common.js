@@ -134,8 +134,8 @@ Common.Scale.Update = function(target, x, y)
 	target.State.ScaleX = target.OriginalState.ScaleX * distanceFactor;
 	target.State.ScaleY = target.OriginalState.ScaleY * distanceFactor;
 
-	target.State.X = this.CenterX + target.OffsetX * distanceFactor;
-	target.State.Y = this.CenterY + target.OffsetY * distanceFactor;
+	target.State.X = target.OriginalState.X + target.OffsetX * distanceFactor;
+	target.State.Y = target.OriginalState.Y + target.OffsetY * distanceFactor;
 };
 
 // ------------------

@@ -18,10 +18,19 @@ transIface.FixPrototype = function(proto)
 	proto.GameTick = proto.GameTick || function(){ return true; };
 	proto.Finish   = proto.Finish   || dummy;
 	proto.Reset    = proto.Reset    || dummy;
+
+	// Volatile objects don't have permanent state
+	// and will be destroyed during state resets.
+	if(proto.Volatile === undefined)
+		proto.Volatile = true;
 };
 
 transIface.Creation = function(handle)
 {
+	handle.TargetHandle  = Script.API.NetState.Script.GetHandleByID(handle.State.Target);
+	handle.Target        = handle.TargetHandle.State;
+	handle.OriginalState = Merge(handle.Target);
+	handle.StartTime     = Script.API.NetState.Clock();
 	handle.Start();
 };
 
@@ -33,6 +42,7 @@ transIface.GameTick = function(handle, time)
 		handle.Finished = true;
 		Script.API.NetState.Script.Remove(handle, NO_BROADCAST);
 	}
+	handle.TargetHandle.UpdateHTML();
 };
 
 transIface.Deletion = function(handle)
