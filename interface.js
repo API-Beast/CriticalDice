@@ -37,8 +37,9 @@ Interface.prototype.Init = function(table, svgLayer)
 
 	this.NetState.OnStateReset.push(this.OnStateReset.bind(this));
 
-  this.Table.addEventListener('mousemove', this.OnMove.bind(this));
-  this.Table.addEventListener('mouseup',   this.OnRelease.bind(this));
+	this.MouseMove = this.OnMove.bind(this);
+  this.Table.addEventListener('mousemove', this.MouseMove,    true);
+  this.Table.addEventListener('mouseup',   this.OnRelease.bind(this), true);
 
   // What the actual fucking fuck HTML5?! You have to change className for Grab & Drop to work
   // ...and no, it doesn't work with classList.
@@ -296,13 +297,23 @@ Interface.prototype.OnMove = function(e)
 
 	if(this.CurrentAction === null) return false;
 
-	this.CurrentAction.MouseInput(this.NetState.Clock()+100, this.MouseX, this.MouseY);
+	this.CurrentAction.MouseInput(this.NetState.Clock()+32, this.MouseX, this.MouseY);
+
+	// WORKAROUND
+	// Problem is that Chrome and Firefox will both pump the queue full with MouseMove events
+	// and these events stop the site from redrawing. Causing the animations to be very clunky.
+	// So we limit the mouse move events to one per redraw by stopping to listen.
+	this.Table.removeEventListener('mousemove', this.MouseMove, true);
 };
 
 Interface.prototype.GameLoop = function()
 {
 	window.requestAnimationFrame(this.GameLoop.bind(this));
 	this.NetState.GameTick(this);
+
+	// WORKAROUND ^ See above.
+	this.Table.removeEventListener('mousemove', this.MouseMove, true);
+	this.Table.addEventListener('mousemove',    this.MouseMove, true);
 };
 
 Interface.prototype.OnRelease = function(e)

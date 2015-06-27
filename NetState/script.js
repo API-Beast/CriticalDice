@@ -33,9 +33,8 @@ NetState.Script.prototype.Create = function(iface, state, id, flags)
   state.ID = id;
 
 	var proto  = this.GetPrototype(state.Type);
-  var handle = Object.create(null);
+  var handle = Object.create(proto);
 	handle.State = state;
-	Object.setPrototypeOf(handle, proto);
 
   if(handle.Interface !== iface)
   {

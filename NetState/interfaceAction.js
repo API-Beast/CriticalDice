@@ -58,8 +58,8 @@ actionIface.Creation = function(handle)
 
 actionIface.GameTick = function(handle, time)
 {
-	var x = handle.XKeyframes.get(time);
-	var y = handle.YKeyframes.get(time);
+	var x = Math.round(handle.XKeyframes.get(time));
+	var y = Math.round(handle.YKeyframes.get(time));
 	for(var i = 0; i < handle.Targets.length; i++)
 	{
 		handle.Update(handle.Targets[i], x, y);

@@ -42,9 +42,10 @@ Token.InitHTML = function()
 	this.Img = document.createElement("img");
 	div.appendChild(this.Img);
 	div.classList.add('token');
+	this.UpdateState();
 };
 
-Token.UpdateHTML = function()
+Token.UpdateState = function()
 {
 	var div = this.HTMLDiv;
 	if(this.State.Texture)
@@ -58,4 +59,9 @@ Token.UpdateHTML = function()
 			this.Img.src = this.PlaceholderSrc;
 		div.classList.add('placeholder');
 	}
+}
+
+Token.UpdateHTML = function()
+{
+
 };
