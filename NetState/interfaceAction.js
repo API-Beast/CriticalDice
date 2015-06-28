@@ -37,20 +37,21 @@ actionIface.Creation = function(handle)
 	for(var i = 0; i < handle.State.Targets.length; i++)
 	{
 		var t = handle.State.Targets[i];
-		handle.Targets[i] = Merge(t);
-		handle.Targets[i].Handle = Script.API.NetState.Script.GetHandleByID(t.ID);
-		handle.Targets[i].State  = handle.Targets[i].Handle.State;
-		handle.Targets[i].OriginalState = Merge(handle.Targets[i].State);
+		var c = Merge(t);
+
+		c.Handle        = Script.API.NetState.Script.GetHandleByID(t.ID);
+		c.State         = c.Handle.State;
+		c.OriginalState = Merge(c.State);
+		c.OffsetX       = c.CenterX - handle.State.CenterX;
+		c.OffsetY       = c.CenterY - handle.State.CenterY;
+
+		handle.Targets[i] = c;
 	}
 	var time = Script.API.NetState.Clock();
 	handle.XKeyframes = new KeyFrameMap();
 	handle.YKeyframes = new KeyFrameMap();
 	handle.XKeyframes.insert(time, handle.State.StartX);
 	handle.YKeyframes.insert(time, handle.State.StartY);
-	handle.StartX = handle.State.StartX;
-	handle.StartY = handle.State.StartY;
-	handle.CenterX = handle.State.CenterX;
-	handle.CenterY = handle.State.CenterY;
 
 	handle.Init();
 	if(handle.Type === "ClickOnce")
@@ -75,6 +76,7 @@ actionIface.GameTick = function(handle, time)
 			Script.API.NetState.Script.Remove(handle, NO_BROADCAST);
 		}
 		handle.Targets[i].Handle.UpdateHTML();
+		Script.API.Interface.UpdateSelection();
 	}
 
 	if(handle.XKeyframes.Frames.length > 64)

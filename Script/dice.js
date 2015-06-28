@@ -24,12 +24,16 @@ Dice.InitHTML = function()
 	var div = this.HTMLDiv;
 	div.classList.add("die");
 
+	this.Sprite = document.createElement("span");
+	this.Sprite.classList.add("sprite");
+	div.appendChild(this.Sprite);
+
 	this.Result = document.createElement("span");
-	this.Result.classList.add("result");
+	this.Result.classList.add("sprite");
 	div.appendChild(this.Result);
 
 	this.Overlay = document.createElement("span");
-	this.Overlay.classList.add("overlay");
+	this.Overlay.classList.add("sprite");
 	div.appendChild(this.Overlay);
 }
 
@@ -38,15 +42,15 @@ Dice.UpdateHTML = function()
 	var div = this.HTMLDiv;
 	if(this.State.Tilted)
 	{
-		div.style.backgroundImage = "url("+this.State.Face+")";
-		div.style.backgroundPosition = -(this.State.Tilted*this.State.FaceSize[0])+"px 0px";
+		this.Sprite.style.backgroundImage = "url("+this.State.Face+")";
+		this.Sprite.style.backgroundPosition = -(this.State.Tilted*this.State.FaceSize[0])+"px 0px";
 
 		div.classList.add("tilted");
 	}
 	else
 	{
-		div.style.backgroundImage = "url("+this.State.Face+")";
-		div.style.backgroundPosition = "";
+		this.Sprite.style.backgroundImage = "url("+this.State.Face+")";
+		this.Sprite.style.backgroundPosition = "";
 
 		div.classList.remove("tilted");
 	}
@@ -58,7 +62,7 @@ Dice.UpdateHTML = function()
 	this.Result.style.backgroundPosition = (-(this.State.FaceSize[0]*this.State.Tilted||0))+"px "+(-this.State.FaceSize[0]*this.State.CurrentFace)+"px";
 
 	this.Overlay.style.backgroundImage    = "url("+this.State.Overlay+")";
-	this.Overlay.style.backgroundPosition = div.style.backgroundPosition;
+	this.Overlay.style.backgroundPosition = this.Sprite.style.backgroundPosition;
 }
 
 // ------------------
@@ -158,7 +162,7 @@ Dice.Roll.Start = function(netstate)
 	this.Goal.StartTime = lastFrame.EndTime;
 	this.Goal.EndTime   = this.EndTime;
 	this.Goal.Face      = lastFrame.Face;
-	this.Goal.Rotation  = rng.randInt(-40, +40);
+	this.Goal.Rotation  = rng.randInt(-9, +9)*5;
 	frames.push(this.Goal);
 
 	this.LastFrame = {};
@@ -188,7 +192,7 @@ Dice.Roll.GameTick = function(time, netstate)
 		this.Target.CurrentFace = curFrame.Face;
 		this.Target.Rotation    = curFrame.Rotation;
 		this.Target.Tilted      = curFrame.Tilted;
-	}		
+	}
 };
 
 Dice.Roll.Finish = function(netstate)

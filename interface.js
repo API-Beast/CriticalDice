@@ -21,8 +21,9 @@ var Interface = function(netstate)
 	this.SVGLayer      = null;
 	this.NetState      = netstate;
 	this.CurrentAction = null;
-	this.Selection     = null;
+	this.Selection     = [];
 	this.ActionBar     = null;
+	this.SelectionDiv  = null;
 	this.MouseX        = 0;
 	this.MouseY        = 0;
 	Script.API.Interface = this;
@@ -40,6 +41,7 @@ Interface.prototype.Init = function(table, svgLayer)
 	this.MouseMove = this.OnMove.bind(this);
   this.Table.addEventListener('mousemove', this.MouseMove,    true);
   this.Table.addEventListener('mouseup',   this.OnRelease.bind(this), true);
+	this.Table.addEventListener('mousedown', this.OnTableClick.bind(this), false);
 
   // What the actual fucking fuck HTML5?! You have to change className for Grab & Drop to work
   // ...and no, it doesn't work with classList.
@@ -53,7 +55,12 @@ Interface.prototype.Init = function(table, svgLayer)
   window.requestAnimationFrame(this.GameLoop.bind(this));
 
   this.ActionBar = document.createElement("div");
-  this.ActionBar.className = "actionbar right";
+  this.ActionBar.className = "actionbar";
+
+	this.SelectionDiv = document.createElement("div");
+	this.SelectionDiv.className = "selection";
+	this.Table.appendChild(this.SelectionDiv);
+	this.SelectionDiv.appendChild(this.ActionBar);
 
   this.SVGLayer = svgLayer;
 };
@@ -96,39 +103,105 @@ Interface.prototype.OnKeyPress = function(e)
 	}
 };
 
-Interface.prototype.ExecuteAction = function(handle, action, mouseX, mouseY)
+Interface.prototype.ExecuteAction = function(action, mouseX, mouseY)
 {
-	var rect = handle.HTMLDiv.getBoundingClientRect();
-	var blueprint = {
+	var blueprint =
+	{
 		Type:    action,
 		StartX:  mouseX,
-		StartY:  mouseY,
-		CenterX: (rect.left + rect.right )/2,
-		CenterY: (rect.top  + rect.bottom)/2
+		StartY:  mouseY
 	};
 	blueprint.Targets = [];
-	blueprint.Targets.push({ID: handle.State.ID, OffsetX: 0, OffsetY: 0});
+
+	var selectionRect = undefined;
+	for (var i = 0; i < this.Selection.length; i++)
+	{
+		var handle = this.Selection[i];
+		var rect   = handle.HTMLDiv.getBoundingClientRect();
+		blueprint.Targets.push({ID: handle.State.ID, CenterX: (rect.left + rect.right)/2, CenterY: (rect.top  + rect.bottom)/2});
+
+		if(!selectionRect)
+			selectionRect = { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+		else
+		{
+			selectionRect.left   = Math.min(rect.left,   selectionRect.left);
+			selectionRect.right  = Math.max(rect.right,  selectionRect.right);
+			selectionRect.top    = Math.min(rect.top,    selectionRect.top);
+			selectionRect.bottom = Math.max(rect.bottom, selectionRect.bottom);
+		}
+	}
+	blueprint.CenterX = (selectionRect.left + selectionRect.right)/2;
+	blueprint.CenterY = (selectionRect.top  + selectionRect.bottom)/2;
+
 	this.CurrentAction = this.NetState.Script.Create("Action", blueprint);
 };
 
-Interface.prototype.UpdateActionBar = function()
+Interface.prototype.UpdateSelection = function()
 {
-	RemoveDiv(this.ActionBar);
-	this.ActionBar.innerHTML = "";
-
-	if(this.Selection)
+	if(this.Selection.length === 0)
 	{
-		var mode = this.Selection.Mode;
-		if(mode === "Window") return;
-
-		this.Selection.HTMLDiv.appendChild(this.ActionBar);
-
-		var menu = this.Selection.MenuActions;
-		this.FillMenu(this.ActionBar, this.Selection, menu);
+		this.SelectionDiv.classList.add("empty");
+		return;
 	}
+	this.SelectionDiv.classList.remove("empty");
+
+	if(this.Selection.length === 1)
+		this.SelectionDiv.classList.add("single");
+	else
+		this.SelectionDiv.classList.remove("single");
+
+	this.ActionBar.innerHTML = "";
+	var menu = this.Selection[0].MenuActions;
+	this.FillMenu(this.ActionBar, menu);
+
+	var selectionRect = undefined;
+	for (var i = 0; i < this.Selection.length; i++)
+	{
+		var handle = this.Selection[i];
+		var rect   = handle.HTMLDiv.getBoundingClientRect();
+
+		if(!selectionRect)
+			selectionRect = { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+		else
+		{
+			selectionRect.left   = Math.min(rect.left,   selectionRect.left);
+			selectionRect.right  = Math.max(rect.right,  selectionRect.right);
+			selectionRect.top    = Math.min(rect.top,    selectionRect.top);
+			selectionRect.bottom = Math.max(rect.bottom, selectionRect.bottom);
+		}
+	}
+
+	this.SelectionDiv.style.left   = selectionRect.left;
+	this.SelectionDiv.style.width  = selectionRect.right - selectionRect.left;
+	this.SelectionDiv.style.top    = selectionRect.top;
+	this.SelectionDiv.style.height = selectionRect.bottom - selectionRect.top;
 }
 
-Interface.prototype.FillMenu = function(div, obj, menu)
+Interface.prototype.ClearSelection = function()
+{
+	for(var i = 0; i < this.Selection.length; i++)
+		this.Selection[i].HTMLDiv.classList.remove("selected");
+
+	this.Selection = [];
+}
+
+Interface.prototype.AddToSelection = function(handle)
+{
+	this.Selection.push(handle);
+	handle.HTMLDiv.classList.add("selected");
+}
+
+Interface.prototype.RemoveFromSelection = function(handle)
+{
+	var i = this.Selection.indexOf(handle);
+	if(i!==-1)
+	{
+		this.Selection.splice(i, 1);
+		handle.HTMLDiv.classList.remove("selected");
+	}
+};
+
+Interface.prototype.FillMenu = function(div, menu)
 {
 	for(var i = 0; i < menu.length; i++)
 	{
@@ -140,16 +213,16 @@ Interface.prototype.FillMenu = function(div, obj, menu)
 		span.className = "item fa "+prototype.Icon;
 		div.appendChild(span);
 
-		var mdown = function(act, obj, e)
+		var mdown = function(act, e)
 		{
 			if(e.button !== 0) return false;
 
 			e.stopPropagation();
 			e.preventDefault();
-			this.ExecuteAction(obj, act, e.pageX, e.pageY);
+			this.ExecuteAction(act, e.pageX, e.pageY);
 		};
 
-		span.addEventListener("mousedown", mdown.bind(this, act, obj));
+		span.addEventListener("mousedown", mdown.bind(this, act));
 	};
 }
 
@@ -279,11 +352,35 @@ Interface.prototype.OnClick = function(obj, e)
 	e.stopImmediatePropagation();
 	e.preventDefault();
 
-	this.ExecuteAction(obj, obj.ClickAction, e.pageX, e.pageY);
+	if(e.shiftKey || e.ctrlKey)
+	{
+		if(this.Selection.indexOf(obj) === -1)
+			this.AddToSelection(obj);
+		else
+			this.RemoveFromSelection(obj);
+	}
+	else
+	{
+		if(this.Selection.indexOf(obj) === -1)
+		{
+			this.ClearSelection();
+			this.AddToSelection(obj);
+		}
 
-	this.Selection = obj;
-	this.UpdateActionBar();
+		this.ExecuteAction(obj.ClickAction, e.pageX, e.pageY);
+	}
+
+	this.UpdateSelection();
 };
+
+Interface.prototype.OnTableClick = function(e)
+{
+	if(e.button !== 0) return false;
+	if(this.CurrentAction) return false;
+
+	this.ClearSelection();
+	this.UpdateSelection();
+}
 
 Interface.prototype.OnDoubleClick = function(obj, e)
 {
@@ -327,15 +424,16 @@ Interface.prototype.OnRelease = function(e)
 	this.CurrentAction = null;
 };
 
-Interface.prototype.SetCenterPos = function(handle, x, y)
+Interface.prototype.SetCenterPos = function(handle, x, y, flags)
 {
-	var rect    = handle.Div.getBoundingClientRect();
+	var rect    = handle.HTMLDiv.getBoundingClientRect();
 	var centerX = (rect.left + rect.right)/2;
 	var centerY = (rect.top  + rect.bottom)/2;
 	var dataX   = handle.State.X;
 	var dataY   = handle.State.Y;
-	var delta   = {X: x + (dataX - centerX), Y: y + (dataY - centerY)};
-	this.NetState.Script.Update(handle.State, delta);
+
+	handle.State.X = x + (dataX - centerX);
+	handle.State.Y = y + (dataY - centerY);
 };
 
 Interface.prototype.CalcTopZIndexFor = function(target)

@@ -97,15 +97,17 @@ Common.Rotate.Update = function(target, x, y)
 
 	if(this.StartAngle)
 	{
-		var deltaAngle = angle - this.StartAngle;
+		var deltaAngle = Round(angle - this.StartAngle, 5);
 		target.State.Rotation = target.OriginalState.Rotation + deltaAngle;
 
 		// Angle2 returns radians, Angle degrees.
 		// This is because CSS uses degrees, but Math.sin/Math.cos uses radians.
 		var targetAngle    = Angle2  (0, 0, target.OffsetX, target.OffsetY);
 		var targetDistance = Distance(0, 0, target.OffsetX, target.OffsetY);
-		target.State.X = target.OriginalState.X + Math.cos(targetAngle + deltaAngle) * targetDistance;
-		target.State.Y = target.OriginalState.Y + Math.sin(targetAngle + deltaAngle) * targetDistance;
+		var deltaAngleRad  = deltaAngle / 180 * Math.PI;
+		var x = Math.floor(this.CenterX + Math.cos(targetAngle + deltaAngleRad) * targetDistance);
+		var y = Math.floor(this.CenterY + Math.sin(targetAngle + deltaAngleRad) * targetDistance);
+		Script.API.Interface.SetCenterPos(target.Handle, x, y);
 	}
 };
 
@@ -134,8 +136,9 @@ Common.Scale.Update = function(target, x, y)
 	target.State.ScaleX = target.OriginalState.ScaleX * distanceFactor;
 	target.State.ScaleY = target.OriginalState.ScaleY * distanceFactor;
 
-	target.State.X = target.OriginalState.X + target.OffsetX * distanceFactor;
-	target.State.Y = target.OriginalState.Y + target.OffsetY * distanceFactor;
+	var x = Math.floor(this.CenterX + target.OffsetX * distanceFactor);
+	var y = Math.floor(this.CenterY + target.OffsetY * distanceFactor);
+	Script.API.Interface.SetCenterPos(target.Handle, x, y);
 };
 
 // ------------------
