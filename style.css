@@ -168,7 +168,7 @@ body
   color: rgb(219, 219, 219);
   border: 1px solid black;
   border-radius: 5px;
-  padding: 4px;
+  /* padding: 4px; */
   box-sizing: border-box;
   font-size: 14px;
   left: -3;
@@ -180,7 +180,11 @@ body
 
 .actionbar .item
 {
-  margin: 2px;}
+  /* margin: 2px; */
+  padding: 6px;
+  min-width: 14px;
+  text-align: center;
+}
 
 .obj
 {
@@ -382,4 +386,10 @@ input, button {
 
 .selection.empty {
     display: none;
+}
+
+
+.actionbar.bottom {
+    top: initial;
+    bottom: -31px;
 }

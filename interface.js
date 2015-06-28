@@ -44,9 +44,11 @@ Interface.prototype.Init = function(table, svgLayer)
 	this.NetState.OnStateReset.push(this.OnStateReset.bind(this));
 
 	this.MouseMove = this.OnMove.bind(this);
-  this.Table.addEventListener('mousemove', this.MouseMove,    true);
-  this.Table.addEventListener('mouseup',   this.OnRelease.bind(this), true);
-	this.Table.addEventListener('mousedown', this.OnTableClick.bind(this), false);
+  window.addEventListener('mousemove', this.MouseMove,    true);
+  window.addEventListener('mouseup',   this.OnRelease.bind(this), true);
+
+	this.Table.addEventListener('mousedown',   this.OnTableClick.bind(this), false);
+	this.Table.addEventListener('contextmenu', this.OnContextMenu.bind(this), false);
 
   // What the actual fucking fuck HTML5?! You have to change className for Grab & Drop to work
   // ...and no, it doesn't work with classList.
@@ -171,10 +173,15 @@ Interface.prototype.UpdateSelection = function()
 		}
 	}
 
-	this.SelectionDiv.style.left   = selectionRect.left;
-	this.SelectionDiv.style.width  = selectionRect.right - selectionRect.left;
-	this.SelectionDiv.style.top    = selectionRect.top;
-	this.SelectionDiv.style.height = selectionRect.bottom - selectionRect.top;
+	this.SelectionDiv.style.left   = Math.floor(selectionRect.left);
+	this.SelectionDiv.style.width  = Math.floor(selectionRect.right - selectionRect.left);
+	this.SelectionDiv.style.top    = Math.floor(selectionRect.top);
+	this.SelectionDiv.style.height = Math.floor(selectionRect.bottom - selectionRect.top);
+
+	if(selectionRect.top < 26)
+		this.ActionBar.className = "actionbar bottom";
+	else
+		this.ActionBar.className = "actionbar top";
 }
 
 Interface.prototype.ClearSelection = function()
@@ -372,7 +379,6 @@ Interface.prototype.OnStateReset = function(state)
 
 Interface.prototype.OnClick = function(obj, e)
 {
-	if(e.button !== 0) return false;
 	if(this.CurrentAction) return false;
 
 	e.stopImmediatePropagation();
@@ -393,9 +399,9 @@ Interface.prototype.OnClick = function(obj, e)
 			this.AddToSelection(obj);
 		}
 
-		if(this.PossibleActions.length)
+		if(this.PossibleActions.length > e.button)
 		{
-			this.PrepareAction = this.PossibleActions[0];
+			this.PrepareAction = this.PossibleActions[e.button];
 			this.PreparationX = e.pageX;
 			this.PreparationY = e.pageY;
 		}
@@ -440,7 +446,7 @@ Interface.prototype.OnMove = function(e)
 		// Problem is that Chrome and Firefox will both pump the queue full with MouseMove events
 		// and these events stop the site from redrawing. Causing the animations to be very clunky.
 		// So we limit the mouse move events to one per redraw by stopping to listen.
-		this.Table.removeEventListener('mousemove', this.MouseMove, true);
+		window.removeEventListener('mousemove', this.MouseMove, true);
 	}
 };
 
@@ -450,8 +456,8 @@ Interface.prototype.GameLoop = function()
 	this.NetState.GameTick(this);
 
 	// WORKAROUND ^ See above.
-	this.Table.removeEventListener('mousemove', this.MouseMove, true);
-	this.Table.addEventListener('mousemove',    this.MouseMove, true);
+	window.removeEventListener('mousemove', this.MouseMove, true);
+	window.addEventListener('mousemove',    this.MouseMove, true);
 };
 
 Interface.prototype.OnRelease = function(e)
@@ -460,11 +466,22 @@ Interface.prototype.OnRelease = function(e)
 	if(this.CurrentAction === null) return false;
 
 	e.preventDefault();
+	e.stopPropagation();
 
 	this.CurrentAction.MouseInput(this.NetState.Clock() + this.MouseDelay, e.pageX, e.pageY);
 	this.CurrentAction.FinishTime = this.NetState.Clock() + this.MouseDelay;
 	this.CurrentAction = null;
+	this.PreventContext = true;
 };
+
+Interface.prototype.OnContextMenu = function(e)
+{
+	if(this.PreventContext)
+	{
+		e.preventDefault();
+		this.PreventContext = false;
+	}
+}
 
 Interface.prototype.CalcTopZIndexFor = function(target)
 {

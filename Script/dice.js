@@ -91,15 +91,15 @@ Dice.Throw.Finish = function(target, x, y)
 	target.State.X = target.OriginalState.X + deltaX;
 	target.State.Y = target.OriginalState.Y + deltaY;
 
-	var dist  = Distance(0, 0, deltaX, deltaY);
-	var angle = Angle2(0, 0, deltaX, deltaY);
+	var dist  = Distance(target.CenterX, target.CenterY, x, y);
+	var angle = Angle2(target.CenterX, target.CenterY, x, y) + target.Index * Math.PI/16;
 
 	// Don't throw too far or too short.
 	if(dist < 10) angle = Math.random()*Math.PI;
 	dist = (dist + 200) / 2;
 
-	var goalX = target.State.X + (Math.cos(angle) * dist);
-	var goalY = target.State.Y + (Math.sin(angle) * dist);
+	var goalX = Math.abs(target.State.X + (Math.cos(angle) * dist));
+	var goalY = Math.abs(target.State.Y + (Math.sin(angle) * dist));
 
 	var transition = {Type: "Dice.Roll", Target: target.State.ID, Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
 	Script.API.NetState.Script.Create("Transition", transition);

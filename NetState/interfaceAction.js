@@ -13,6 +13,7 @@ actionIface.FixPrototype = function(proto)
 {
 	var dummy = function() {};
 	proto.Init    = proto.Init    || dummy;
+	proto.Deinit  = proto.Deinit  || dummy;
 	proto.Update  = proto.Update  || dummy;
 	proto.Finish  = proto.Finish  || dummy;
 	proto.Undo    = proto.Undo    || dummy;
@@ -44,6 +45,7 @@ actionIface.Creation = function(handle)
 		c.OriginalState = Merge(c.State);
 		c.OffsetX       = c.CenterX - handle.State.CenterX;
 		c.OffsetY       = c.CenterY - handle.State.CenterY;
+		c.Index         = i;
 
 		handle.Targets[i] = c;
 	}
@@ -88,6 +90,7 @@ actionIface.GameTick = function(handle, time)
 
 actionIface.Deletion = function(handle)
 {
+	handle.Deinit();
 	if(!handle.Finished)
 	{
 		for(var i = 0; i < handle.Targets.length; i++)
