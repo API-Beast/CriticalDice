@@ -171,10 +171,10 @@ Interface.prototype.UpdateSelection = function()
 		}
 	}
 
-	this.SelectionDiv.style.left   = Math.round(selectionRect.left);
-	this.SelectionDiv.style.width  = Math.round(selectionRect.right - selectionRect.left - 5);
-	this.SelectionDiv.style.top    = Math.round(selectionRect.top);
-	this.SelectionDiv.style.height = Math.round(selectionRect.bottom - selectionRect.top - 5);
+	this.SelectionDiv.style.left   = selectionRect.left;
+	this.SelectionDiv.style.width  = selectionRect.right - selectionRect.left;
+	this.SelectionDiv.style.top    = selectionRect.top;
+	this.SelectionDiv.style.height = selectionRect.bottom - selectionRect.top;
 }
 
 Interface.prototype.ClearSelection = function()
