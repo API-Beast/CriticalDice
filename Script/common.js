@@ -45,7 +45,7 @@ Common.Move =
 	Label: "Move",
 	Type : "MultiDrag",
 	Icon : "fa-arrows",
-	Shortcut: 71, // "g"
+	Shortcut: 77, // "m"
 	Interface: "Action"
 };
 
