@@ -5,8 +5,7 @@
 // ----------
 var Token =
 {
-	ClickAction: "Common.Move",
-	MenuActions: ["Common.Move", "Common.Rotate", "Common.Scale", "Common.Remove"],
+	Actions: ["Common.Move", "Common.Rotate", "Common.Scale", "Common.Remove"],
 	Inheritance: ["Common"],
 	Interface:   "Object"
 };

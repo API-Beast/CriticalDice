@@ -5,8 +5,7 @@
 // ----------
 var Dice =
 {
-	ClickAction: "Dice.Throw",
-	MenuActions: ["Common.Move", "Common.Rotate", "Common.Remove"],
+	Actions:     ["Dice.Throw", "Common.Move", "Common.Rotate", "Common.Remove"],
 	Inheritance: ["Common"],
 	Interface:   "Object"
 };
@@ -72,7 +71,7 @@ Dice.Throw =
 {
 	Label: "Roll",
 	Type : "MultiDrag",
-	Icon : "fa-random",
+	Icon : "fa-bolt",
 	Interface: "Action"
 };
 
@@ -95,16 +94,15 @@ Dice.Throw.Finish = function(target, x, y)
 	var dist  = Distance(0, 0, deltaX, deltaY);
 	var angle = Angle2(0, 0, deltaX, deltaY);
 
-	if(dist > 10)
-	{
-		dist = (dist + 200) / 2;
+	// Don't throw too far or too short.
+	if(dist < 10) angle = Math.random()*Math.PI;
+	dist = (dist + 200) / 2;
 
-		var goalX = target.State.X + (Math.cos(angle) * dist);
-		var goalY = target.State.Y + (Math.sin(angle) * dist);
+	var goalX = target.State.X + (Math.cos(angle) * dist);
+	var goalY = target.State.Y + (Math.sin(angle) * dist);
 
-		var transition = {Type: "Dice.Roll", Target: target.State.ID, Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
-		Script.API.NetState.Script.Create("Transition", transition);
-	}
+	var transition = {Type: "Dice.Roll", Target: target.State.ID, Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
+	Script.API.NetState.Script.Create("Transition", transition);
 };
 
 // ---------------------

@@ -22,10 +22,15 @@ var Interface = function(netstate)
 	this.NetState      = netstate;
 	this.CurrentAction = null;
 	this.Selection     = [];
+	this.PossibleActions = [];
+	this.PrepareAction = null;
+	this.PreparationX  = 0;
+	this.PreparationY  = 0;
 	this.ActionBar     = null;
 	this.SelectionDiv  = null;
 	this.MouseX        = 0;
 	this.MouseY        = 0;
+	this.MouseDelay    = 32;
 	Script.API.Interface = this;
 }
 
@@ -149,10 +154,6 @@ Interface.prototype.UpdateSelection = function()
 	else
 		this.SelectionDiv.classList.remove("single");
 
-	this.ActionBar.innerHTML = "";
-	var menu = this.Selection[0].MenuActions;
-	this.FillMenu(this.ActionBar, menu);
-
 	var selectionRect = undefined;
 	for (var i = 0; i < this.Selection.length; i++)
 	{
@@ -182,12 +183,14 @@ Interface.prototype.ClearSelection = function()
 		this.Selection[i].HTMLDiv.classList.remove("selected");
 
 	this.Selection = [];
+	this.UpdatePossibleActions();
 }
 
 Interface.prototype.AddToSelection = function(handle)
 {
 	this.Selection.push(handle);
 	handle.HTMLDiv.classList.add("selected");
+	this.UpdatePossibleActions();
 }
 
 Interface.prototype.RemoveFromSelection = function(handle)
@@ -197,8 +200,32 @@ Interface.prototype.RemoveFromSelection = function(handle)
 	{
 		this.Selection.splice(i, 1);
 		handle.HTMLDiv.classList.remove("selected");
+		this.UpdatePossibleActions();
 	}
 };
+
+Interface.prototype.UpdatePossibleActions = function()
+{
+	if(this.Selection.length === 0)
+	{
+		this.PossibleActions = [];
+		return;
+	}
+
+	this.PossibleActions = this.Selection[0].Actions;
+	for(var i = 1; i < this.Selection.length; i++)
+	{
+		var handle = this.Selection[i];
+		var actions = this.PossibleActions;
+		this.PossibleActions = [];
+		for(var i = 0; i < actions.length; i++)
+		if(handle.Actions.indexOf(actions[i]) !== -1)
+			this.PossibleActions.push(actions[i]);
+	}
+	this.ActionBar.innerHTML = "";
+	this.FillMenu(this.ActionBar, this.PossibleActions);
+	return;
+}
 
 Interface.prototype.FillMenu = function(div, menu)
 {
@@ -366,7 +393,12 @@ Interface.prototype.OnClick = function(obj, e)
 			this.AddToSelection(obj);
 		}
 
-		this.ExecuteAction(obj.ClickAction, e.pageX, e.pageY);
+		if(this.PossibleActions.length)
+		{
+			this.PrepareAction = this.PossibleActions[0];
+			this.PreparationX = e.pageX;
+			this.PreparationY = e.pageY;
+		}
 	}
 
 	this.UpdateSelection();
@@ -391,15 +423,25 @@ Interface.prototype.OnMove = function(e)
 	this.MouseX = e.pageX;
 	this.MouseY = e.pageY;
 
-	if(this.CurrentAction === null) return false;
+	if(this.PrepareAction)
+	{
+		if(Distance(this.PreparationX, this.PreparationY, this.MouseX, this.MouseY) > 5)
+		{
+			this.ExecuteAction(this.PrepareAction, this.PreparationX, this.PreparationY);
+			this.PrepareAction = null;
+		}
+	}
 
-	this.CurrentAction.MouseInput(this.NetState.Clock()+32, this.MouseX, this.MouseY);
+	if(this.CurrentAction)
+	{
+		this.CurrentAction.MouseInput(this.NetState.Clock() + this.MouseDelay, this.MouseX, this.MouseY);
 
-	// WORKAROUND
-	// Problem is that Chrome and Firefox will both pump the queue full with MouseMove events
-	// and these events stop the site from redrawing. Causing the animations to be very clunky.
-	// So we limit the mouse move events to one per redraw by stopping to listen.
-	this.Table.removeEventListener('mousemove', this.MouseMove, true);
+		// WORKAROUND
+		// Problem is that Chrome and Firefox will both pump the queue full with MouseMove events
+		// and these events stop the site from redrawing. Causing the animations to be very clunky.
+		// So we limit the mouse move events to one per redraw by stopping to listen.
+		this.Table.removeEventListener('mousemove', this.MouseMove, true);
+	}
 };
 
 Interface.prototype.GameLoop = function()
@@ -414,12 +456,13 @@ Interface.prototype.GameLoop = function()
 
 Interface.prototype.OnRelease = function(e)
 {
+	this.PrepareAction = null;
 	if(this.CurrentAction === null) return false;
 
 	e.preventDefault();
 
-	this.CurrentAction.MouseInput(this.NetState.Clock()+100, e.pageX, e.pageY);
-	this.CurrentAction.FinishTime = this.NetState.Clock()+100;
+	this.CurrentAction.MouseInput(this.NetState.Clock() + this.MouseDelay, e.pageX, e.pageY);
+	this.CurrentAction.FinishTime = this.NetState.Clock() + this.MouseDelay;
 	this.CurrentAction = null;
 };
 

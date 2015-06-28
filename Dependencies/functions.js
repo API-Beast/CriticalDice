@@ -325,15 +325,9 @@ var ClaimInheritance = function(first, inherited)
 
         first[key] = combined(first[key], inherited[key]);
       }
-      else if(typeof(first[key]) === "object") // A object, make it inherit too.
-      {
-        first[key] = ClaimInheritance(first[key], inherited[key]);
-      }
       // Any other type: first[key] overwrites inherited[key]
       else
-      {
         continue;
-      }
     }
     else
       first[key] = inherited[key];

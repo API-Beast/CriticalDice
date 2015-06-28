@@ -3,7 +3,11 @@
 // ------------
 // Type: Common
 // ------------
-var Common = { Interface: "Object" };
+var Common =
+{
+	Interface: "Object",
+	Actions: ["Common.Move", "Common.Rotate", "Common.Scale", "Common.Remove"]
+};
 Script.Register("Common", Common);
 
 Common.Initialize = function()
