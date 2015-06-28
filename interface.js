@@ -98,7 +98,6 @@ Interface.prototype.OnKeyPress = function(e)
 			copy.Y = this.MouseY;
 			this.NetState.Script.Create(copy);
 			var handle = this.Handles[copy.ID];
-			this.SetCenterPos(handle, this.MouseX, this.MouseY);
 		}
 	}
 };
@@ -422,18 +421,6 @@ Interface.prototype.OnRelease = function(e)
 	this.CurrentAction.MouseInput(this.NetState.Clock()+100, e.pageX, e.pageY);
 	this.CurrentAction.FinishTime = this.NetState.Clock()+100;
 	this.CurrentAction = null;
-};
-
-Interface.prototype.SetCenterPos = function(handle, x, y, flags)
-{
-	var rect    = handle.HTMLDiv.getBoundingClientRect();
-	var centerX = (rect.left + rect.right)/2;
-	var centerY = (rect.top  + rect.bottom)/2;
-	var dataX   = handle.State.X;
-	var dataY   = handle.State.Y;
-
-	handle.State.X = x + (dataX - centerX);
-	handle.State.Y = y + (dataY - centerY);
 };
 
 Interface.prototype.CalcTopZIndexFor = function(target)

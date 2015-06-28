@@ -22,6 +22,7 @@ Common.UpdateHTML = function()
 	var div = this.HTMLDiv;
 
 	var transform = "";
+	transform += "translate(-50%, -50%) ";
 	transform += "translate3d("+Math.floor(this.State.X)+"px, "+Math.floor(this.State.Y)+"px, "+this.State.Z+"px) ";
 	transform += "scaleX("+this.State.ScaleX+") ";
 	transform += "scaleY("+this.State.ScaleY+") ";
@@ -105,9 +106,8 @@ Common.Rotate.Update = function(target, x, y)
 		var targetAngle    = Angle2  (0, 0, target.OffsetX, target.OffsetY);
 		var targetDistance = Distance(0, 0, target.OffsetX, target.OffsetY);
 		var deltaAngleRad  = deltaAngle / 180 * Math.PI;
-		var x = Math.floor(this.CenterX + Math.cos(targetAngle + deltaAngleRad) * targetDistance);
-		var y = Math.floor(this.CenterY + Math.sin(targetAngle + deltaAngleRad) * targetDistance);
-		Script.API.Interface.SetCenterPos(target.Handle, x, y);
+		target.State.X = Math.floor(this.CenterX + Math.cos(targetAngle + deltaAngleRad) * targetDistance);
+		target.State.Y = Math.floor(this.CenterY + Math.sin(targetAngle + deltaAngleRad) * targetDistance);
 	}
 };
 
@@ -136,9 +136,8 @@ Common.Scale.Update = function(target, x, y)
 	target.State.ScaleX = target.OriginalState.ScaleX * distanceFactor;
 	target.State.ScaleY = target.OriginalState.ScaleY * distanceFactor;
 
-	var x = Math.floor(this.CenterX + target.OffsetX * distanceFactor);
-	var y = Math.floor(this.CenterY + target.OffsetY * distanceFactor);
-	Script.API.Interface.SetCenterPos(target.Handle, x, y);
+	target.State.X = Math.floor(this.CenterX + target.OffsetX * distanceFactor);
+	target.State.Y = Math.floor(this.CenterY + target.OffsetY * distanceFactor);
 };
 
 // ------------------
