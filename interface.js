@@ -23,6 +23,7 @@ var Interface = function(netstate)
 	this.CurrentAction = null;
 	this.Selection     = [];
 	this.PossibleActions = [];
+	this.Hotkeys       = {};
 	this.PrepareAction = null;
 	this.PreparationX  = 0;
 	this.PreparationY  = 0;
@@ -75,6 +76,12 @@ Interface.prototype.Init = function(table, svgLayer)
 Interface.prototype.OnKeyPress = function(e)
 {
 	if(e.repeat) return;
+
+	if(this.Hotkeys[e.which])
+	{
+		if(this.Selection.length)
+			this.ExecuteAction(this.Hotkeys[e.which], this.MouseX, this.MouseY);
+	}
 
 	// ---------
 	// TODO: Fix
@@ -229,6 +236,15 @@ Interface.prototype.UpdatePossibleActions = function()
 		if(handle.Actions.indexOf(actions[i]) !== -1)
 			this.PossibleActions.push(actions[i]);
 	}
+
+	for(var i = 0; i < this.PossibleActions.length; i++)
+	{
+		var proto = this.NetState.Script.GetPrototype(this.PossibleActions[i]);
+		var key = proto.Shortcut;
+		if(key)
+			this.Hotkeys[key] = this.PossibleActions[i];
+	}
+
 	this.ActionBar.innerHTML = "";
 	this.FillMenu(this.ActionBar, this.PossibleActions);
 	return;
