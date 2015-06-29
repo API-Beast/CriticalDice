@@ -227,10 +227,10 @@ Interface.prototype.UpdatePossibleActions = function()
 	}
 
 	this.PossibleActions = this.Selection[0].Actions;
-	for(var i = 1; i < this.Selection.length; i++)
+	for(var j = 1; j < this.Selection.length; j++)
 	{
-		var handle = this.Selection[i];
-		var actions = this.PossibleActions;
+		var handle = this.Selection[j];
+		var actions = handle.Actions;
 		this.PossibleActions = [];
 		for(var i = 0; i < actions.length; i++)
 		if(handle.Actions.indexOf(actions[i]) !== -1)
@@ -386,6 +386,8 @@ Interface.prototype.OnObjectRemoval = function(iface, handle)
 
 	var div = handle.HTMLDiv;
 	div.parentNode.removeChild(div);
+	this.RemoveFromSelection(handle);
+	this.UpdateSelection();
 }
 
 Interface.prototype.OnStateReset = function(state)
