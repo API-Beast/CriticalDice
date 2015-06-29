@@ -76,7 +76,7 @@ Dice.Throw =
 };
 
 
-Dice.Throw.Update = function(target, x, y)
+Dice.Throw.Update = function(target, x, y, time)
 {
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
@@ -84,19 +84,21 @@ Dice.Throw.Update = function(target, x, y)
 	target.State.Y = target.OriginalState.Y + deltaY;
 };
 
-Dice.Throw.Finish = function(target, x, y)
+Dice.Throw.Finish = function(target, x, y, time)
 {
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
 	target.State.X = target.OriginalState.X + deltaX;
 	target.State.Y = target.OriginalState.Y + deltaY;
 
-	var dist  = Distance(target.CenterX, target.CenterY, x, y);
-	var angle = Angle2(target.CenterX, target.CenterY, x, y) + target.Index * Math.PI/16;
+	var refX = this.XKeyframes.get(time-60);
+	var refY = this.YKeyframes.get(time-60);
+	var dist  = Distance(refX, refY, x, y);
+	var angle = Angle2(refX, refY, x-target.OffsetX, y-target.OffsetY) + target.Index * Math.PI/16;
 
 	// Don't throw too far or too short.
 	if(dist < 10) angle = Math.random()*Math.PI;
-	dist = (dist + 200) / 2;
+	dist = ((dist * 2) + 200) / 2;
 
 	var goalX = Math.abs(target.State.X + (Math.cos(angle) * dist));
 	var goalY = Math.abs(target.State.Y + (Math.sin(angle) * dist));

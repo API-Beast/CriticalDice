@@ -56,7 +56,7 @@ actionIface.Creation = function(handle)
 	handle.YKeyframes.insert(time, handle.State.StartY);
 
 	handle.Init();
-	if(handle.Type === "ClickOnce")
+	if(handle.Mode === "ClickOnce")
 	{
 		for(var i = 0; i < handle.Targets.length; i++)
 			handle.Execute(handle.Targets[i]);
@@ -70,11 +70,11 @@ actionIface.GameTick = function(handle, time)
 	var y = Math.round(handle.YKeyframes.get(time));
 	for(var i = 0; i < handle.Targets.length; i++)
 	{
-		handle.Update(handle.Targets[i], x, y);
+		handle.Update(handle.Targets[i], x, y, time);
 		if(handle.FinishTime && time > handle.FinishTime)
 		{
 			handle.Finished = true;
-			handle.Finish(handle.Targets[i], x, y);
+			handle.Finish(handle.Targets[i], x, y, time);
 			Script.API.NetState.Script.Remove(handle, NO_BROADCAST);
 		}
 		handle.Targets[i].Handle.UpdateHTML();

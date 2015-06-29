@@ -1,7 +1,7 @@
 "use strict";
 
 // ------------
-// Type: Common
+// Mode: Common
 // ------------
 var Common =
 {
@@ -43,7 +43,7 @@ Common.UpdateHTML = function()
 Common.Move =
 {
 	Label: "Move",
-	Type : "MultiDrag",
+	Mode : "MultiDrag",
 	Icon : "fa-arrows",
 	Shortcut: 77, // "m"
 	Interface: "Action"
@@ -86,7 +86,7 @@ Common.Move.Finish = function(target, x, y)
 Common.Rotate =
 {
 	Label: "Rotate",
-	Type : "MultiDrag",
+	Mode : "MultiDrag",
 	Icon : "fa-rotate-right",
 	Shortcut: 82, // "r"
 	Interface: "Action"
@@ -121,7 +121,7 @@ Common.Rotate.Update = function(target, x, y)
 Common.Scale =
 {
 	Label: "Scale",
-	Type : "MultiDrag",
+	Mode : "MultiDrag",
 	Icon : "fa-expand",
 	Shortcut: 83, // "s"
 	Interface: "Action"
@@ -150,7 +150,7 @@ Common.Scale.Update = function(target, x, y)
 Common.Resize =
 {
 	Label: "Resize",
-	Type : "MultiDrag",
+	Mode : "MultiDrag",
 	Icon : "fa-compress",
 	Interface: "Action"
 };
@@ -170,7 +170,7 @@ Common.Resize.Update = function(target, x, y)
 Common.Remove =
 {
 	Label: "Remove",
-	Type: "ClickOnce",
+	Mode: "ClickOnce",
 	Icon: "fa-remove",
 	Shortcut: 46, // Delete-Key
 	Interface: "Action"

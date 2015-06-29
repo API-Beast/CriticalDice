@@ -65,7 +65,7 @@ KeyFrameMap.prototype.getValuesFor = function(time)
 	else if(!prev && !cur)
 		return [last[1], last[1], 1.0];
 	if(!prev && cur)
-		return [cur[1], cur[1], factor];
+		return [cur[1], cur[1], 1.0];
 
 	var factor = (time-prev[0])/(cur[0]-prev[0]);
 	return [prev[1], cur[1], factor];
