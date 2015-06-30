@@ -333,3 +333,40 @@ var ClaimInheritance = function(first, inherited)
       first[key] = inherited[key];
   }
 };
+
+function Extend(fnName, extension)
+{
+  var fn = DereferenceDotSyntax(window, fnName);
+
+  var combined = function (fn1, fn2)
+  {
+    return function()
+      {
+        fn2.apply(this, arguments);
+        return fn1.apply(this, arguments);
+      };
+  };
+
+  var newFunc = combined(extension, fn);
+  Object.setPrototypeOf(newFunc, fn);
+  if(fn.prototype) newFunc.prototype = fn.prototype;
+
+  DotSyntaxSetValue(window, fnName, newFunc);
+}
+
+function GetRect(x1, y1, x2, y2)
+{
+  return { left: Math.min(x1, x2), right: Math.max(x1, x2), top: Math.min(y1, y2), bottom: Math.max(y1, y2), width: Math.abs(x1 - x2), height: Math.abs(y1 - y2)};
+}
+
+function IntersectRect(r1, r2)
+{
+  var result = {left: null, right: null, top: null, bottom: null, width: null, height: null, area: null};
+  result.left   = Math.max(r1.left,   r2.left);
+  result.right  = Math.min(r1.right,  r2.right);
+  result.top    = Math.max(r1.top,    r2.top);
+  result.bottom = Math.min(r1.bottom, r2.bottom);
+  result.width  = Math.max(result.right - result.left,   0);
+  result.height = Math.max(result.bottom- result.top, 0);
+  return result;
+}

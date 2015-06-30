@@ -52,8 +52,7 @@ function GameInit(argument)
 
 	gInterface = new Interface(gNetState);
 	var playfield = id("table");
-	var svg = id("svg-overlay");
-	gInterface.Init(playfield, svg);
+	gInterface.Init(playfield);
 	gNetState.OnEtablishedSession.push(SessionInit);
 	gNetState.OnStatusText.push(Status);
 
