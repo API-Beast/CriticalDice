@@ -72,7 +72,7 @@ NetState.Script.prototype.Update = function(handle, delta, flags)
   var oldState = Merge(state);
 	ApplyTemplate(state, delta);
 
-	Script.Interfaces[iface].UpdateState(handle);
+	Script.Interfaces[handle.Interface].UpdateState(handle);
 
 	// Callbacks
   CallAll(this.OnUpdate, handle.Interface, handle, oldState, delta, flags);
@@ -83,7 +83,7 @@ NetState.Script.prototype.Remove = function(handle, flags)
 {
   if(!handle.Volatile)
     delete this.Net.State[handle.Interface][handle.State.ID];
-	
+
   delete this.Handles[handle.State.ID];
 	Script.Interfaces[handle.Interface].Deletion(handle);
 

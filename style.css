@@ -31,6 +31,7 @@ body
 	background: none;
 	border: 0px dashed white;
 	border-radius: 0px;
+	/* padding: 10px; */
 }
 
 .token.placeholder
@@ -400,4 +401,8 @@ input, button {
     background: rgba(211, 156, 156, 0.41);
     z-index: 900;
     pointer-events: none;
+}
+
+.token.selected {
+    padding: 10px;
 }

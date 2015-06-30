@@ -30,11 +30,11 @@ Extend("Interface.prototype.OnDrop", function(e)
       var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
       this.NetState.Script.Create("Object", token);
     }
-    else if(url.match(/.(\.mp3|\.ogg)/))
+    /*else if(url.match(/.(\.mp3|\.ogg)/))
     {
       var player = {Type: "Player", X: e.pageX, Y: e.pageY, Source: url};
       this.NetState.Script.Create("Object", player);
-    }
+    }*/
   }
   else // Firefox sends Images also as Files, o_O, so we have to do a either or
   {
@@ -58,7 +58,7 @@ Extend("Interface.prototype.OnDrop", function(e)
             self.NetState.Script.Update(token, {Width: image.width, Height: image.height}, self.InterfaceID);
           };
           image.src = reader.result;
-          self.Handles[token.ID].PlaceholderSrc = reader.result;
+          token.PlaceholderSrc = reader.result;
         };
         reader.readAsDataURL(file);
 
