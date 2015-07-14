@@ -1,51 +1,9 @@
 "use strict";
 
-// ------
-// Header
-// ------
-
-// Origin flags.
-var BROADCAST = 0;
-var NO_BROADCAST = 1;
-
-/*
-class NetState
-{
-  void Join(peerID);               // Join target peer. Their current state will overwrite yours.
-                                   // Also you will connect to any other peer that is connected to this one.
-
-  void Leave();                    // Disconnect from all peers in the current session.
-  void ChangeNick(newNick);        // Inform all other peers that your nick has changed.
-  void SetState(newState, origin); // Set state. This will be broadcast to all other peers unless origin is NO_BROADCAST.
-  void Broadcast(packet);          // Send the packet to all other peers you are connected to.
-  void StatusText(str, ...);       // Display a status text, this has internal purposes and won't be broadcast.
-
-  State = {};
-
-  signal OnEtablishedSession(peerID); // This signal is send when the network is initialized and ready to be used.
-
-                                      // peerID is the ID that was assigned to this computer.
-  signal OnStatusText(htmlText);      // Is send whenever a status message should be displayed to the user.
-  signal OnStateReset(newState);      // Is send whenever the state is overwritten.
-                                      // (E.g. all objects were removed and new objects were added to replace them.)
-
-  class Objects
-  {
-    // All these will be broadcast to all other peers unless origin is NO_BROADCAST.
-    object Create(blueprint, id, origin); // Register a new game object.
-    void Update(object, delta, origin);   // Apply the delta to the object.
-    void Remove(object, origin);          // Remove the object from the State again
-  };
-  class Transitions
-  {
-    // Same as Objects.
-  };
-
-}*/
-
-// --------------
-// Implementation
-// --------------
+/* This networking model isn't completly perfect.
+   There is just one reliable stream, and pings are send over that one too.
+   So Ping can delay other, maybe more important packages.
+*/
 
 var NetState = function(name, id)
 {
@@ -56,9 +14,6 @@ var NetState = function(name, id)
 
   this.Network.on("open", this.OnNetworkEtablished.bind(this));
 	this.Network.on("connection", this.OnPeerConnected.bind(this));
-	this.Peers = Object.create(null);
-
-  this.Metadata = {Nick: name};
 
   this.OnEtablishedSession = [];
   this.OnStatusText = [];
@@ -68,155 +23,202 @@ var NetState = function(name, id)
   this.Script = new NetState.Script(this);
 
   this.ClockStart = window.performance.now();
+
+  this.MyPlayer = new Player();
+  this.Players  = Object.create(null);
 }
 
-NetState.prototype.Join = function(id, timeoutfn)
+NetState.prototype.OnNetworkEtablished = function()
 {
-  var conn = this.Network.connect(id, {metadata: this.Metadata});
-  //this.Peers[id] = conn;
-  conn.on('data',  this.OnDataReceived.bind(this, conn));
-  conn.on('close', this.OnPeerDisconnected.bind(this, conn));
-
-  conn.on('open',
-    function()
-    {
-      this.Peers[id] = conn;
-      this.StatusText("Joined <b>{0}</b>'s Session.", conn.metadata.Nick);
-      conn.send(["JoinSession"]);
-    }.bind(this));
-  setTimeout(
-    function() {
-      if(!conn.open)
-      {
-        this.StatusText("Timeout while trying to connect to <b>{0}</b>.", id);
-        if(timeoutfn)
-          timeoutfn();
-      }
-    }.bind(this),
-    3000);
-
-  conn.on('error', console.warn);
+  CallAll(this.OnEtablishedSession);
 }
-
-NetState.prototype.Leave = function()
-{
-  for(var id in this.Peers)
-    this.Peers[id].send(["LeaveSession"]);
-};
-
-NetState.prototype.ChangeNick = function(newName)
-{
-  if(this.Metadata.Nick !== newName)
-  {
-    this.Metadata.Nick = newName;
-    this.Broadcast(["ChangeNick", newName]);
-    this.StatusText("You changed your Nick to <b>{0}</b>.", newName);
-  }
-}
-
-NetState.prototype.SetState = function(newState, flags)
-{
-  this.State = newState;
-  this.Script.StateReset(newState);
-
-  if(!(flags & NO_BROADCAST)) this.Broadcast(["SetState", newState]);
-
-  CallAll(this.OnStateReset, this.State);
-};
-
-NetState.prototype.Broadcast = function(data)
-{
-	for(var peer in this.Peers)
-		this.Peers[peer].send(data);
-}
-
-NetState.prototype.StatusText = function(str)
-{
-  CallAll(this.OnStatusText, tr(str, Array.prototype.slice.call(arguments, 1)));
-};
-
-NetState.prototype.GameTick = function(ui)
-{
-  var time = this.Clock();
-  var deltaTime = time - this.LastTick;
-
-  this.Script.GameTick(time, ui);
-
-  this.LastTick = time;
-};
 
 NetState.prototype.Clock = function()
 {
   return window.performance.now() - this.ClockStart;
 };
 
-// ---------
-// Callbacks
-// ---------
-
-NetState.prototype.OnNetworkEtablished = function(id)
+NetState.prototype.GameTick = function()
 {
-  CallAll(this.OnEtablishedSession, id);
-};
+  var time = window.performance.now();
+
+  for(var pid in this.Players)
+  if(this.Players.hasOwnProperty(pid))
+  {
+    var player = this.Players[pid];
+
+    // Resend Reliable packages we haven't received a ack or response for yet.
+    for(var id in player.PackageLog)
+    if(player.PackageLog.hasOwnProperty(id))
+    {
+      var p = player.PackageLog[id];
+      if((time - p.LastResendTime) > 100 * ((p.ResendTries * p.ResendTries)||1))
+      {
+        player.Connection.send(p.pack());
+        p.LastResendTime = time;
+        p.ResendTries++;
+      }
+    }
+
+    // TODO: Ping sometimes
+    // Oops, I deleted this accidentally.
+    // Must have pressed Ctrl-Z once too often and didn't notice.
+  }
+
+  var clock = this.Clock();
+  var deltaTime = clock - this.LastTick;
+  this.Script.GameTick(clock);
+  this.LastTick = clock;
+}
+
+NetState.prototype.Broadcast = function(type, args, domain, flags)
+{
+  for(var pid in this.Players)
+  if(this.Players.hasOwnProperty(pid))
+  {
+    var player = this.Players[pid];
+
+    var f = flags;
+    // Until the state is synced all Broadcasts are reliable.
+    // This is so they can be applied after the state was finally received.
+    if(!player.Introduced || !player.ClockSynced || !player.StateSynced)
+      f = (flags & (~UNORDERED)) | RELIABLE;
+
+    if(f & RELIABLE)
+      this.SendReliable(player, type, args, domain, f);
+    else if(f & UNORDERED)
+      this.SendUnordered(player, type, args, domain, f);
+    else
+      this.Send(player, type, args, domain, f);
+  }
+}
 
 NetState.prototype.OnPeerConnected = function(conn)
 {
-  this.Peers[conn.peer] = conn;
-  conn.on('data', this.OnDataReceived.bind(this, conn));
+  var player = new Player(conn);
+  this.Players[conn.peer] = player;
+  this.SendReliable(player, "Introduction", [this.MyPlayer.GetIntroduction()]);
+  this.SendReliable(player, "WaitForClockSync"); // This buffers later packages until the clock is synced.
+  this.SendReliable(player, "SyncState",    [this.State]);
 }
 
-NetState.prototype.OnPeerDisconnected = function(conn)
+NetState.prototype.Send = function(player, type, args, domain, flags)
 {
-  this.StatusText("<b>{0}</b> was disconnected.", conn.metadata.Nick);
+  var p = new Package();
+  p.ID       = player.SentUnreliableID++;
+  p.Flags    = UNRELIABLE | flags;
+  p.Domain   = domain || "";
+  p.Type     = type;
+  p.Args     = args || [];
+  p.SendTime = window.performance.now();
+
+  player.Connection.send(p.pack());
+
+  if(p.Flags & AWAIT_RESPONSE)
+    player.PackageLog[p.ID] = p;
 }
 
-NetState.prototype.OnDataReceived = function(conn, pack)
+NetState.prototype.SendUnordered = function(player, type, args, domain, flags)
 {
-  console.log(pack);
+  var p = new Package();
+  p.Flags    = UNORDERED | flags;
+  p.Domain   = domain || "";
+  p.Type     = type;
+  p.Args     = args || [];
+  p.SendTime = window.performance.now();
 
-  var type = pack[0];
-  if(type === "Script") this.Script.HandlePackage(pack[1], pack.slice(2));
+  player.Connection.send(p.pack());
 
-  if(type === "JoinSession")
+  if(p.Flags & AWAIT_RESPONSE)
+    player.PackageLog[p.ID] = p;
+}
+
+NetState.prototype.SendReliable = function(player, type, args, domain, flags)
+{
+  var p = new Package();
+  p.ID       = player.SentReliableID++;
+  p.Flags    = RELIABLE | flags;
+  p.Domain   = domain || "";
+  p.Type     = type;
+  p.Args     = args || [];
+  p.SendTime = window.performance.now();
+
+  player.Connection.send(p.pack());
+
+  player.PackageLog[p.ID] = p;
+}
+
+NetState.prototype.Receive = function(player, packet)
+{
+  var p = new Package(packet);
+
+  if(p.Flags & UNRELIABLE)
   {
-    for(var id in this.Peers)
-    if(id != conn.peer)
-      this.Peers[id].send(["JoinedSession", conn.peer]);
-
-    conn.send(["SetState", this.State]);
-    this.StatusText("<b>{0}</b> joined the session.", conn.metadata.Nick);
-    return;
+    if(p.ID < player.ProcessedUnreliableID)
+      return 0; // Unreliable packages that are received out of order are discarded.
+    else
+    {
+      player.ProcessedUnreliableID = p.ID;
+      HandlePackage(player, p);
+    }
   }
-
-  if(type === "JoinedSession")
+  else if(p.Flags & RELIABLE)
   {
-    var id = pack[1];
-    var conn = this.Network.connect(id, {metadata: this.Metadata});
-    this.Peers[id] = conn;
-    conn.on('data', this.OnDataReceived.bind(this, conn));
-    this.StatusText("<b>{0}</b> joined the session.", conn.metadata.Nick);
-    return;
+    this.SendUnordered(player, "Ack", [p.ID]);
+    // Reliable packages are buffered until they can be processed.
+    if(p > player.ProcessedReliableID)
+    {
+      player.PackageBuffer[p.ID] = p;
+      this.ProcessPackageLog(player);
+    }
   }
+  else
+    HandlePackage(player, p);
+}
 
-  if(type === "LeaveSession")
-  {
-    conn.close();
-    this.StatusText("<b>{0}</b> left the session.", conn.metadata.Nick);
-    delete this.Peers[conn.peer];
-  }
+NetState.prototype.ProcessPackageLog = function(player)
+{
+  if(this.WaitingForClockSync) return 0;
 
-  if(type === "ChangeNick")
+  var p = null;
+  while(p = player.PackageBuffer[player.ProcessedReliableID+1])
   {
-    var oldName = conn.metadata.Nick;
-    var newName = pack[1];
-    if(oldName !== newName)
-      this.StatusText("<b>{0}</b> changed their Nick to <b>{1}</b>.", oldName, newName);
-    conn.metadata.Nick = newName;
+    player.ProcessedReliableID++;
+    HandlePackage(player, p);
+    delete player.PackageBuffer[player.ProcessedReliableID];
   }
+}
 
-  if(type === "SetState")
-  {
-    this.SetState(pack[1], NO_BROADCAST);
-    return;
-  }
+NetState.prototype.HandlePackage = function(player, p)
+{
+  if(p.Handled === true) return;
+
+  var result = null;
+  if(p.Domain === "")
+    result = NetState.Package[p.Type].apply(this, [player].concat(p.Args));
+  else
+    result = this[p.Domain].HandlePackage(p);
+
+  p.Handled = true;
+
+  if(p.Flags & AWAIT_RESPONSE)
+    this.SendReliable(player, "Response", [p.ID, result]);
+}
+
+NetState.prototype.SetState = function(state)
+{
+  this.State = state;
+  this.Script.StateReset(state);
+
+  CallAll(this.OnStateReset, this.State);
+}
+
+NetState.prototype.Join = function(host)
+{
+
+}
+
+NetState.prototype.Host = function()
+{
+
 }

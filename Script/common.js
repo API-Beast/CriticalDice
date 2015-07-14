@@ -178,5 +178,5 @@ Common.Remove =
 
 Common.Remove.Execute = function(target)
 {
-	Script.API.NetState.Script.Remove(target.Handle, NO_BROADCAST);
+	Script.API.NetState.Script.Remove(target.Handle);
 }

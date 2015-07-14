@@ -24,17 +24,19 @@ NetState.Script = function(netstate)
 	this.OnRemoval  = [];
 };
 
-NetState.Script.prototype.Create = function(iface, state, id, flags)
+NetState.Script.prototype.Create = function(iface, state, id, bFlags)
 {
 	if(id === undefined)
 		do id = Math.floor(Math.random()*32000000);
 		while(this.Handles[id] !== undefined);
 
-  state.ID = id;
-
 	var proto  = this.GetPrototype(state.Type);
   var handle = Object.create(proto);
   var originalState = Merge(state);
+
+	originalState.ID = id;
+  state.ID         = id;
+	handle.ID        = id;
 
   if(handle.Volatile)
   {
@@ -59,14 +61,18 @@ NetState.Script.prototype.Create = function(iface, state, id, flags)
   }
 
 	// Callbacks
-  CallAll(this.OnCreation, iface, handle, flags);
-  if(!(flags & NO_BROADCAST)) this.Net.Broadcast(["Script", "Create", iface, originalState]);
+  CallAll(this.OnCreation, iface, handle);
+
+  if(bFlags)
+		this.Net.Broadcast("Create", [iface, originalState, id], "Script", bFlags);
 
   return handle;
 }
 
-NetState.Script.prototype.Update = function(handle, delta, flags)
+NetState.Script.prototype.Update = function(handle, delta, bFlags)
 {
+	if(typeof(handle) !== "object")	handle = this.Handles[handle];
+
   // With just one parameter Merge is basically a deep clone
 	var state = handle.State;
   var oldState = Merge(state);
@@ -75,12 +81,26 @@ NetState.Script.prototype.Update = function(handle, delta, flags)
 	Script.Interfaces[handle.Interface].UpdateState(handle);
 
 	// Callbacks
-  CallAll(this.OnUpdate, handle.Interface, handle, oldState, delta, flags);
-  if(!(flags & NO_BROADCAST))	this.Net.Broadcast(["Script", "Update", state.ID, delta]);
+  CallAll(this.OnUpdate, handle.Interface, handle, oldState, delta);
+
+	if(bFlags)
+		this.Net.Broadcast("Update", [handle.ID, delta], "Script", bFlags);
 }
 
-NetState.Script.prototype.Remove = function(handle, flags)
+NetState.Script.prototype.Input = function(handle, time, input, bFlags)
 {
+	if(typeof(handle) !== "object")	handle = this.Handles[handle];
+
+	Script.Interfaces[handle.Interface].Input(handle, time, input);
+
+	if(bFlags)
+		this.Net.Broadcast("Input", [handle.ID, time, input], bFlags);
+}
+
+NetState.Script.prototype.Remove = function(handle, bFlags)
+{
+	if(typeof(handle) !== "object")	handle = this.Handles[handle];
+
   if(!handle.Volatile)
     delete this.Net.State[handle.Interface][handle.State.ID];
 
@@ -88,8 +108,10 @@ NetState.Script.prototype.Remove = function(handle, flags)
 	Script.Interfaces[handle.Interface].Deletion(handle);
 
 	// Callbacks
-  CallAll(this.OnRemoval, handle.Interface, handle, flags);
-  if(!(flags & NO_BROADCAST)) this.Net.Broadcast(["Script", "Remove", handle.ID]);
+  CallAll(this.OnRemoval, handle.Interface, handle);
+
+  if(bFlags)
+		this.Net.Broadcast("Remove", [handle.ID], "Script", bFlags);
 };
 
 NetState.Script.prototype.StateReset = function(state)
@@ -102,7 +124,7 @@ NetState.Script.prototype.StateReset = function(state)
 	if(state[iface].hasOwnProperty(id))
 	{
 		var handle = state[iface][id];
-		this.Create(iface, handle, id, NO_BROADCAST);
+		this.Create(iface, handle, id);
 	}
 }
 
@@ -111,7 +133,7 @@ NetState.Script.prototype.GetHandleByID = function(id)
 	return this.Handles[id];
 }
 
-NetState.Script.prototype.GameTick = function(time, ui)
+NetState.Script.prototype.GameTick = function(time)
 {
 	for(var id in this.Handles)
 	{
@@ -146,32 +168,5 @@ NetState.Script.prototype.GetPrototype = function(type)
 
 NetState.Script.prototype.HandlePackage = function(type, pack)
 {
-  if(type === "Create")
-  {
-    var iface = pack[0];
-    var state = pack[1];
-    this.Create(iface, state, state.ID, NO_BROADCAST);
-    return;
-  }
-
-  if(type === "Update")
-  {
-    var handle   = this.Handles[pack[0]];
-    var delta = pack[1];
-    if(handle)
-    	this.Update(handle, delta, NO_BROADCAST);
-    else
-    	console.log("Trying to update non-existant object.", pack[0]);
-    return;
-	}
-
-  if(type === "Remove")
-  {
-    var handle = this.Handles[pack[0]];
-    if(handle)
-    	this.Remove(handle, NO_BROADCAST);
-    else
-    	console.log("Trying to remove non-existant object.", pack[0]);
-    return;
-  }
+	this[pack.Type].apply(this, pack.Args);
 };

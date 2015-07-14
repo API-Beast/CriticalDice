@@ -23,12 +23,6 @@ actionIface.FixPrototype = function(proto)
 	// and will be destroyed during state resets.
 	if(proto.Volatile === undefined)
 		proto.Volatile = true;
-
-	proto.MouseInput = function(time, x, y)
-	{
-		this.XKeyframes.insert(time, x);
-		this.YKeyframes.insert(time, y);
-	};
 };
 
 actionIface.Creation = function(handle)
@@ -60,9 +54,17 @@ actionIface.Creation = function(handle)
 	{
 		for(var i = 0; i < handle.Targets.length; i++)
 			handle.Execute(handle.Targets[i]);
-		Script.API.NetState.Script.Remove(handle, NO_BROADCAST);
+		Script.API.NetState.Script.Remove(handle);
 	}
 };
+
+actionIface.Input = function(handle, time, args)
+{
+	if(args[0] === "Finish")
+		handle.FinishTime = time;
+	handle.XKeyframes.insert(time, args[1]);
+	handle.YKeyframes.insert(time, args[2]);
+}
 
 actionIface.GameTick = function(handle, time)
 {
@@ -75,7 +77,7 @@ actionIface.GameTick = function(handle, time)
 		{
 			handle.Finished = true;
 			handle.Finish(handle.Targets[i], x, y, time);
-			Script.API.NetState.Script.Remove(handle, NO_BROADCAST);
+			Script.API.NetState.Script.Remove(handle);
 		}
 		handle.Targets[i].Handle.UpdateHTML();
 		Script.API.Interface.UpdateSelection();

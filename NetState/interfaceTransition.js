@@ -40,7 +40,7 @@ transIface.GameTick = function(handle, time)
 	{
 		handle.Finish();
 		handle.Finished = true;
-		Script.API.NetState.Script.Remove(handle, NO_BROADCAST);
+		Script.API.NetState.Script.Remove(handle);
 	}
 	handle.TargetHandle.UpdateHTML();
 	Script.API.Interface.UpdateSelection();

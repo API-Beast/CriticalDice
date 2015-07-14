@@ -13,7 +13,7 @@ Extend("Interface.prototype.OnDrop", function(e)
     prefab = JSON.parse(prefab);
     prefab.X = e.pageX;
     prefab.Y = e.pageY;
-    this.NetState.Script.Create("Object", prefab);
+    this.NetState.Script.Create("Object", prefab, undefined, RELIABLE);
     return;
   }
 
@@ -28,7 +28,7 @@ Extend("Interface.prototype.OnDrop", function(e)
     if(url.match(/.(\.png|\.jpg|\.jpeg|\.gif|\.apng)/))
     {
       var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
-      this.NetState.Script.Create("Object", token);
+      this.NetState.Script.Create("Object", token, undefined, RELIABLE);
     }
     /*else if(url.match(/.(\.mp3|\.ogg)/))
     {
@@ -48,14 +48,14 @@ Extend("Interface.prototype.OnDrop", function(e)
         var self  = this;
 
         var reader = new FileReader();
-        var token  = this.NetState.Script.Create("Object", {Type: "Token", X: e.pageX+(i*40), Y: e.pageY});
+        var token  = this.NetState.Script.Create("Object", {Type: "Token", X: e.pageX+(i*40), Y: e.pageY}, undefined, RELIABLE);
 
         var image = new Image();
         reader.onload = function()
         {
           image.onload = function()
           {
-            self.NetState.Script.Update(token, {Width: image.width, Height: image.height}, self.InterfaceID);
+            self.NetState.Script.Update(token, {Width: image.width, Height: image.height}, RELIABLE);
           };
           image.src = reader.result;
           token.PlaceholderSrc = reader.result;
@@ -75,7 +75,7 @@ Extend("Interface.prototype.OnDrop", function(e)
             if(this.status === 200)
             {
               var response = JSON.parse(this.responseText);
-              self.NetState.Script.Update(token, {Texture: response.data.link}, self.InterfaceID);
+              self.NetState.Script.Update(token, {Texture: response.data.link}, RELIABLE);
             }
             else
               self.NetState.Script.Remove(token, self.InterfaceID);

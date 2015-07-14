@@ -223,6 +223,7 @@ function SessionInit(id)
         {
           Status(tr("No peer available. Restoring Auto-Save."));
 				  gNetState.SetState(autoSave);
+          gNetState.Host();
         }
         else
           Status(tr("No Auto-Save that can be restored available."));
@@ -235,7 +236,7 @@ function SessionInit(id)
 		if(hash)
 			gNetState.Join(hash);
 		else
-			/* Host new game. */;
+			gNetState.Host(); /* Host new game. */
 	}
 
 	var loading = document.getElementById("loading");
@@ -248,12 +249,12 @@ function SessionInit(id)
 function SessionExit()
 {
 	var peers = [];
-	for(var peer in gNetState.Peers)
+	for(var peer in gNetState.Players)
 		peers.push(peer); // We only want the key, this is intended
 
 	SetSessionStorage("Peers", peers);
 	SetSessionStorage("AutoSave", gNetState.State);
-	gNetState.Leave();
+	// gNetState.Leave();
 }
 
 function Status(text)

@@ -21,7 +21,7 @@ Extend("Interface.prototype.OnMove", function ()
   }
 
   if(this.CurrentAction)
-    this.CurrentAction.MouseInput(this.NetState.Clock() + this.MouseDelay, this.MouseX, this.MouseY);
+    this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Move", this.MouseX, this.MouseY], UNRELIABLE);
 });
 
 Extend("Interface.prototype.OnRelease", function(e)
@@ -32,8 +32,8 @@ Extend("Interface.prototype.OnRelease", function(e)
   e.preventDefault();
   e.stopPropagation();
 
-  this.CurrentAction.MouseInput(this.NetState.Clock() + this.MouseDelay, e.pageX, e.pageY);
-  this.CurrentAction.FinishTime = this.NetState.Clock() + this.MouseDelay;
+  this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Finish", this.MouseX, this.MouseY], RELIABLE);
+
   this.CurrentAction = null;
   this.PreventContext = true;
 });
@@ -108,5 +108,5 @@ Interface.prototype.ExecuteAction = function(action, mouseX, mouseY)
 	blueprint.CenterX = (selectionRect.left + selectionRect.right)/2;
 	blueprint.CenterY = (selectionRect.top  + selectionRect.bottom)/2;
 
-	this.CurrentAction = this.NetState.Script.Create("Action", blueprint);
+	this.CurrentAction = this.NetState.Script.Create("Action", blueprint, undefined, RELIABLE);
 };
