@@ -90,11 +90,12 @@ NetState.Script.prototype.Update = function(handle, delta, bFlags)
 NetState.Script.prototype.Input = function(handle, time, input, bFlags)
 {
 	if(typeof(handle) !== "object")	handle = this.Handles[handle];
+	if(!handle) return;
 
 	Script.Interfaces[handle.Interface].Input(handle, time, input);
 
 	if(bFlags)
-		this.Net.Broadcast("Input", [handle.ID, time, input], bFlags);
+		this.Net.Broadcast("Input", [handle.ID, time, input], "Script", bFlags);
 }
 
 NetState.Script.prototype.Remove = function(handle, bFlags)
@@ -166,7 +167,7 @@ NetState.Script.prototype.GetPrototype = function(type)
 	}
 };
 
-NetState.Script.prototype.HandlePackage = function(type, pack)
+NetState.Script.prototype.HandlePackage = function(pack)
 {
 	this[pack.Type].apply(this, pack.Args);
 };

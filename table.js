@@ -54,7 +54,6 @@ function GameInit(argument)
 	var playfield = id("table");
 	gInterface.Init(playfield);
 	gNetState.OnEtablishedSession.push(SessionInit);
-	gNetState.OnStatusText.push(Status);
 
 
 	id("save-session-button").addEventListener('click', SaveSession);
@@ -206,7 +205,7 @@ function SessionInit(id)
 	var hash = loc.hash.substr(1);
 	var url = loc.protocol+"//"+loc.hostname+loc.pathname+"#"+id;
 
-	Status(tr("Etablished Session.<br>Give other players this link to join you: <a href='{0}'>{0}</a>", [url]));
+	Status("Etablished Session.<br>Give other players this link to join you: <a href='{0}'>{0}</a>", url);
 
 	var sessionPeers = GetSessionStorage("Peers");
 	if(sessionPeers)
@@ -241,7 +240,9 @@ function SessionInit(id)
 
 	var loading = document.getElementById("loading");
 	loading.className = "finished";
-	window.addEventListener('beforeunload', SessionExit);
+	//window.addEventListener('beforeunload', SessionExit);
+  // ^ beforeunload only get's called if the tab is focused on Chrome
+  window.addEventListener('unload', SessionExit);
 
 	SetSessionStorage("PeerID", id);
 }
@@ -254,7 +255,7 @@ function SessionExit()
 
 	SetSessionStorage("Peers", peers);
 	SetSessionStorage("AutoSave", gNetState.State);
-	// gNetState.Leave();
+	gNetState.Leave();
 }
 
 function Status(text)
@@ -263,7 +264,7 @@ function Status(text)
 
 	var div = document.createElement('div');
 	div.className = "status";
-	div.innerHTML = text;
+	div.innerHTML = subs(text, Array.prototype.slice.call(arguments, 1));
 
 	chatArea.appendChild(div);
 }

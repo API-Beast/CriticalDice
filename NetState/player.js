@@ -3,14 +3,15 @@
 var Player = function(conn)
 {
   this.Nick       = "Unknown";
+  this.Color      = "rgb(0, 0, 0)";
   this.Ping       = undefined;
   this.Pings      = [];
 
   this.SentReliableID   = 0;
   this.SentUnreliableID = 0;
 
-  this.ProcessedReliableID   = -1;
-  this.ProcessedUnreliableID = -1;
+  this.ProcessedReliableID   = 0;
+  this.ProcessedUnreliableID = 0;
 
   this.PackageLog    = Object.create(null);
   this.PackageBuffer = Object.create(null);
@@ -22,6 +23,8 @@ var Player = function(conn)
   this.LastSendActivity = window.performance.now();
   this.LastReceivedActivity = window.performance.now();
 
+  this.LastPing = null;
+
   if(conn)
   {
     this.Connection = conn;
@@ -31,14 +34,28 @@ var Player = function(conn)
   }
 }
 
+Player.prototype.GetHTMLTag = function()
+{
+  if(ColorIsDark(this.Color))
+    return subs("<span class='player-name dark' style='color:{Color}'>{Nick}</span>", this);
+  else
+    return subs("<span class='player-name' style='color:{Color}'>{Nick}</span>", this);
+}
+
 Player.prototype.GetIntroduction = function()
 {
-  return [this.Nick];
+  return [this.Nick, this.Color];
+}
+
+Player.prototype.Is = function(intro)
+{
+  return this.Nick === intro[0] && this.Color === intro[1];
 }
 
 Player.prototype.Impersonate = function(introduction)
 {
-  this.Nick = introduction[0];
+  this.Nick  = introduction[0];
+  this.Color = introduction[1];
   this.Introduced = true;
 }
 
@@ -55,4 +72,10 @@ Player.prototype.UpdatePing = function(newPing)
   this.Ping = pings[Math.floor(pings.length/2)];
 
   this.LastReceivedActivity = window.performance.now();
+}
+
+Player.prototype.Send = function(p)
+{
+  this.Connection.send(p);
+  this.LastSendActivity = window.performance.now();
 }

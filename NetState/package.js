@@ -27,6 +27,8 @@ var Package = function(obj)
   this.SendTime       = null;
   this.LastResendTime = null;
   this.ResendTries    = 0;
+  this.Handled        = false;
+  this.ReceivedResponse = false;
 }
 
 Package.prototype.pack = function()

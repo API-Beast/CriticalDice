@@ -370,3 +370,21 @@ function IntersectRect(r1, r2)
   result.height = Math.max(result.bottom- result.top, 0);
   return result;
 }
+
+function InterpretColor(input)
+{
+  if(typeof(input) === "string")
+  {
+    var m = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+    if(m)
+      return [m[1],m[2],m[3]];
+  }
+  return input;
+}
+
+function ColorIsDark(clr)
+{
+  clr = InterpretColor(clr);
+	var brightness = (0.2126*clr[0] + 0.7152*clr[1] + 0.0722*clr[2]);
+	return brightness < 140;
+}
