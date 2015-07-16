@@ -92,23 +92,10 @@ body
 	box-sizing: border-box;
 }
 
-#svg-overlay
-{
-  position: absolute;
-  /* right: 450px; */
-  top: 0;
-  left: 0;
-  /* width: 100%; */
-  /* height: 100%; */
-  pointer-events: none;
-  overflow: visible;
-  z-index: 9999;
-}
-
 .status {
-    background: rgb(255, 189, 160);
-    border: 2px solid rgb(82, 19, 19);
-    padding: 10px;
+    /* background: rgb(255, 189, 160); */
+    /* border: 2px solid rgb(82, 19, 19); */
+    /* padding: 10px; */
     margin-bottom: 5px;
 }
 
@@ -405,4 +392,13 @@ input, button {
 
 .token.selected {
     padding: 10px;
+}
+
+.player-name {
+    font-weight: bold;
+    text-shadow: 1px 0px 1px black, 1px 0px 1px black, 1px 0px 1px black;
+}
+
+.player-name.dark {
+    text-shadow: 1px 0px 1px white, 1px 0px 1px white, 1px 0px 1px white;
 }
