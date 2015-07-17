@@ -120,6 +120,7 @@ function GameInit(argument)
 	id("save-session-button").addEventListener('click', SaveSession);
 	id("load-session-button").addEventListener('click', LoadSession);
 
+  id("hide-sidebar-button").addEventListener('click', function(){ id("sidebar").classList.toggle("hidden"); });
 
 	RequestLibrary(function()
 	{

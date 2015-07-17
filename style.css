@@ -1,6 +1,7 @@
 body
 {
   font-family: 'Roboto Condensed', sans-serif;
+  overflow: hidden;
 }
 
 .dialog
@@ -56,7 +57,7 @@ body
 	position: absolute;
 	top: 0;
 	left: 0;
-	right: 450px;
+	right: 0px;
 
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -86,10 +87,11 @@ body
 	height: 100%;
 	right: 0;
 	top: 0;
-	overflow: hidden;
+	overflow: visible;
 	border-left: 4px solid rgb(181, 108, 108);
-	box-shadow: -2px 0px 5px rgba(40,0,0,0.8);
+	/* box-shadow: -2px 0px 5px rgba(40,0,0,0.8); */
 	box-sizing: border-box;
+	transition: right 0.4s; */;
 }
 
 .status {
@@ -112,11 +114,11 @@ body
     position: absolute;
     top: 0;
     left: 0;
-    right: 450px;#
+    right: 0;#
 ;-webkit-user-select: none;    -moz-user-select: none;    -ms-user-select: none;    user-select: none;
 }
 
-#loading.finished
+div#loading.finished
 {
   visibility: hidden;
   opacity: 0;
@@ -353,7 +355,7 @@ body
 }
 
 input, button {
-    width: 100%;
+    /* width: 100%; */
 }
 
 
@@ -504,4 +506,28 @@ textarea#chat-input {
 
 .chatmsg .message * {
     margin: 0;
+}
+
+#hide-sidebar-button {
+    position: absolute;
+    left: -36px;
+    top: 34px;
+    width: 36px;
+    height: 40px;
+    font-size: 16px;
+    background-color: rgba(249, 245, 244, 1);
+    border: 4px solid rgba(181, 108, 108, 1);
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    /* box-shadow: -4px 5px 10px rgba(0, 0, 0, 0.49); */
+}
+
+#sidebar.hidden {
+    right: -450px;
+    /* transition: right 0.5s; */
+}
+
+#save-session-button, #load-session-button {
+    width: 100%;
 }
