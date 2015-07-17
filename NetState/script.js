@@ -92,8 +92,6 @@ NetState.Script.prototype.Input = function(handle, time, input, bFlags)
 	if(typeof(handle) !== "object")	handle = this.Handles[handle];
 	if(!handle) return;
 
-
-	console.log(handle.ID.toString().substr(0, 2), time, input, bFlags);
 	Script.Interfaces[handle.Interface].Input(handle, time, input);
 
 	if(bFlags !== undefined)

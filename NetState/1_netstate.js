@@ -211,9 +211,9 @@ NetState.prototype.ProcessPackageLog = function(player)
 NetState.prototype.HandlePackage = function(player, p)
 {
   if(p.Handled === true) return;
+  this.LogNetwork("PROC", "<>", player, p);
 
-  if(p.Flags & RELIABLE)
-    this.LogNetwork("PROC", "<>", player, p);
+  var result = undefined;
   if(p.Domain === "")
     result = NetState.Package[p.Type].apply(this, [player].concat(p.Args));
   else
