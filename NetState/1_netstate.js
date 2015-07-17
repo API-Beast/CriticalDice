@@ -275,7 +275,7 @@ NetState.prototype.ChangeNick = function(newNick)
   if(this.MyPlayer.Nick !== newNick)
   {
     this.MyPlayer.Nick = newNick;
-    Status("system", "You changed your Nick to {0}.", newNick);
+    Status("system", "You changed your Nick to <b>{0}</b>.", newNick);
     this.Broadcast("ChangeNick", [this.MyPlayer.GetIntroduction()], "", RELIABLE);
   }
 }

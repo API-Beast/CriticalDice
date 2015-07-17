@@ -40,10 +40,68 @@ function GameInit(argument)
 	}
 	nameField.value = name;
 	nameField.addEventListener('blur', function(){ SetStored('nick', this.value); gNetState.ChangeNick(this.value); });
-	nameField.addEventListener('keydown', function(e){ if(e.which == 13 || e.keyCode == 13){ SetStored('nick', this.value); gNetState.ChangeNick(this.value); } });
+	nameField.addEventListener('keydown',
+  function(e)
+  {
+    if(e.which == 13 || e.keyCode == 13)
+    {
+      if(this.value === "") this.value = RandomName();
+      SetStored('nick', this.value);
+      gNetState.ChangeNick(this.value);
+    }
+  });
 
   var chatInput = id("chat-input");
-  chatInput.addEventListener('keydown', function(e){ if(e.which == 13 || e.keyCode == 13){ if(this.value.length) gNetState.Chat(this.value); this.value = ""; } });
+  chatInput.inputHistory = [""];
+  chatInput.inputHistoryPos = -1;
+  chatInput.addEventListener('keydown',
+  function(e)
+  {
+    if(e.which == 13 || e.keyCode == 13)
+    if(!e.shiftKey)
+    {
+      if(this.value.length)
+      {
+        if(this.inputHistoryPos !== -1)
+          this.inputHistory.splice(this.inputHistoryPos, 1);
+
+        gNetState.Chat(this.value);
+        this.inputHistory.unshift(this.value);
+        this.value = "";
+        this.inputHistoryPos = -1;
+      }
+      e.preventDefault();
+    }
+
+    if(e.which == 38)
+    if(this.inputHistory[this.inputHistoryPos+1])
+    {
+      if(this.inputHistoryPos === -1)
+        this.cachedValue = this.value;
+
+      this.inputHistoryPos++;
+      this.value = this.inputHistory[this.inputHistoryPos];
+      e.preventDefault();
+    }
+
+    if(e.which == 40)
+    if(this.inputHistory[this.inputHistoryPos-1])
+    {
+      this.inputHistoryPos--;
+      this.value = this.inputHistory[this.inputHistoryPos];
+      e.preventDefault();
+    }
+    else if(this.inputHistoryPos === 0)
+    {
+      this.value = this.cachedValue || "";
+      this.inputHistoryPos = -1;
+      e.preventDefault();
+    }
+
+    if(e.which !== 13 && e.which !== 38 && e.which !== 40)
+      this.inputHistoryPos = -1;
+
+  });
 
 	//window.addEventListener('storage', OnStorageChange, false);
 	window.addEventListener('unload', SessionExit, false);
@@ -267,6 +325,8 @@ function ChatMessage(nick, color, text)
   me = text.indexOf("/me ") === 0;
   if(me)
     text = text.substr("/me ".length);
+
+  text = text.trim();
 
   var chatArea = document.getElementById("chat-area");
 

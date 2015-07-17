@@ -54,7 +54,7 @@ NetState.Package.Ping.Response = function(player, theirClock)
 NetState.Package.Join = function(player, intro)
 {
   player.Impersonate(intro);
-  Status("join", "{0} joined your Session.", player.Nick);
+  Status("join", "<b>{0}</b> joined your Session.", player.Nick);
 
   this.SendReliable(player, "WaitForClockSync"); // This buffers later packages until the clock is synced.
   this.SendReliable(player, "SetState",    [this.State]);
@@ -72,7 +72,7 @@ NetState.Package.Join.Response = function(player, peers, intro)
     this.ConnectTo(peers[i]);
 
   player.Impersonate(intro);
-  Status("join", "You joined {0}'s Session.", player.Nick);
+  Status("join", "You joined <b>{0}</b>'s Session.", player.Nick);
 }
 
 NetState.Package.SetState = function(player, state)
@@ -83,7 +83,7 @@ NetState.Package.SetState = function(player, state)
 NetState.Package.Goodbye = function(player)
 {
   player.Connection.close();
-  Status("leave", "{0} left the session.", player.Nick);
+  Status("leave", "<b>{0}</b> left the session.", player.Nick);
   delete this.Players[player.ID];
 }
 
@@ -93,7 +93,7 @@ NetState.Package.ChangeNick = function(player, intro)
   {
     var oldNick = player.Nick;
     player.Impersonate(intro);
-    Status("system", "{0} changed their Nick to {1}.", oldNick, player.Nick);
+    Status("system", "<b>{0}</b> changed their Nick to <b>{1}</b>.", oldNick, player.Nick);
   }
 }
 

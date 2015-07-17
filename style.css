@@ -427,6 +427,8 @@ input#name-input {
     width: 25%;
     margin-right: 5px;
     text-align: center;
+    height: 24px;
+    padding: 0px;
 }
 
 input#chat-input {
@@ -451,6 +453,7 @@ div#chat-controls {
     min-width: 120px;
     text-overflow: ellipsis;
     overflow: hidden;
+    vertical-align: top;
 }
 
 .chatmsg .player-name:before {
@@ -459,6 +462,7 @@ div#chat-controls {
     /* text-align: left; */
     /* display: inline-block; */
     text-shadow: none;
+    vertical-align: top;
 }
 
 .chatmsg .player-name:after {
@@ -466,11 +470,14 @@ div#chat-controls {
     color: black;
     /* text-align: right; */
     text-shadow: none;
+    vertical-align: top;
 }
 
 .chatmsg .message {
     margin: none;
     padding: none;
+    white-space: pre;
+    display: inline-block;
 }
 
 .action .player-name {
@@ -482,4 +489,19 @@ div#chat-controls {
 
 .action .player-name:before {
     content: "* ";
+}
+
+textarea#chat-input {
+    height: 24px;
+    width: 60%;
+    resize: none;
+    /* display: inline-block; */
+    /* margin: 0; */
+    position: absolute;
+    /* vertical-align: middle; */
+    /* text-align: center; */
+}
+
+.chatmsg .message * {
+    margin: 0;
 }
