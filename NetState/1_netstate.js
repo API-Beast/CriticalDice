@@ -18,8 +18,11 @@ var NetState = function(name, id)
 
   this.OnEtablishedSession = [];
   this.OnStateReset = [];
+  this.OnGlobalStateChange = [];
 
   this.State = {};
+  this.State.Global = {};
+
   this.Script = new NetState.Script(this);
 
   this.ClockStart = window.performance.now();
@@ -34,7 +37,6 @@ var NetState = function(name, id)
   this.MyPlayer.Color = subs("rgb({0},{1},{2})", clr);
 
   this.Players  = Object.create(null);
-
   this.VerboseLogging = false; // Set this to true if you want to see what packages we receive, we send and what we do with them.
 }
 
@@ -259,6 +261,13 @@ NetState.prototype.ChangeNick = function(newNick)
     Status("system", "You changed your Nick to <b>{0}</b>.", newNick);
     this.Broadcast("ChangeNick", [this.MyPlayer.GetIntroduction()], "", RELIABLE);
   }
+}
+
+NetState.prototype.SetGlobal = function(key, value)
+{
+  this.State.Global[key] = value;
+  this.Broadcast("UpdateGlobalState", [this.State.Global], "", RELIABLE);
+  CallAll(this.OnGlobalStateChange);
 }
 
 NetState.prototype.Chat = function(text)

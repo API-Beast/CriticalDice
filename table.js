@@ -1,5 +1,7 @@
 "use strict";
 
+/* The Glue, attention, Really Ugly. */
+
 var gNetState  = null;
 var gInterface = null;
 
@@ -139,6 +141,27 @@ function GameInit(argument)
 			var p = prefabs[i];
 			libraryList.appendChild(LibraryItem(p));
 		};
+
+
+    var bgSelect = id("background-select");
+
+    var backgrounds = gLibrary.Background;
+    for(var i = 0; i < backgrounds.length; i++)
+    {
+      var b = backgrounds[i];
+      var opt = document.createElement("option");
+      opt.text = b.Name;
+      opt.val = b;
+      bgSelect.add(opt);
+    }
+
+    bgSelect.addEventListener("change",
+      function()
+      {
+        var bg = this.options[this.selectedIndex];
+        gNetState.SetGlobal("Background", bg.val.Value);
+      }
+    );
 
 	});
 }

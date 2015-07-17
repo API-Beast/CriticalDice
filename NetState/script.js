@@ -15,6 +15,7 @@ Script.Register = function(name, ptr)
 NetState.Script = function(netstate)
 {
 	this.Net = netstate;
+	this.Net.State.Scripted = {};
   this.Handles = Object.create(null);
 	Script.API.NetState = netstate;
 
@@ -47,9 +48,9 @@ NetState.Script.prototype.Create = function(iface, state, id, bFlags)
   {
     handle.State = state;
 
-    if(!this.Net.State[iface])
-      this.Net.State[iface] = {};
-    this.Net.State[iface][id] = state;
+    if(!this.Net.State.Scripted[iface])
+      this.Net.State.Scripted[iface] = {};
+    this.Net.State.Scripted[iface][id] = state;
   }
   this.Handles[id] = handle;
   Script.Interfaces[iface].Creation(handle);
@@ -103,7 +104,7 @@ NetState.Script.prototype.Remove = function(handle, bFlags)
 	if(typeof(handle) !== "object")	handle = this.Handles[handle];
 
   if(!handle.Volatile)
-    delete this.Net.State[handle.Interface][handle.State.ID];
+    delete this.Net.State.Scripted[handle.Interface][handle.State.ID];
 
   delete this.Handles[handle.State.ID];
 	Script.Interfaces[handle.Interface].Deletion(handle);
@@ -119,12 +120,12 @@ NetState.Script.prototype.StateReset = function(state)
 {
 	this.Handles = Object.create(null);
 
-	for(var iface in state)
-	if(state.hasOwnProperty(iface))
-	for(var id in state[iface])
-	if(state[iface].hasOwnProperty(id))
+	for(var iface in state.Scripted)
+	if(state.Scripted.hasOwnProperty(iface))
+	for(var id in state.Scripted[iface])
+	if(state.Scripted[iface].hasOwnProperty(id))
 	{
-		var handle = state[iface][id];
+		var handle = state.Scripted[iface][id];
 		this.Create(iface, handle, id);
 	}
 }

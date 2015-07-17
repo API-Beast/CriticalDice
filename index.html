@@ -19,6 +19,7 @@
 	<script src="UserInteraction/Hotkeys.js"></script>
 	<script src="UserInteraction/CalcZIndex.js"></script>
 	<script src="UserInteraction/Dropping.js"></script>
+	<script src="UserInteraction/Background.js"></script>
 
 	<script src="NetState/1_netstate.js"></script>
 	<script src="NetState/package.js"></script>
@@ -66,6 +67,9 @@
 
 		<section>
 			<h2><a>Session</a></h2>
+
+			Background: <select id="background-select"></select>
+			<br>
 			<div>
 				<button id="save-session-button">Save Session to Disk</button><br>
 				<button id="load-session-button">Load Session from Disk</button>
@@ -78,7 +82,7 @@
 
 			</div>
 		</section>
-		
+
 		<button id="hide-sidebar-button"><i class="fa fa-sliders"></i></button>
 	</div>
 </body>

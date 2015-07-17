@@ -80,6 +80,7 @@ NetState.Package.Join.Response = function(player, peers, intro)
 NetState.Package.SetState = function(player, state)
 {
   this.SetState(state);
+  CallAll(this.OnGlobalStateChange);
 }
 
 NetState.Package.SetState.Response = function(player)
@@ -107,4 +108,10 @@ NetState.Package.ChangeNick = function(player, intro)
 NetState.Package.ChatMsg = function(player, text)
 {
   ChatMessage(player.Nick, player.Color, text);
+}
+
+NetState.Package.UpdateGlobalState = function(player, newGlobalState)
+{
+  this.State.Global = newGlobalState;
+  CallAll(this.OnGlobalStateChange);
 }

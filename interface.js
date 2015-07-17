@@ -17,6 +17,7 @@ Interface.prototype.Init = function(table)
 	this.NetState.Script.OnUpdate  .push(this.OnObjectChange  .bind(this));
 	this.NetState.Script.OnCreation.push(this.OnObjectCreation.bind(this));
 	this.NetState.Script.OnRemoval .push(this.OnObjectRemoval .bind(this));
+	this.NetState.OnGlobalStateChange.push(this.OnGlobalChange.bind(this));
 
 	this.MouseMove = this.OnMove.bind(this);
   window.addEventListener('mousemove', this.MouseMove,    true);
@@ -35,6 +36,8 @@ Interface.prototype.Init = function(table)
   window.addEventListener('keydown',   this.OnKeyPress.bind(this));
 
   window.requestAnimationFrame(this.GameLoop.bind(this));
+
+	this.OnGlobalChange();
 };
 
 Interface.prototype.OnKeyPress = function(e){};
@@ -88,3 +91,5 @@ Interface.prototype.OnObjectRemoval = function(iface, handle)
 	var div = handle.HTMLDiv;
 	div.parentNode.removeChild(div);
 }
+
+Interface.prototype.OnGlobalChange = function(){}
