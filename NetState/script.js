@@ -63,7 +63,7 @@ NetState.Script.prototype.Create = function(iface, state, id, bFlags)
 	// Callbacks
   CallAll(this.OnCreation, iface, handle);
 
-  if(bFlags)
+  if(bFlags !== undefined)
 		this.Net.Broadcast("Create", [iface, originalState, id], "Script", bFlags);
 
   return handle;
@@ -83,7 +83,7 @@ NetState.Script.prototype.Update = function(handle, delta, bFlags)
 	// Callbacks
   CallAll(this.OnUpdate, handle.Interface, handle, oldState, delta);
 
-	if(bFlags)
+	if(bFlags !== undefined)
 		this.Net.Broadcast("Update", [handle.ID, delta], "Script", bFlags);
 }
 
@@ -92,9 +92,11 @@ NetState.Script.prototype.Input = function(handle, time, input, bFlags)
 	if(typeof(handle) !== "object")	handle = this.Handles[handle];
 	if(!handle) return;
 
+
+	console.log(handle.ID.toString().substr(0, 2), time, input, bFlags);
 	Script.Interfaces[handle.Interface].Input(handle, time, input);
 
-	if(bFlags)
+	if(bFlags !== undefined)
 		this.Net.Broadcast("Input", [handle.ID, time, input], "Script", bFlags);
 }
 
@@ -111,7 +113,7 @@ NetState.Script.prototype.Remove = function(handle, bFlags)
 	// Callbacks
   CallAll(this.OnRemoval, handle.Interface, handle);
 
-  if(bFlags)
+  if(bFlags !== undefined)
 		this.Net.Broadcast("Remove", [handle.ID], "Script", bFlags);
 };
 

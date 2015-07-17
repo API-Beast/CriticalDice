@@ -8,6 +8,7 @@ NetState.Package.Ack = function(player, id)
   if(p)
   {
     player.UpdatePing(window.performance.now() - p.SendTime);
+    p.ReceivedAck = true;
     if(!(p.Flags & AWAIT_RESPONSE))
       delete player.PackageLog[id];
   }
@@ -69,6 +70,7 @@ NetState.Package.Join = function(player, intro)
 NetState.Package.Join.Response = function(player, peers, intro)
 {
   for(var i = 0; i < peers.length; i++)
+  if(peers[i] !== this.Network.id)
     this.ConnectTo(peers[i]);
 
   player.Impersonate(intro);
@@ -78,6 +80,11 @@ NetState.Package.Join.Response = function(player, peers, intro)
 NetState.Package.SetState = function(player, state)
 {
   this.SetState(state);
+}
+
+NetState.Package.SetState.Response = function(player)
+{
+  player.StateSynced = true;
 }
 
 NetState.Package.Goodbye = function(player)

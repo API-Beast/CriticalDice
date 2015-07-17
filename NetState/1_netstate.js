@@ -34,6 +34,8 @@ var NetState = function(name, id)
   this.MyPlayer.Color = subs("rgb({0},{1},{2})", clr);
 
   this.Players  = Object.create(null);
+
+  this.VerboseLogging = false; // Set this to true if you want to see what packages we receive, we send and what we do with them.
 }
 
 NetState.prototype.OnNetworkEtablished = function()
@@ -43,7 +45,7 @@ NetState.prototype.OnNetworkEtablished = function()
 
 NetState.prototype.Clock = function()
 {
-  return window.performance.now() - this.ClockStart;
+  return Math.floor(window.performance.now() - this.ClockStart);
 };
 
 NetState.prototype.GameTick = function()
@@ -58,11 +60,13 @@ NetState.prototype.GameTick = function()
     for(var id in player.PackageLog)
     {
       var p = player.PackageLog[id];
-      if((time - p.LastResendTime) > 100 * ((p.ResendTries * p.ResendTries)||1))
+      if(p.ReceivedAck === false)
+      if((time - p.LastResendTime) > 500)
       {
         player.Send(p.pack());
         p.LastResendTime = time;
         p.ResendTries++;
+        this.LogNetwork("RESE", ">X", player, p);
       }
     }
 
@@ -99,14 +103,9 @@ NetState.prototype.Broadcast = function(type, args, domain, flags)
     // Until the state is synced all Broadcasts are reliable.
     // This is so they can be applied after the state was finally received.
     if(!player.Introduced || !player.ClockSynced || !player.StateSynced)
-      f = (flags & (~UNORDERED)) | RELIABLE;
+      f = flags | RELIABLE;
 
-    if(f & RELIABLE)
-      this.SendReliable(player, type, args, domain, f);
-    else if(f & UNORDERED)
-      this.SendUnordered(player, type, args, domain, f);
-    else
-      this.Send(player, type, args, domain, f);
+    this.Send(player, type, args, domain, f);
   }
 }
 
@@ -138,64 +137,54 @@ NetState.prototype.OnPeerConnected = function(conn)
 NetState.prototype.Send = function(player, type, args, domain, flags)
 {
   var p = new Package();
-  p.ID       = player.SentUnreliableID++;
-  p.Flags    = UNRELIABLE | flags;
-  p.Domain   = domain || "";
+
+  if(flags & RELIABLE)
+    p.ID = player.SentReliableID++
+  else if(flags & UNORDERED)
+    p.ID = -1;
+  else
+    p.ID = player.SentUnreliableID++;
+
   p.Type     = type;
+  p.Flags    = flags;
+  p.Domain   = domain || "";
   p.Args     = args || [];
   p.SendTime = window.performance.now();
+  p.LastResendTime = p.SendTime;
 
   player.Send(p.pack());
 
-  if(p.Flags & AWAIT_RESPONSE)
+  this.LogNetwork("SEND", ">>", player, p);
+
+  if(p.Flags & AWAIT_RESPONSE || flags & RELIABLE)
     player.PackageLog[p.ID] = p;
+
   return p;
 }
 
-NetState.prototype.SendUnordered = function(player, type, args, domain, flags)
-{
-  var p = new Package();
-  p.Flags    = UNORDERED | flags;
-  p.Domain   = domain || "";
-  p.Type     = type;
-  p.Args     = args || [];
-  p.SendTime = window.performance.now();
-
-  player.Send(p.pack());
-
-  //console.log("Sending ", player.ID, player.Nick, " -> (unordered) ", p.ID, p.Type, p.Args);
-
-  if(p.Flags & AWAIT_RESPONSE)
-    player.PackageLog[p.ID] = p;
-  return p;
-}
-
-NetState.prototype.SendReliable = function(player, type, args, domain, flags)
-{
-  var p = new Package();
-  p.ID       = player.SentReliableID++;
-  p.Flags    = RELIABLE | flags;
-  p.Domain   = domain || "";
-  p.Type     = type;
-  p.Args     = args || [];
-  p.SendTime = window.performance.now();
-
-  player.Send(p.pack());
-
-  //console.log("Sending ", player.ID, player.Nick, " -> ", p.ID, p.Type, p.Args);
-
-  player.PackageLog[p.ID] = p;
-  return p;
-}
+NetState.prototype.SendUnordered  = function(player, type, args, domain, flags){ return this.Send(player, type, args, domain, flags |  UNORDERED); }
+NetState.prototype.SendReliable   = function(player, type, args, domain, flags){ return this.Send(player, type, args, domain, flags |   RELIABLE); }
 
 NetState.prototype.Receive = function(player, packet)
 {
   var p = new Package(packet);
-  //console.log("Receiving ", player.ID, player.Nick, " -> ", p.ID, p.Type, p.Args);
+  this.LogNetwork("RECV", "<<", player, p);
 
-  if(p.Flags & UNRELIABLE)
+  if(p.Flags & RELIABLE)
   {
-    if(p.ID < player.ProcessedUnreliableID)
+    this.SendUnordered(player, "Ack", [p.ID]);
+    if(p.ID >= player.ProcessedReliableID)
+    {
+      if(player.PackageBuffer[p.ID] === undefined)
+        player.PackageBuffer[p.ID] = p;
+      this.ProcessPackageLog(player);
+    }
+  }
+  else if(p.Flags & UNORDERED)
+    this.HandlePackage(player, p);
+  else
+  {
+    if(p.ID <= player.ProcessedUnreliableID)
       return 0; // Unreliable packages that are received out of order are discarded.
     else
     {
@@ -203,19 +192,12 @@ NetState.prototype.Receive = function(player, packet)
       this.HandlePackage(player, p);
     }
   }
-  else if(p.Flags & RELIABLE)
-  {
-    this.SendUnordered(player, "Ack", [p.ID]);
-    player.PackageBuffer[p.ID] = p;
-    this.ProcessPackageLog(player);
-  }
-  else
-    this.HandlePackage(player, p);
 }
 
 NetState.prototype.ProcessPackageLog = function(player)
 {
   //if(this.WaitingForClockSync) return 0;
+  // ^ We can't do that as we won't receive the ping responses that way.
 
   var p = null;
   while(p = player.PackageBuffer[player.ProcessedReliableID])
@@ -228,11 +210,10 @@ NetState.prototype.ProcessPackageLog = function(player)
 
 NetState.prototype.HandlePackage = function(player, p)
 {
-  //if(p.Handled === true) return;
+  if(p.Handled === true) return;
 
-  //console.log("Processing ", player.ID, player.Nick, " -> ", p.ID, p.Type, p.Args);
-
-  var result = null;
+  if(p.Flags & RELIABLE)
+    this.LogNetwork("PROC", "<>", player, p);
   if(p.Domain === "")
     result = NetState.Package[p.Type].apply(this, [player].concat(p.Args));
   else
@@ -284,4 +265,10 @@ NetState.prototype.Chat = function(text)
 {
   ChatMessage(this.MyPlayer.Nick, this.MyPlayer.Color, text);
   this.Broadcast("ChatMsg", [text], "", RELIABLE);
+}
+
+NetState.prototype.LogNetwork = function(command, direction, player, p)
+{
+  if(this.VerboseLogging)
+    console.log(command, player.ID.substr(0, 4), direction, p.Type, p.ID, p.Args, p.getFlagString());
 }
