@@ -42,7 +42,10 @@ function GameInit(argument)
 	nameField.addEventListener('blur', function(){ SetStored('nick', this.value); gNetState.ChangeNick(this.value); });
 	nameField.addEventListener('keydown', function(e){ if(e.which == 13 || e.keyCode == 13){ SetStored('nick', this.value); gNetState.ChangeNick(this.value); } });
 
-	window.addEventListener('storage', OnStorageChange, false);
+  var chatInput = id("chat-input");
+  chatInput.addEventListener('keydown', function(e){ if(e.which == 13 || e.keyCode == 13){ if(this.value.length) gNetState.Chat(this.value); this.value = ""; } });
+
+	//window.addEventListener('storage', OnStorageChange, false);
 	window.addEventListener('unload', SessionExit, false);
 	var peerID = GetSessionStorage("PeerID");
 	if(peerID)
@@ -188,24 +191,13 @@ function LoadSession()
 	document.body.removeChild(input);
 }
 
-function OnStorageChange(event)
-{
-	if(event.key === "nick")
-	{
-		var nameField = document.getElementById("name-input");
-		nameField.value = JSON.parse(event.newValue);
-		gNetState.ChangeNick(nameField.value);
-	}
-
-}
-
 function SessionInit(id)
 {
 	var loc = window.location;
 	var hash = loc.hash.substr(1);
 	var url = loc.protocol+"//"+loc.hostname+loc.pathname+"#"+id;
 
-	Status("Etablished Session.<br>Give other players this link to join you: <a href='{0}'>{0}</a>", url);
+	Status("welcome", "Etablished Session.<br>Give other players this link to join you: <a href='{0}'>{0}</a>", url);
 
 	var sessionPeers = GetSessionStorage("Peers");
 	if(sessionPeers)
@@ -220,12 +212,12 @@ function SessionInit(id)
         var autoSave = GetSessionStorage("AutoSave");
         if(autoSave)
         {
-          Status(tr("No peer available. Restoring Auto-Save."));
+          Status("system", "No peer available. Restoring Auto-Save.");
 				  gNetState.SetState(autoSave);
           gNetState.Host();
         }
         else
-          Status(tr("No Auto-Save that can be restored available."));
+          Status("system", "No Auto-Save that can be restored available.");
 			}
 		};
 		joinNextPeer();
@@ -258,13 +250,41 @@ function SessionExit()
 	gNetState.Leave();
 }
 
-function Status(text)
+function Status(style, text)
 {
 	var chatArea = document.getElementById("chat-area");
 
 	var div = document.createElement('div');
-	div.className = "status";
-	div.innerHTML = subs(text, Array.prototype.slice.call(arguments, 1));
+	div.className = style || "status";
+	div.innerHTML = subs(text, Array.prototype.slice.call(arguments, 2));
 
 	chatArea.appendChild(div);
+}
+
+function ChatMessage(nick, color, text)
+{
+  var me = false;
+  me = text.indexOf("/me ") === 0;
+  if(me)
+    text = text.substr("/me ".length);
+
+  var chatArea = document.getElementById("chat-area");
+
+  var div = document.createElement('div');
+  if(me) div.classList.add("action");
+  else   div.classList.add("chatmsg");
+
+  var nickSpan = document.createElement('span');
+  nickSpan.innerHTML = nick;
+  nickSpan.classList.add("player-name");
+  if(!me) nickSpan.style.color = color;
+
+  var textSpan = document.createElement('span');
+  textSpan.innerHTML = text;
+  textSpan.classList.add("message");
+
+  div.appendChild(nickSpan);
+  div.appendChild(textSpan);
+
+  chatArea.appendChild(div);
 }

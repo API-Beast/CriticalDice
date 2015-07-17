@@ -73,7 +73,7 @@ NetState.prototype.GameTick = function()
       {
         if((time - player.LastPing.SendTime) > 15000) // 15 seconds
         {
-          Status("<< {0} disconnected due to a ping timeout.", player.GetHTMLTag());
+          Status("leave", "{0} disconnected. (Ping timeout.)", player.Nick);
           delete this.Players[pid];
         }
         continue;
@@ -268,4 +268,20 @@ NetState.prototype.Host = function()
 NetState.prototype.Leave = function()
 {
   this.Broadcast("Goodbye", [], "", UNORDERED);
+}
+
+NetState.prototype.ChangeNick = function(newNick)
+{
+  if(this.MyPlayer.Nick !== newNick)
+  {
+    this.MyPlayer.Nick = newNick;
+    Status("system", "You changed your Nick to {0}.", newNick);
+    this.Broadcast("ChangeNick", [this.MyPlayer.GetIntroduction()], "", RELIABLE);
+  }
+}
+
+NetState.prototype.Chat = function(text)
+{
+  ChatMessage(this.MyPlayer.Nick, this.MyPlayer.Color, text);
+  this.Broadcast("ChatMsg", [text], "", RELIABLE);
 }
