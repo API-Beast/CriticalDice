@@ -21,7 +21,7 @@ Extend("Interface.prototype.OnMove", function ()
   }
 
   if(this.CurrentAction)
-    this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Move", this.MouseX, this.MouseY], UNRELIABLE);
+    this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Move", this.MouseX, this.MouseY], RELIABLE);
 });
 
 Extend("Interface.prototype.OnRelease", function(e)
