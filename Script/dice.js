@@ -64,6 +64,19 @@ Dice.UpdateHTML = function()
 	this.Overlay.style.backgroundPosition = this.Sprite.style.backgroundPosition;
 }
 
+Dice.GetValue = function()
+{
+	return this.State.FaceValues[this.State.CurrentFace];
+}
+
+Dice.GetValueDecoration = function()
+{
+	if(this.State.CurrentFace === (this.State.NumFaces-1)) return "plus";
+	if(this.State.CurrentFace === 0) return "minus";
+	return undefined;
+}
+
+
 // ------------------
 // Action: Dice.Throw
 // ------------------

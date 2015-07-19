@@ -170,8 +170,8 @@ div#loading.finished
 
 .actionbar .item
 {
-  /* margin: 2px; */
-  padding: 6px;
+  margin: 6px;
+  /* padding: 2px; */
   min-width: 14px;
   text-align: center;
 }
@@ -530,4 +530,30 @@ textarea#chat-input {
 
 #save-session-button, #load-session-button {
     width: 100%;
+}
+
+.actionbar .value-counter {
+    font-weight: bold;
+    color: black;
+    background: white;
+    padding-left: 2px;
+    padding-right: 2px;
+    user-select: none;
+    -webkit-user-select: none;
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 5px;
+}
+
+.actionbar .value-counter i {
+    font-weight: normal;
+    font-style: normal;
+    color: gray;
+}
+
+b.plus {
+    color: green;
+}
+
+b.minus {
+    color: red;
 }
