@@ -4,4 +4,4 @@ Value=url("Table/emblem.png") top left no-repeat, url("Table/background.jpg") to
 
 [Background]
 Name=Old Paper
-Value=url(Library/backgroundPaper.jpg) top left
+Value=url(Library/backgroundPaperOverlay.png) top left no-repeat, url(Library/backgroundPaper.jpg) top left
