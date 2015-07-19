@@ -103,7 +103,7 @@ Dice.Throw.Finish = function(target, x, y, time)
 	var goalX = Math.abs(target.State.X + (Math.cos(angle) * dist));
 	var goalY = Math.abs(target.State.Y + (Math.sin(angle) * dist));
 
-	var transition = {Type: "Dice.Roll", Target: target.State.ID, Seed: Math.floor(Math.random()*10000), Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
+	var transition = {Type: "Dice.Roll", Target: target.State.ID, Bumps: 4 + dist/400, Duration: 400 + dist/2, Goal: {X: goalX, Y: goalY}};
 	Script.API.NetState.Script.Create("Transition", transition);
 };
 
@@ -123,7 +123,7 @@ Dice.Roll = {Interface: "Transition" };
 Dice.Roll.Start = function(netstate)
 {
 	this.EndTime = this.StartTime + this.Duration;
-	var rng = new DetRNG(this.Seed);
+	var rng = Script.API.GetRNG();
 	var tilt = rng.randInt(1, 2);
 	var lastFrame = { X: this.OriginalState.X, Y: this.OriginalState.Y, Face: undefined, Tilted: tilt, Rotation: this.OriginalState.Rotation, EndTime: this.StartTime};
 	var bounce = rng.randSign() * Math.PI/10;
@@ -173,6 +173,7 @@ Dice.Roll.Start = function(netstate)
 	this.Target.Tilted = tilt;
 
 	PlaySound("Library/diceThrow1.ogg");
+	Script.API.UpdateSeed(rng);
 };
 
 Dice.Roll.GameTick = function(time, netstate)

@@ -156,7 +156,7 @@ function IsEmptyObject(obj)
 function RandomName()
 {
   var a = ["Apple", "Blazing", "Orange", "Red", "White", "Blue", "Fierce", "Bright", "Dark", "Green", "Amazing", "Tiny", "Huge", "Silver", "Bronze", "Iron", "Doom", "Cute"];
-  var b = ["Turtle", "Goblin", "Shark", "Elemental", "Spy", "Pirate", "Orb", "Golem", "Pillager", "Orphan", "Hammer", "Killer", "Minotaur", "Kobold", "Dwarf", "Giant", "Lizard", "Dragon", "Rabbit"];
+  var b = ["Turtle", "Goblin", "Shark", "Elemental", "Spy", "Pirate", "Orb", "Golem", "Pillager", "Tongue", "Hammer", "Killer", "Minotaur", "Kobold", "Dwarf", "Giant", "Lizard", "Dragon", "Rabbit"];
   return a.randomElement() + " " + b.randomElement();
 }
 
@@ -206,23 +206,47 @@ function RemoveDiv(div)
 
 function HashInt(val)
 {
+}
+
+function Hash(val)
+{
   var a = new Uint32Array(1);
-  a[0] = val;
-  a[0] = (a[0]+0x7ed55d16) + (a[0]<<12);
-  a[0] = (a[0]^0xc761c23c) ^ (a[0]>>>19);
-  a[0] = (a[0]+0x165667b1) + (a[0]<<5);
-  a[0] = (a[0]+0xd3a2646c) ^ (a[0]<<9);
-  a[0] = (a[0]+0xfd7046c5) + (a[0]<<3);
-  a[0] = (a[0]^0xb55a4f09) ^ (a[0]>>>16);
+
+  if(typeof(val) === "number")
+  {
+    a[0] = val;
+    a[0] = (a[0]+0x7ed55d16) + (a[0]<<12);
+    a[0] = (a[0]^0xc761c23c) ^ (a[0]>>>19);
+    a[0] = (a[0]+0x165667b1) + (a[0]<<5);
+    a[0] = (a[0]+0xd3a2646c) ^ (a[0]<<9);
+    a[0] = (a[0]+0xfd7046c5) + (a[0]<<3);
+    a[0] = (a[0]^0xb55a4f09) ^ (a[0]>>>16);
+  }
+  else if(typeof(val) === "string" || typeof(val) === "array")
+  {
+    for(var i = 0; i < val.length; i++)
+      a[0] = ((a[0] << 5) - a[0]) + val[i];
+  }
+
   return Number(a[0]);
 }
 
 function DetRNG(seed)
 {
-  var h = HashInt(seed);
-  var low  = h ^ 0x520AF59;
-  var high = h ^ 0x49616E42;
-  this.seed = new Uint32Array([high, low]);
+  if(typeof(seed) === "number" || typeof(seed) === "string")
+  {
+    var h = Hash(seed);
+    var low  = h ^ 0x520AF59;
+    var high = h ^ 0x49616E42;
+    this.seed = new Uint32Array([high, low]);
+  }
+  else
+    this.seed = new Uint32Array(seed);
+}
+
+DetRNG.prototype.getSeed = function()
+{
+  return [this.seed[0], this.seed[1]];
 }
 
 DetRNG.prototype.rand32Bit = function()

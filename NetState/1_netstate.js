@@ -23,6 +23,9 @@ var NetState = function(name, id)
   this.State = {};
   this.State.Global = {};
 
+  var rng = new DetRNG(Math.random()*99999);
+  this.State.Global.RNGSeed = rng.seed;
+
   this.Script = new NetState.Script(this);
 
   this.ClockStart = window.performance.now();
