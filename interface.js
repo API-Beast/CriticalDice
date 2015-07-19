@@ -7,6 +7,7 @@ var Interface = function(netstate)
 	this.MouseX        = 0;
 	this.MouseY        = 0;
 	this.MouseDelay    = 32;
+	this.ElementDivs   = Object.create(null);
 
 	Script.API.Interface = this;
 }
@@ -82,6 +83,7 @@ Interface.prototype.OnObjectCreation = function(iface, handle)
 
 	this.Table.appendChild(handle.HTMLDiv);
 	handle.HTMLDiv.addEventListener('mousedown', this.OnClick.bind(this, handle));
+	this.ElementDivs[handle.ID] = handle.HTMLDiv;
 }
 
 Interface.prototype.OnObjectRemoval = function(iface, handle)
@@ -90,6 +92,7 @@ Interface.prototype.OnObjectRemoval = function(iface, handle)
 
 	var div = handle.HTMLDiv;
 	div.parentNode.removeChild(div);
+	delete this.ElementDivs[handle.ID];
 }
 
 Interface.prototype.OnGlobalChange = function(){}

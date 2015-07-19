@@ -37,31 +37,21 @@ Extend("Interface.prototype.OnRelease", function(e)
 
   this.ClearSelection();
   var rect = GetRect(this.RectSelect.X, this.RectSelect.Y, e.pageX, e.pageY);
-  for(var y = rect.top; y < rect.bottom; y += 8)
-  for(var x = rect.left; x < rect.right; x += 8)
-  {
-    var ele = document.elementFromPoint(x, y);
-    // We need to go through the parent elements so we know wheter this "thing" belongs to a card.
-    while(ele instanceof Element)
-    {
-      if(ele.GameHandle) break;
-      if(ele === this.Table) break;
-      ele = ele.parentNode;
-    }
 
-    if(ele)
-    if(ele.GameHandle)
-    {
-      var eleRect = ele.getBoundingClientRect();
-      // Don't select objects that aren't at least halfway in the selection rect.
-      var intersection = IntersectRect(eleRect, rect);
-      if((eleRect.width * eleRect.height)*0.5 > (intersection.width*intersection.height))
-        continue;
-      // Great, select!
-      else
-        this.AddToSelection(ele.GameHandle);
-    }
-  };
+  for(var id in this.ElementDivs)
+  {
+    var ele = this.ElementDivs[id];
+    if(!ele.GameHandle) continue;
+
+    var eleRect = ele.getBoundingClientRect();
+    // Don't select objects that aren't at least halfway in the selection rect.
+    var intersection = IntersectRect(eleRect, rect);
+    if((eleRect.width * eleRect.height)*0.5 > (intersection.width*intersection.height))
+      continue;
+    // Great, select!
+    else
+      this.AddToSelection(ele.GameHandle);
+  }
 
   this.RectSelect.X = null;
   this.UpdateSelection();
