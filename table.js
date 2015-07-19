@@ -136,6 +136,7 @@ function GameInit(argument)
 		};
 
 		var prefabs = gLibrary.Prefab;
+    if(prefabs)
 		for(var i = 0; i < prefabs.length; i++)
 		{
 			var p = prefabs[i];

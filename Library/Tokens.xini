@@ -1,5 +1,0 @@
-[Prefab]
-Icon="./Library/coin.png"
-Texture="./Library/coin.png"
-Name=Coin
-Type=Token

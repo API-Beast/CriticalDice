@@ -1,0 +1,34 @@
+Folder
+{
+	Name = Chips
+
+	[Prefab]
+	Type     = Token
+	Name     = Red Chip
+	Icon     = rgb(200, 40, 40)
+	Texture  = Library/chipRed.png
+
+  [Prefab]
+	Type     = Token
+	Name     = Blue Chip
+	Icon     = rgb(40, 80, 200)
+	Texture  = Library/chipBlue.png
+
+  [Prefab]
+	Type     = Token
+	Name     = Magenta Chip
+	Icon     = rgb(200, 40, 160)
+	Texture  = Library/chipMagenta.png
+
+  [Prefab]
+  Type     = Token
+  Name     = Yellow Chip
+  Icon     = rgb(180, 180, 40)
+  Texture  = Library/chipYellow.png
+
+  [Prefab]
+  Type     = Token
+  Name     = Green Chip
+  Icon     = rgb(40, 180, 40)
+  Texture  = Library/chipGreen.png
+}
