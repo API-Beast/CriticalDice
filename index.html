@@ -1,13 +1,18 @@
 <head>
 	<title>The Table</title>
 
+	<link rel="stylesheet" type="text/css" href="Dependencies/quill.base.css"\>
+	<link rel="stylesheet" type="text/css" href="style.css"\>
+	<link rel="stylesheet" type="text/css" href="tabs.css"\>
+	<link rel="stylesheet" type="text/css" href="Table/font-awesome.css"\>
+
+	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+
 	<script src="Dependencies/functions.js"></script>
 	<script src="Dependencies/xini.js"></script>
 	<script src="Dependencies/peer.js"></script>
 	<script src="Dependencies/quill.js"></script>
 	<script src="Dependencies/keyframemap.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="Dependencies/quill.base.css"\>
 
 	<script src="interface.js"></script>
 	<script src="library.js"></script>
@@ -40,12 +45,6 @@
 
 	<script src="table.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="style.css"\>
-	<link rel="stylesheet" type="text/css" href="tabs.css"\>
-	<link rel="stylesheet" type="text/css" href="Table/font-awesome.css"\>
-
-	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
-
 </head>
 <body>
 
@@ -59,28 +58,26 @@
 
 	<div id="sidebar" class="tabbed">
 		<section class="active-tab">
-			<h2><a>Chat</a></h2>
+			<h2><a><i class="fa fa-comment"></i></a></h2>
 			<div id="chat-area">
 
 			</div>
-			<div id="chat-controls">
+			<label id="chat-controls">
 				<input id="name-input" placeholder="Your Nick"><textarea id="chat-input" placeholder="What do you want to share?"></textarea>
-			</div>
+			</label>
 		</section>
 
 		<section>
-			<h2><a>Session</a></h2>
+			<h2><a><i class="fa fa-bars"></i></a></h2>
 
-			Background: <select id="background-select"></select>
-			<br>
-			<div>
-				<button id="save-session-button">Save Session to Disk</button><br>
-				<button id="load-session-button">Load Session from Disk</button>
-			</div>
+			<h3>Session</h3>
+			<label><span>Background</span><select id="background-select"></select></label>
+			<button id="save-session-button">Save to Disk</button><br>
+			<button id="load-session-button">Load from Disk</button>
 		</section>
 
 		<section>
-			<h2><a>Library</a></h2>
+			<h2><a><i class="fa fa-book"></i></a></h2>
 			<div id="library-list">
 
 			</div>

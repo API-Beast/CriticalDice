@@ -6,7 +6,7 @@
 .tabbed section
 {
 	position: absolute;
-	top: 34px;
+	top: 38px;
 	z-index: 10;
 	height: 100%;
 	width: 100%;
@@ -18,14 +18,14 @@
 .tabbed section h2
 {
 	position: absolute;
-	top: -28px;
+	top: -32px;
 	left: 4px;
 	width: 80px;
-	height: 24px;
-	background: rgba(255, 208, 175, 0.51);
+	height: 28px;
+	background: rgba(0, 0, 0, 1);
 	margin: 0;
 	z-index: 10;
-	padding-left: 5px;
+	/* padding-left: 5px; */
 	box-sizing: border-box;
 
 	/* border-top: 1px solid gray; */
@@ -36,6 +36,11 @@
 	/* border-top-left-radius: 5px; */
 
 	/* box-shadow: 4px -5px 7px -5px rgba(0, 0, 0, 0.5); */
+	vertical-align: middle;
+	color: rgb(157, 0, 0);
+	/* line-height: 30px; */
+	/* text-shadow: 0px 2px 4px black; */
+	/* display: inline-block; */
 }
 
 .tabbed section h2 a
@@ -44,11 +49,12 @@
 	font-weight: normal;
 	text-decoration: none;
 	text-align: center;
-	width: 70px;
+	width: 80px;
 	display: inline-block;
 	cursor: pointer;
-	padding: 2px;
-	opacity: 0.7;
+	padding-top: 6px;
+	/* opacity: 0.7; */
+	/* vertical-align: bottom; */
 }
 
 .tabbed section:nth-child(2) h2
@@ -89,7 +95,8 @@
 .tabbed section.active-tab h2
 {
 	/* background: rgba(219, 205, 193, 0.25); */
-	background: rgba(255, 183, 183, 1);
+	background: rgba(255, 242, 0, 1);
+	color: rgb(157, 0, 0);
 }
 
 .tabbed section.active-tab h2 a

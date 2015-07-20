@@ -81,14 +81,14 @@ body
 
 #sidebar
 {
-	width: 450px;
-	background: rgb(107, 41, 41);
+	width: 350px;
+	background: rgb(95, 95, 95);
 	position: absolute;
 	height: 100%;
 	right: 0;
 	top: 0;
 	overflow: visible;
-	border-left: 4px solid rgb(181, 108, 108);
+	border-left: 4px solid rgb(157, 0, 0);
 	/* box-shadow: -2px 0px 5px rgba(40,0,0,0.8); */
 	box-sizing: border-box;
 	transition: right 0.4s; */;
@@ -333,7 +333,7 @@ div#loading.finished
   content: "\f07b";
 
   font: normal normal normal 24px/1 FontAwesome;
-  color: rgb(211, 155, 155);
+  color: rgb(134, 0, 0);
   display: inline-block;
   vertical-align: middle;
   margin-right: 4px;
@@ -346,7 +346,7 @@ div#loading.finished
 }
 
 .library .folder {
-    background: rgb(245, 233, 230);
+    background: rgb(255, 233, 233);
     /* cursor: pointer; */
 }
 
@@ -356,6 +356,11 @@ div#loading.finished
 
 input, button {
     /* width: 100%; */
+    background-color: rgb(255, 200, 200);
+    margin: 5px;
+    border: 1px solid rgb(150, 0, 0);
+    height: 24px;    vertical-align: middle;    line-height: 24px;
+    width: 316px;
 }
 
 
@@ -426,11 +431,11 @@ input, button {
 }
 
 input#name-input {
-    width: 25%;
-    margin-right: 5px;
+    /* width: 25%; */
+    /* margin-right: 5px; */
     text-align: center;
-    height: 24px;
-    padding: 0px;
+    /* height: 24px; */
+    /* padding: 0px; */
 }
 
 input#chat-input {
@@ -494,14 +499,15 @@ div#chat-controls {
 }
 
 textarea#chat-input {
-    height: 24px;
-    width: 60%;
+    /* height: 24px; */
+    /* width: 60%; */
     resize: none;
     /* display: inline-block; */
     /* margin: 0; */
-    position: absolute;
+    /* position: absolute; */
     /* vertical-align: middle; */
     /* text-align: center; */
+    overflow: hidden;
 }
 
 .chatmsg .message * {
@@ -510,13 +516,13 @@ textarea#chat-input {
 
 #hide-sidebar-button {
     position: absolute;
-    left: -36px;
+    left: -40px;
     top: 34px;
     width: 36px;
     height: 40px;
     font-size: 16px;
     background-color: rgba(249, 245, 244, 1);
-    border: 4px solid rgba(181, 108, 108, 1);
+    border: 4px solid rgba(157, 0, 0, 1);
     border-right: none;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -524,12 +530,12 @@ textarea#chat-input {
 }
 
 #sidebar.hidden {
-    right: -450px;
+    right: -350px;
     /* transition: right 0.5s; */
 }
 
 #save-session-button, #load-session-button {
-    width: 100%;
+    /* width: 100%; */
 }
 
 .actionbar .value-counter {
@@ -556,4 +562,66 @@ b.plus {
 
 b.minus {
     color: red;
+}
+
+#background-select {
+    /* width: 70%; */
+}
+
+.library {
+    border-top: 1px solid black;
+}
+
+label>*:nth-child(1) {
+    width: 25%;
+    display: inline-block;
+    text-align: right;
+    padding-right: 5px;
+    border-right: 1px solid black;
+    height: 24px;
+    vertical-align: middle;
+    line-height: 24px;
+}
+
+label>*:nth-child(2) {
+    width: 73%;
+
+    height: 24px;
+    vertical-align: middle;
+    line-height: 24px;
+}
+
+label span
+{
+  border: none;
+  background: rgb(255, 200, 200);
+}
+
+label input, label select, label textarea
+{
+  border: none;
+  margin: 0;
+}
+
+label {
+    /* border: 1px solid black; */
+    margin: 5px;
+    display: block;
+    border: 1px solid rgb(150, 0, 0); */;
+}
+
+
+#sidebar h3 {
+    margin-top: 0;
+}
+
+
+label#chat-controls {
+    position: absolute;
+    bottom: 40px;
+}
+
+#chat-area a {
+    text-decoration: none;
+    color: rgb(157, 0, 0);
 }
