@@ -19,9 +19,6 @@ Extend("Interface.prototype.OnClick", function(handle, e)
 {
   if(this.CurrentAction) return false;
 
-  e.stopImmediatePropagation();
-  e.preventDefault();
-
   if(e.shiftKey || e.ctrlKey)
   {
     if(this.Selection.indexOf(handle) === -1)
@@ -39,6 +36,12 @@ Extend("Interface.prototype.OnClick", function(handle, e)
   }
 
   this.UpdateSelection();
+});
+
+Extend("Interface.prototype.OnClickBubble", function(handle, e)
+{
+  e.stopImmediatePropagation();
+  e.preventDefault();
 });
 
 Extend("Interface.prototype.OnObjectRemoval", function(iface, handle)

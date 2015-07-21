@@ -1,0 +1,93 @@
+#sidebar {
+  width: 350px;
+  background: linear-gradient(transparent 10px, rgba(134, 134, 134, 0.42) 50px), #F9F5F4;
+  position: absolute;
+  height: 100%;
+  right: 0;
+  top: 0;
+  overflow: visible;
+  border-left: 4px solid #9d0000;
+  box-sizing: border-box;
+  transition: right 0.4s;
+}
+#sidebar .wide {
+  width: 316px;
+  text-align: left;
+}
+#sidebar .half-wide {
+  width: 156px;
+  text-align: left;
+}
+.tabbed {
+  position: relative;
+}
+.tabbed section {
+  position: absolute;
+  top: 39px;
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(transparent 50%, rgba(134, 134, 134, 0.42)), #f9f5f4;
+  padding: 10px;
+  box-sizing: border-box;
+  border-top: 4px solid rgb(157, 0, 0);
+}
+.tabbed section h2 {
+  position: absolute;
+  top: -38px;
+  left: 4px;
+  width: 60px;
+  height: 30px;
+  background: #000000;
+  margin: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  vertical-align: middle;
+  color: #FFFFFF;
+  border: 1px solid black;
+}
+.tabbed section h2 a {
+  font-size: 18px;
+  font-weight: normal;
+  text-decoration: none;
+  text-align: center;
+  width: 60px;
+  display: inline-block;
+  cursor: pointer;
+  padding-top: 6px;
+}
+.tabbed section.active-tab h2 {
+  background: #FFFFFF;
+  color: #000000;
+}
+.tabbed section.active-tab {
+  z-index: 11;
+}
+.tabbed section:nth-child(2) h2 {
+  left: 68px;
+  z-index: 9;
+}
+.tabbed section:nth-child(3) h2 {
+  left: 132px;
+  z-index: 8;
+}
+.tabbed section:nth-child(4) h2 {
+  left: 196px;
+  z-index: 7;
+}
+.tabbed section:nth-child(5) h2 {
+  left: 260px;
+  z-index: 6;
+}
+.tabbed section:nth-child(6) h2 {
+  left: 324px;
+  z-index: 5;
+}
+.tabbed section:nth-child(7) h2 {
+  left: 388px;
+  z-index: 4;
+}
+.tabbed section:nth-child(8) h2 {
+  left: 452px;
+  z-index: 3;
+}

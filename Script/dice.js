@@ -15,7 +15,7 @@ Script.Register("Dice", Dice);
 Dice.Initialize = function()
 {
 	var rng = new DetRNG(this.State.ID);
-	this.State.CurrentFace = this.State.CurrentFace || rng.randInt(1, this.State.NumFrames-1);
+	this.State.CurrentFace = this.State.CurrentFace || rng.randInt(1, this.State.NumFaces-1);
 }
 
 Dice.InitHTML = function()

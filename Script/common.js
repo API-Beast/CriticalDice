@@ -160,8 +160,12 @@ Common.Resize.Update = function(target, x, y)
 	var deltaX = x - this.StartX;
 	var deltaY = y - this.StartY;
 
-	target.State.Width  = target.OriginalState.Width  + deltaX;
-	target.State.Height = target.OriginalState.Height + deltaY;
+	// We center, make sure the Width/Height is dividable by 2 so that no object gets rendered on a half pixel
+	target.State.Width  = Round(target.OriginalState.Width  + deltaX, 2);
+	target.State.Height = Round(target.OriginalState.Height + deltaY, 2);
+
+	target.State.X      = target.OriginalState.X + Math.floor((deltaX+1) / 2);
+	target.State.Y      = target.OriginalState.Y + Math.floor((deltaY+1) / 2);
 };
 
 // ---------------------

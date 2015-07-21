@@ -21,7 +21,7 @@ Interface.prototype.Init = function(table)
 	this.NetState.OnGlobalStateChange.push(this.OnGlobalChange.bind(this));
 
 	this.MouseMove = this.OnMove.bind(this);
-  window.addEventListener('mousemove', this.MouseMove,    true);
+  window.addEventListener('mousemove', this.MouseMove, false);
   window.addEventListener('mouseup',   this.OnRelease.bind(this), true);
 
 	this.Table.addEventListener('mousedown',   this.OnTableClick.bind(this), false);
@@ -43,6 +43,7 @@ Interface.prototype.Init = function(table)
 
 Interface.prototype.OnKeyPress = function(e){};
 Interface.prototype.OnClick = function(obj, e){};
+Interface.prototype.OnClickBubble = function(obj, e){};
 Interface.prototype.OnDrop = function(e){};
 Interface.prototype.OnTableClick = function(e){};
 Interface.prototype.OnRelease = function(e){};
@@ -56,7 +57,7 @@ Interface.prototype.OnMove = function(e)
 	// Problem is that Chrome and Firefox will both pump the queue full with MouseMove events
 	// and these events stop the site from redrawing. Causing the animations to be very clunky.
 	// So we limit the mouse move events to one per redraw by stopping to listen.
-	window.removeEventListener('mousemove', this.MouseMove, true);
+	window.removeEventListener('mousemove', this.MouseMove, false);
 };
 
 Interface.prototype.GameLoop = function()
@@ -65,8 +66,8 @@ Interface.prototype.GameLoop = function()
 	this.NetState.GameTick(this);
 
 	// WORKAROUND ^ See above.
-	window.removeEventListener('mousemove', this.MouseMove, true);
-	window.addEventListener('mousemove',    this.MouseMove, true);
+	window.removeEventListener('mousemove', this.MouseMove, false);
+	window.addEventListener('mousemove',    this.MouseMove, false);
 };
 
 Interface.prototype.OnObjectChange = function(iface, handle, oldState, delta)
@@ -82,7 +83,8 @@ Interface.prototype.OnObjectCreation = function(iface, handle)
 	if(iface !== "Object") return;
 
 	this.Table.appendChild(handle.HTMLDiv);
-	handle.HTMLDiv.addEventListener('mousedown', this.OnClick.bind(this, handle));
+	handle.HTMLDiv.addEventListener('mousedown', this.OnClickBubble.bind(this, handle), false);
+	handle.HTMLDiv.addEventListener('mousedown', this.OnClick.bind(this, handle), true);
 	this.ElementDivs[handle.ID] = handle.HTMLDiv;
 }
 

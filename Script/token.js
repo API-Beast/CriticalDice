@@ -21,6 +21,15 @@ Token.Initialize = function()
 	}
 };
 
+Token.InitHTML = function()
+{
+	var div = this.HTMLDiv;
+	this.Img = document.createElement("img");
+	div.appendChild(this.Img);
+	div.classList.add('token');
+	this.UpdateState();
+};
+
 Token.UpdateState = function()
 {
 	if(!this.State.Texture)
@@ -33,18 +42,9 @@ Token.UpdateState = function()
 		delete this.State.Width;
 		delete this.State.Height;
 	}
-};
+}
 
-Token.InitHTML = function()
-{
-	var div = this.HTMLDiv;
-	this.Img = document.createElement("img");
-	div.appendChild(this.Img);
-	div.classList.add('token');
-	this.UpdateState();
-};
-
-Token.UpdateState = function()
+Token.UpdateHTML = function()
 {
 	var div = this.HTMLDiv;
 	if(this.State.Texture)
@@ -58,9 +58,4 @@ Token.UpdateState = function()
 			this.Img.src = this.PlaceholderSrc;
 		div.classList.add('placeholder');
 	}
-}
-
-Token.UpdateHTML = function()
-{
-
 };

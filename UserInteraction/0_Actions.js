@@ -11,7 +11,7 @@ Extend("Interface", function()
 
 Extend("Interface.prototype.OnMove", function ()
 {
-  if(this.PrepareAction)
+  if(this.PrepareAction && this.Selection.length)
   {
     if(Distance(this.PreparationX, this.PreparationY, this.MouseX, this.MouseY) > 5)
     {
@@ -47,7 +47,7 @@ Extend("Interface.prototype.OnContextMenu", function(e)
 	}
 });
 
-Extend("Interface.prototype.OnClick", function(handle, e)
+Extend("Interface.prototype.OnClickBubble", function(handle, e)
 {
   if(!e.shiftKey && !e.ctrlKey)
   if(this.PossibleActions.length > e.button)

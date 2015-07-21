@@ -14,11 +14,24 @@ var NetState = function(name, id)
 
   this.Network.on("open", this.OnNetworkEtablished.bind(this));
 	this.Network.on("connection", this.OnPeerConnected.bind(this));
-  this.Network.on("error", function(err){ console.error(err); });
+  this.Network.on("error",
+  function(err)
+  {
+    console.warn(err);
+    if(!this.Initialized && !this.Failure)
+    {
+      CallAll(this.OnInitFailure);
+      this.Failure = true;
+    }
+  }.bind(this));
 
   this.OnEtablishedSession = [];
+  this.OnInitFailure = [];
   this.OnStateReset = [];
   this.OnGlobalStateChange = [];
+
+  this.Initialized = false;
+  this.Failure = false;
 
   this.State = {};
   this.State.Global = {};

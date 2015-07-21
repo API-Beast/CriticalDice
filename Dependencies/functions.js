@@ -204,10 +204,6 @@ function RemoveDiv(div)
     div.parentNode.removeChild(div);
 }
 
-function HashInt(val)
-{
-}
-
 function Hash(val)
 {
   var a = new Uint32Array(1);
@@ -222,11 +218,14 @@ function Hash(val)
     a[0] = (a[0]+0xfd7046c5) + (a[0]<<3);
     a[0] = (a[0]^0xb55a4f09) ^ (a[0]>>>16);
   }
-  else if(typeof(val) === "string" || typeof(val) === "array")
+  else if(typeof(val) === "string")
   {
+    a[0] = 0;
     for(var i = 0; i < val.length; i++)
-      a[0] = ((a[0] << 5) - a[0]) + val[i];
+      a[0] = ((a[0] << 5) - a[0]) ^ val.charCodeAt(i);
   }
+  else
+    return undefined;
 
   return Number(a[0]);
 }
@@ -242,6 +241,7 @@ function DetRNG(seed)
   }
   else
     this.seed = new Uint32Array(seed);
+  this.rand32Bit();
 }
 
 DetRNG.prototype.getSeed = function()

@@ -117,6 +117,7 @@ function GameInit(argument)
 	var playfield = id("table");
 	gInterface.Init(playfield);
 	gNetState.OnEtablishedSession.push(SessionInit);
+  gNetState.OnInitFailure.push(OfflineSession);
 
 
 	id("save-session-button").addEventListener('click', SaveSession);
@@ -315,11 +316,28 @@ function SessionInit(id)
 
 	var loading = document.getElementById("loading");
 	loading.className = "finished";
-	//window.addEventListener('beforeunload', SessionExit);
-  // ^ beforeunload only get's called if the tab is focused on Chrome
-  window.addEventListener('unload', SessionExit);
+	window.addEventListener('beforeunload', SessionExit);
 
 	SetSessionStorage("PeerID", id);
+}
+
+function OfflineSession(id)
+{
+	Status("welcome", "You are offline.<br>Nobody will be able to join you.");
+
+  var autoSave = GetSessionStorage("AutoSave");
+  if(autoSave)
+  {
+    Status("system", "No peer available. Restoring Auto-Save.");
+    gNetState.SetState(autoSave);
+    gNetState.Host();
+  }
+  else
+    gNetState.Host();
+
+	var loading = document.getElementById("loading");
+	loading.className = "finished";
+	window.addEventListener('beforeunload', SessionExit);
 }
 
 function SessionExit()
