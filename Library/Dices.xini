@@ -40,6 +40,45 @@ Folder
 	FaceSize = [60, 60]
 	NumFaces = 6
 	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Golden D6
+	Title    = Golden
+	Icon     = rgb(226, 154, 32)
+	Face     = Library/D6Gold.png
+	Overlay  = Library/D6OverlayReflective.png
+	Faces    = Library/D6Faces.png
+	FaceValues = [1, 2, 3, 4, 5, 6]
+	FaceSize = [60, 60]
+	NumFaces = 6
+	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Steel D6
+	Title    = Steel
+	Icon     = rgb(52, 54, 62)
+	Face     = Library/D6Steel.png
+	Overlay  = Library/D6OverlayReflective.png
+	Faces    = Library/D6Faces.png
+	FaceValues = [1, 2, 3, 4, 5, 6]
+	FaceSize = [60, 60]
+	NumFaces = 6
+	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Wooden D6
+	Title    = Wooden
+	Icon     = rgb(182, 149, 115)
+	Face     = Library/D6Wooden.png
+	Overlay  = Library/D6WoodenOverlay.png
+	Faces    = Library/D6Faces.png
+	FaceValues = [1, 2, 3, 4, 5, 6]
+	FaceSize = [60, 60]
+	NumFaces = 6
+	NumFrames = 3
 }
 
 Folder
