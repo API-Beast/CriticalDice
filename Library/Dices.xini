@@ -13,7 +13,7 @@ Folder
 	FaceValues = [1, 2, 3, 4, 5, 6]
 	FaceSize = [60, 60]
 	NumFaces = 6
-	NumFrames = 3
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -26,7 +26,7 @@ Folder
 	FaceValues = [1, 2, 3, 4, 5, 6]
 	FaceSize = [60, 60]
 	NumFaces = 6
-	NumFrames = 3
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -39,7 +39,7 @@ Folder
 	FaceValues = [1, 2, 3, 4, 5, 6]
 	FaceSize = [60, 60]
 	NumFaces = 6
-	NumFrames = 3
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -52,7 +52,7 @@ Folder
 	FaceValues = [1, 2, 3, 4, 5, 6]
 	FaceSize = [60, 60]
 	NumFaces = 6
-	NumFrames = 3
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -65,7 +65,7 @@ Folder
 	FaceValues = [1, 2, 3, 4, 5, 6]
 	FaceSize = [60, 60]
 	NumFaces = 6
-	NumFrames = 3
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -78,7 +78,7 @@ Folder
 	FaceValues = [1, 2, 3, 4, 5, 6]
 	FaceSize = [60, 60]
 	NumFaces = 6
-	NumFrames = 3
+	NumFrames = 6
 }
 
 Folder
@@ -95,8 +95,8 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 3
-	NumFrames = 3
+	NumFaces = 6
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -108,8 +108,8 @@ Folder
 	Faces    = Library/FudgeDiceFacesWhite.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 3
-	NumFrames = 3
+	NumFaces = 6
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -121,8 +121,8 @@ Folder
 	Faces    = Library/FudgeDiceFacesWhite.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 3
-	NumFrames = 3
+	NumFaces = 6
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -134,8 +134,8 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 3
-	NumFrames = 3
+	NumFaces = 6
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -147,8 +147,8 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 3
-	NumFrames = 3
+	NumFaces = 6
+	NumFrames = 6
 
 	[Prefab]
 	Type     = Dice
@@ -160,6 +160,6 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 3
-	NumFrames = 3
+	NumFaces = 6
+	NumFrames = 6
 }
