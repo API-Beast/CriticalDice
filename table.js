@@ -125,6 +125,24 @@ function GameInit(argument)
 
   id("hide-sidebar-button").addEventListener('click', function(){ id("sidebar").classList.toggle("hidden"); });
 
+  var PrepareArchive = function(div)
+  {
+    div.classList.add("archive");
+
+    var newTextFile = document.createElement("button");
+    newTextFile.classList.add("item");
+    newTextFile.innerHTML = "<i class='fa fa-file-text'></i> New Text-Document";
+    div.appendChild(newTextFile);
+
+    var dropArea = document.createElement("div");
+    dropArea.classList.add("item");
+    dropArea.classList.add("hint");
+    dropArea.innerHTML = "...or drag files here to import them.";
+    div.appendChild(dropArea);
+  };
+  PrepareArchive(id("public-archive"));
+  PrepareArchive(id("private-archive"));
+
 	RequestLibrary(function()
 	{
 		var libraryList = id("library-list");

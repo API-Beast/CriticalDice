@@ -1,17 +1,17 @@
 <head>
 	<title>The Table</title>
 
-	<link rel="stylesheet" type="text/css" href="Dependencies/quill.base.css"\>
 	<link rel="stylesheet" type="text/css" href="style.css"\>
-	<link rel="stylesheet" type="text/css" href="tabs.css"\>
+	<link rel="stylesheet" type="text/css" href="sidebar.css"\>
 	<link rel="stylesheet" type="text/css" href="Table/font-awesome.css"\>
 
-	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700' rel='stylesheet' type='text/css'>
+	<link href="http://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css">
 
 	<script src="Dependencies/functions.js"></script>
 	<script src="Dependencies/xini.js"></script>
 	<script src="Dependencies/peer.js"></script>
-	<script src="Dependencies/quill.js"></script>
+	<script src="Dependencies/marked.js"></script>
 	<script src="Dependencies/keyframemap.js"></script>
 
 	<script src="interface.js"></script>
@@ -34,6 +34,7 @@
 	<script src="NetState/player.js"></script>
 
 	<script src="NetState/script.js"></script>
+	<script src="NetState/ScriptFunctions.js"></script>
 	<script src="NetState/interfaceObject.js"></script>
 	<script src="NetState/interfaceAction.js"></script>
 	<script src="NetState/interfaceTransition.js"></script>
@@ -41,7 +42,7 @@
 	<script src="Script/common.js"></script>
 	<script src="Script/token.js"></script>
 	<script src="Script/dice.js"></script>
-	<script src="NetState/ScriptFunctions.js"></script>
+	<script src="Script/sheet.js"></script>
 
 	<script src="table.js"></script>
 
@@ -80,6 +81,17 @@
 			<h2><a><i class="fa fa-book"></i></a></h2>
 			<div id="library-list">
 
+			</div>
+		</section>
+
+		<section>
+			<h2><a><i class="fa fa-archive"></i></a></h2>
+			<h3>Public Archive</h3>
+			<div id="public-archive">
+			</div>
+
+			<h3>Private Archive</h3>
+			<div id="private-archive">
 			</div>
 		</section>
 

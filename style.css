@@ -87,7 +87,7 @@ body
 }
 
 #chat-area {
-    padding: 10px;
+    /* padding-left: 10px; */
     /* position: relative; */
 }
 
@@ -403,9 +403,10 @@ input, button {
 
 .welcome {
     margin-bottom: 10px;
-    border: 2px dashed rgba(0, 0, 0, 0.13);
-    padding: 10px;
+    border-left: 2px solid rgba(0, 0, 0, 0.13);
+    padding-left: 10px;
     font-weight: 600;
+    margin-top: 10px;
 }
 
 .system, .join, .leave {
@@ -560,6 +561,7 @@ b.minus {
 
 .library {
     border-top: 1px solid black;
+    /* font-weight: 300; */
 }
 
 label>*:nth-child(1) {
@@ -606,6 +608,7 @@ label {
 
 #sidebar h3 {
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 
@@ -619,13 +622,31 @@ label#chat-controls {
     color: rgb(157, 0, 0);
 }
 
-.sheet>div {
+.sheet .text-field {
     background: radial-gradient(rgba(0, 0, 0, 0.0) 50%, rgba(0, 0, 0, 0.1)),rgb(255, 240, 208);
     color: black;
     box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.8);
     /* margin: 10px; */
     border: 2px solid rgba(115, 85, 52, 0.39);
     font-family: 'Roboto Condensed', sans-serif;
+    /* white-space: pre; */
+    /* height: auto; */
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    /* width: 100%; */
+    /* width: inherit; */
+    /* height: inherit; */
+    overflow: auto;
+    padding: 5px;
+}
+
+.sheet .text-field *
+{
+  margin-top: 0px;
+  /* margin-bottom: 5px; */
 }
 
 .obj.sheet {
@@ -666,4 +687,50 @@ button {
 .group button:last-child {
     border-bottom-left-radius: 0px;
     border-top-left-radius: 0px;
+}
+
+
+.dropArea {
+    /* border: 2px dashed #7B7B7B; */
+    /* padding: 10px; */
+    font-weight: 300;
+    /* font-size: 100%; */
+    /* text-align: center; */
+    color: #656565;
+    /* background: black; */
+}
+
+#sidebar h3:not(:first-of-type) {
+    margin-top: 30px;
+}
+
+.welcome:first-child {
+    margin-top: 0;
+}
+
+.archive .item {
+    border: none;
+    width: 100%;
+    border-left: 1px solid rgb(187, 187, 187);
+    border-bottom: 1px dashed rgb(204, 204, 204);
+    border-radius: 0;
+    /* padding: 0; */
+    margin: 0;
+    text-align: left;
+    padding: 5px;
+    display: inline-block;
+    height: 30px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    background: white;
+    font-weight: 300;
+    /* font-style: italic; */
+}
+
+.archive button.item:hover {
+    background-color: #E4E4E4;
+}
+
+.archive .item.hint {
+    font-style: italic;
 }
