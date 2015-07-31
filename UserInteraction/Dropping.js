@@ -59,7 +59,7 @@ Extend("Interface.prototype.OnDrop", function(e)
           };
           image.src = reader.result;
           token.PlaceholderSrc = reader.result;
-        };
+        }
         reader.readAsDataURL(file);
 
 
@@ -82,6 +82,17 @@ Extend("Interface.prototype.OnDrop", function(e)
           }
         };
         xhttp.send(fd);
+      }
+      else
+      {
+        var reader = new FileReader();
+        reader.onload = function ()
+        {
+          var text = marked(reader.result);
+          console.log(text);
+          this.NetState.Script.Create("Object", {Type: "Sheet", X: e.pageX+(i*40), Y: e.pageY, Content: text}, undefined, RELIABLE);
+        }.bind(this);
+        reader.readAsText(file);
       }
     };
   }

@@ -93,9 +93,11 @@ Interface.prototype.UpdateSelection = function()
 	}
   this.SelectionRect = selectionRect;
 
-	this.SelectionDiv.style.left   = Math.floor(selectionRect.left);
+  // getBoundingClientRect gives, as the name indicates, returns the coordinates in client space.
+  // We however position in "table" space, so we need to add the scroll values.
+	this.SelectionDiv.style.left   = Math.floor(selectionRect.left + this.Table.scrollLeft);
 	this.SelectionDiv.style.width  = Math.floor(selectionRect.right - selectionRect.left);
-	this.SelectionDiv.style.top    = Math.floor(selectionRect.top);
+	this.SelectionDiv.style.top    = Math.floor(selectionRect.top  + this.Table.scrollTop);
 	this.SelectionDiv.style.height = Math.floor(selectionRect.bottom - selectionRect.top);
 }
 

@@ -21,8 +21,8 @@ Extend("Interface.prototype.OnTableClick", function(e)
   if(e.button !== 0)     return;
   if(this.CurrentAction) return;
 
-  this.RectSelect.X = e.pageX;
-	this.RectSelect.Y = e.pageY;
+  this.RectSelect.X = e.pageX + this.Table.scrollLeft;
+	this.RectSelect.Y = e.pageY + this.Table.scrollTop;
 });
 
 Extend("Interface.prototype.OnMove", function(e)
@@ -36,7 +36,7 @@ Extend("Interface.prototype.OnRelease", function(e)
   if(this.RectSelect.X === null) return;
 
   this.ClearSelection();
-  var rect = GetRect(this.RectSelect.X, this.RectSelect.Y, e.pageX, e.pageY);
+  var rect = GetRect(this.RectSelect.X, this.RectSelect.Y, e.pageX + this.Table.scrollLeft, e.pageY + this.Table.scrollTop);
 
   for(var id in this.ElementDivs)
   {
@@ -60,12 +60,14 @@ Extend("Interface.prototype.OnRelease", function(e)
 
 Interface.prototype.UpdateRectSelect = function()
 {
+  var mX = this.MouseX + this.Table.scrollLeft;
+  var mY = this.MouseY + this.Table.scrollTop;
 	if(this.RectSelect.X !== null)
 	{
-		var left   = Math.min(this.RectSelect.X, this.MouseX);
-		var right  = Math.max(this.RectSelect.X, this.MouseX);
-		var top    = Math.min(this.RectSelect.Y, this.MouseY);
-		var bottom = Math.max(this.RectSelect.Y, this.MouseY);
+		var left   = Math.min(this.RectSelect.X, mX);
+		var right  = Math.max(this.RectSelect.X, mX);
+		var top    = Math.min(this.RectSelect.Y, mY);
+		var bottom = Math.max(this.RectSelect.Y, mY);
 
 		this.RectSelect.Div.style.left    = Math.floor(left);
 		this.RectSelect.Div.style.width   = Math.floor(right - left);
