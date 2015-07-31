@@ -139,6 +139,12 @@ function GameInit(argument)
     dropArea.classList.add("hint");
     dropArea.innerHTML = "...or drag files here to import them.";
     div.appendChild(dropArea);
+
+    dropArea.OnObjectDrop = function(evnt)
+    {
+      console.log(evnt);
+      evnt.result = "MOVE";
+    };
   };
   PrepareArchive(id("public-archive"));
   PrepareArchive(id("private-archive"));

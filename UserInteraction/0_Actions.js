@@ -3,6 +3,7 @@
 Extend("Interface", function()
 {
   this.CurrentAction = null;
+  this.LastAction = null;
 	this.PrepareAction = null;
 	this.PreparationX  = 0;
 	this.PreparationY  = 0;
@@ -34,6 +35,7 @@ Extend("Interface.prototype.OnRelease", function(e)
 
   this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Finish", this.MouseX, this.MouseY], RELIABLE);
 
+  this.LastAction = this.CurrentAction;
   this.CurrentAction = null;
   this.PreventContext = true;
 });

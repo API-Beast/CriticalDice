@@ -15,6 +15,7 @@ Common.Initialize = function()
 	this.State.X   = this.State.X || 0;
 	this.State.Y   = this.State.Y || 0;
 	this.State.Z   = this.State.Z || 0;
+	this.State.Hovering = false;
 
 	this.State.Rotation = this.State.Rotation || 0;
 	this.State.ScaleX   = this.State.ScaleX   || 1;
@@ -32,6 +33,11 @@ Common.UpdateHTML = function()
 	transform += "scaleY("+this.State.ScaleY+") ";
 	transform += "rotate("+this.State.Rotation+"deg) ";
 	div.style.transform = transform;
+
+	if(this.State.Hovering)
+		div.style.zIndex = 200;
+	else
+		div.style.zIndex = '';
 
 	if(this.State.Width  !== undefined) div.style.width  = this.State.Width +"px";
 	if(this.State.Height !== undefined) div.style.height = this.State.Height+"px";
@@ -64,19 +70,22 @@ Common.Move.Update = function(target, x, y)
 
 	if(Math.abs(deltaX) > 150 || Math.abs(deltaY) > 150)
 	{
-		this.DropOnTop  = true;
+		this.Drop = true;
 		target.State.Hovering = true;
-		//target.State.Z = Script.API.Interface.CalcTopZIndexFor(target.Handle)+1;
 	}
 };
 
 Common.Move.Finish = function(target, x, y)
 {
 	this.Update(target, x, y);
-	if(this.DropOnTop)
+	if(this.Drop)
 	{
-		//target.State.Z = Script.API.Interface.CalcTopZIndexFor(target.Handle)+1;
 		target.State.Hovering = false;
+		// Handle Drag & Drop into stuff like the archive.
+		// NOTE: This is asynchronous and will only work if this is the current action.
+		// Slight ugliness, yes.
+		if(Script.API.Interface.DropObject(this, target.Handle, x, y) === "MOVE")
+			Script.API.NetState.Script.Remove(target.Handle, RELIABLE); // Thus we need to broadcast the result.
 	}
 };
 
