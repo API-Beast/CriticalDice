@@ -123,4 +123,43 @@ Folder
 	FaceSize = [60, 60]
 	NumFaces = 3
 	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Golden Fudge-Dice
+	Title    = Golden
+	Icon     = rgb(226, 154, 32)
+	Face     = Library/D6Gold.png
+	Overlay  = Library/D6OverlayReflective.png
+	Faces    = Library/FudgeDiceFaces.png
+	FaceValues = [-1, 0, +1]
+	FaceSize = [60, 60]
+	NumFaces = 3
+	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Steel Fudge-Dice
+	Title    = Steel
+	Icon     = rgb(52, 54, 62)
+	Face     = Library/D6Steel.png
+	Overlay  = Library/D6OverlayReflective.png
+	Faces    = Library/FudgeDiceFaces.png
+	FaceValues = [-1, 0, +1]
+	FaceSize = [60, 60]
+	NumFaces = 3
+	NumFrames = 3
+
+	[Prefab]
+	Type     = Dice
+	Name     = Wooden Fudge-Dice
+	Title    = Wooden
+	Icon     = rgb(182, 149, 115)
+	Face     = Library/D6Wooden.png
+	Overlay  = Library/D6WoodenOverlay.png
+	Faces    = Library/FudgeDiceFaces.png
+	FaceValues = [-1, 0, +1]
+	FaceSize = [60, 60]
+	NumFaces = 3
+	NumFrames = 3
 }

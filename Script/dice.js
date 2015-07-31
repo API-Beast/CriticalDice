@@ -107,7 +107,7 @@ Dice.Throw.Finish = function(target, x, y, time)
 	var refX = this.XKeyframes.get(time-60);
 	var refY = this.YKeyframes.get(time-60);
 	var dist  = Distance(refX, refY, x, y);
-	var angle = Angle2(refX, refY, x-target.OffsetX, y-target.OffsetY) + target.Index * Math.PI/64;
+	var angle = Angle2(refX, refY, x-target.OffsetX, y-target.OffsetY) + target.Index * Math.PI/32;
 
 	// Don't throw too far or too short.
 	if(dist < 10) angle = Math.random()*Math.PI;
