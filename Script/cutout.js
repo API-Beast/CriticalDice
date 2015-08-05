@@ -8,7 +8,7 @@ var Cutout =
 	Actions: ["Common.Move", "Common.Rotate", "Common.Resize", "Common.Remove"],
 	Inheritance: ["Common"],
 	Interface:   "Object",
-	Properties: [["Name", "Name", "Unnamed"], ["Text"], ["FontSize", "Font-Size"], ["FontColor", "Font-Color", "", "color"], ["BorderRadius", "Border-Radius"], ["Texture", "Picture-URL"], ["TexSize", "Picture-Size"], ["TexAlign", "Picture-Alignment"], ["Height"], ["Width"], ["BGColor", "BG-Color", "", "color"], ["BGTexture", "BG-Texture"]]
+	Properties: [["Name", "Name", "Unnamed"], ["Text"], ["TextAlign", "H. Text-Align", "left"], ["VertAlign", "V. Text-Align", "top"], ["FontSize", "Font-Size"], ["FontColor", "Font-Color", "", "color"], ["BorderRadius", "Border-Radius"], ["Texture", "Picture-URL"], ["TexSize", "Picture-Size"], ["TexAlign", "Picture-Alignment"], ["Height"], ["Width"], ["BGColor", "BG-Color", "", "color"], ["BGTexture", "BG-Texture"]]
 };
 Script.Register("Cutout", Cutout);
 
@@ -24,6 +24,8 @@ Cutout.Initialize = function()
   this.State.Text         = this.State.Text || "";
   this.State.FontSize     = this.State.FontSize  || "150%";
   this.State.FontColor    = this.State.FontColor || "#000000";
+  this.State.VertAlign    = this.State.VertAlign || "center";
+  this.State.TextAlign    = this.State.TextAlign || "center";
 };
 
 Cutout.InitHTML = function()
@@ -81,8 +83,12 @@ Cutout.UpdateHTML = function()
   div.style.borderRadius = this.State.BorderRadius;
   div.style.background   = bg.join(', ');
 
+  var flexAlign = {"center": "center", "top": "flex-start", "bottom": "flex-end"};
+  div.style.justifyContent = flexAlign[this.State.VertAlign];
+
   this.Text.innerHTML = this.State.Text || "";
 
-  this.Text.style.fontSize = this.State.FontSize;
-  this.Text.style.color    = this.State.FontColor;
+  this.Text.style.fontSize  = this.State.FontSize;
+  this.Text.style.color     = this.State.FontColor;
+  this.Text.style.textAlign = this.State.TextAlign;
 };

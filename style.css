@@ -768,6 +768,10 @@ button {
     box-shadow: 0px 2px black, 0px 2px 5px rgba(0, 0, 0, 0.5);
     /* border-top: 1px solid rgba(255, 255, 255, 0.5); */
     background-size: cover;
+    position: relative;
+    display: flex;
+    justify-content: center;    
+    flex-direction: column;
 }
 
 .cutout>div>img {
@@ -776,11 +780,7 @@ button {
 }
 
 .cutout>div .text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 150%;
     text-shadow: white 0px 0px 8px;
     font-weight: bold;
+    text-align: center;
 }
