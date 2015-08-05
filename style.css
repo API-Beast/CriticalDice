@@ -293,12 +293,12 @@ div#loading.finished
   max-height: 24px;
 }
 
-.library .folder .contents
+.library .folder>.contents
 {
   display: none;
 }
 
-.library .folder.open .contents
+.library .folder.open>.contents
 {
   display: block;
   margin-left: 20px;
@@ -570,7 +570,7 @@ label>*:nth-child(1) {
     /* text-align: right; */
     padding-left: 5px;
     border-right: 1px solid black;
-    height: 24px;
+    min-height: 24px;
     vertical-align: middle;
     line-height: 24px;
     padding-right: 5px;
@@ -589,7 +589,7 @@ label>*:nth-child(2) {
 label span
 {
   border: none;
-  background: rgb(255, 200, 200);
+  background: rgba(255, 200, 200, 0.18);
 }
 
 label input, label select, label textarea
@@ -649,7 +649,7 @@ label#chat-controls {
   /* margin-bottom: 5px; */
 }
 
-.obj.sheet {
+.obj.sheet, .obj.cutout {
     padding: 5px;
 }
 
@@ -733,4 +733,54 @@ button {
 
 .archive .item.hint {
     font-style: italic;
+}
+
+
+.property-list {
+    margin-bottom: 20px;
+    border: 1px solid;
+}
+
+.property-list .item {
+    margin: 0;
+    border: 0;
+}
+
+.property-list .item:nth-child(even) {
+    background-color: #FFDFDF;
+}
+
+.property-list .item input {
+    background: none;
+    padding: 0;
+    padding-left: 10px;
+    width: 218px;
+    /* padding: 0; */
+}
+
+.token img {
+    /* width: 100%; */
+    /* height: 100%; */
+}
+
+.cutout>div {
+    overflow: hidden;
+    box-shadow: 0px 2px black, 0px 2px 5px rgba(0, 0, 0, 0.5);
+    /* border-top: 1px solid rgba(255, 255, 255, 0.5); */
+    background-size: cover;
+}
+
+.cutout>div>img {
+    width: 100%;
+    background-size: 50px 50px;
+}
+
+.cutout>div .text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 150%;
+    text-shadow: white 0px 0px 8px;
+    font-weight: bold;
 }

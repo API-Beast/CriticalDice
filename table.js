@@ -4,6 +4,7 @@
 
 var gNetState  = null;
 var gInterface = null;
+var gSidebar   = null;
 
 document.onreadystatechange = function ()
 {
@@ -119,6 +120,7 @@ function GameInit(argument)
 	gNetState.OnEtablishedSession.push(SessionInit);
   gNetState.OnInitFailure.push(OfflineSession);
 
+  gSidebar = new Sidebar(gNetState, gInterface);
 
 	id("save-session-button").addEventListener('click', SaveSession);
 	id("load-session-button").addEventListener('click', LoadSession);
@@ -237,9 +239,10 @@ function LibraryItem(p)
 	{
 		item.className = "folder";
 		item.addEventListener('click',
-			function()
+			function(e)
 			{
 				this.classList.toggle("open");
+        e.stopPropagation();
 			});
 
 		var contents = document.createElement("div");

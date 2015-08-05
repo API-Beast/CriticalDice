@@ -16,7 +16,7 @@ Extend("Interface.prototype.OnKeyPress", function(e)
 	}
 });
 
-Extend("Interface.prototype.UpdatePossibleActions", function ()
+Extend("Interface.prototype.SelectionChanged", function ()
 {
   this.Hotkeys = {};
   for(var i = 0; i < this.PossibleActions.length; i++)

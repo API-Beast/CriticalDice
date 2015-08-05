@@ -39,8 +39,11 @@ Common.UpdateHTML = function()
 	else
 		div.style.zIndex = '';
 
-	if(this.State.Width  !== undefined) div.style.width  = this.State.Width +"px";
-	if(this.State.Height !== undefined) div.style.height = this.State.Height+"px";
+	if(this.State.Width)  div.style.width  = this.State.Width +"px";
+	else                  div.style.width  = '';
+
+	if(this.State.Height) div.style.height = this.State.Height+"px";
+	else                  div.style.height  = '';
 }
 
 // ------------------

@@ -7,7 +7,8 @@ var Token =
 {
 	Actions: ["Common.Move", "Common.Rotate", "Common.Scale", "Common.Remove"],
 	Inheritance: ["Common"],
-	Interface:   "Object"
+	Interface:   "Object",
+	Properties: [["Name", "Name", "Unnamed"], ["Texture", "Picture-URL"]]
 };
 Script.Register("Token", Token);
 

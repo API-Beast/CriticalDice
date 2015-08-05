@@ -60,7 +60,7 @@ Extend("Interface.prototype.OnClickBubble", function(handle, e)
   }
 });
 
-Interface.prototype.UpdatePossibleActions = function()
+Extend("Interface.prototype.SelectionChanged", function()
 {
 	if(this.Selection.length === 0)
 	{
@@ -78,7 +78,7 @@ Interface.prototype.UpdatePossibleActions = function()
 		if(handle.Actions.indexOf(actions[i]) !== -1)
 			this.PossibleActions.push(actions[i]);
 	}
-}
+});
 
 Interface.prototype.ExecuteAction = function(action, mouseX, mouseY)
 {

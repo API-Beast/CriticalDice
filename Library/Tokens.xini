@@ -1,0 +1,141 @@
+Folder
+{
+  Name = Counters
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Red-Counter
+  Title    = Red
+  Icon     = #932424
+  Width    = 40
+  Height   = 40
+  BGColor  = #932424
+  BorderRadius = 5px
+  Text = "1"
+  FontColor = #ffffff
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Blue-Counter
+  Title    = Blue
+  Icon     = #1F6598
+  Width    = 40
+  Height   = 40
+  BGColor  = #1F6598
+  BorderRadius = 5px
+  Text = "1"
+  FontColor = #ffffff
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Green-Counter
+  Title    = Green
+  Icon     = #1D6B4A
+  Width    = 40
+  Height   = 40
+  BGColor  = #1D6B4A
+  BorderRadius = 5px
+  Text = "1"
+  FontColor = #ffffff
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Health-Counter
+  Title    = Health
+  Texture  = Library/Markers/health-normal.png
+  Icon     = Library/Markers/health-normal-black.png
+  TexSize  = contain
+  Width    = 40
+  Height   = 40
+  BGColor  = #ad1d1d
+  BorderRadius = 5px
+  Text = "1"
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Armor-Counter
+  Title    = Armor
+  Texture  = Library/Markers/shield-black.png
+  Icon     = Library/Markers/shield-black.png
+  TexSize  = contain
+  Width    = 40
+  Height   = 40
+  BGColor  = #7c7c7c
+  BorderRadius = 5px
+  Text = "1"
+  FontColor = #FFFFFF
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Attack-Counter
+  Title    = Attack
+  Texture  = Library/Markers/battle-axe-black.png
+  Icon     = Library/Markers/battle-axe-black.png
+  TexSize  = contain
+  Width    = 40
+  Height   = 40
+  BGColor  = #aa3300
+  BorderRadius = 5px
+  Text = "1"
+  FontColor = #FFFFFF
+
+  [Prefab]
+  Type     = Cutout
+  Name     = Ranged-Counter
+  Title    = Ranged
+  Texture  = Library/Markers/bowman-black.png
+  Icon     = Library/Markers/bowman-black.png
+  TexSize  = contain
+  Width    = 40
+  Height   = 40
+  BGColor  = #144405
+  BorderRadius = 5px
+  Text = "1"
+  FontColor = #FFFFFF
+}
+
+Folder
+{
+  Name = Tokens
+
+  Folder
+  {
+  	Name = Chips
+
+  	[Prefab]
+  	Type     = Token
+  	Name     = Red Chip
+  	Icon     = rgb(200, 40, 40)
+  	Texture  = Library/chipRed.png
+
+    [Prefab]
+  	Type     = Token
+  	Name     = Blue Chip
+  	Icon     = rgb(40, 80, 200)
+  	Texture  = Library/chipBlue.png
+
+    [Prefab]
+  	Type     = Token
+  	Name     = Magenta Chip
+  	Icon     = rgb(200, 40, 160)
+  	Texture  = Library/chipMagenta.png
+
+    [Prefab]
+    Type     = Token
+    Name     = Yellow Chip
+    Icon     = rgb(180, 180, 40)
+    Texture  = Library/chipYellow.png
+
+    [Prefab]
+    Type     = Token
+    Name     = Green Chip
+    Icon     = rgb(40, 180, 40)
+    Texture  = Library/chipGreen.png
+  }
+
+  Folder
+  {
+    Name = Markers
+  }
+
+}

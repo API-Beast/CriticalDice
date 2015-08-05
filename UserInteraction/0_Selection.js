@@ -6,6 +6,8 @@ Extend("Interface", function()
   this.SelectionRect   = null;
   this.PossibleActions = [];
   this.SelectionDiv    = null;
+
+  this.OnSelectionChanged = [];
 });
 
 Extend("Interface.prototype.Init", function()
@@ -59,6 +61,8 @@ Extend("Interface.prototype.OnTableClick", function(e)
 
 	this.ClearSelection();
 	this.UpdateSelection();
+
+  if(document.activeElement) document.activeElement.blur();
 });
 
 Interface.prototype.UpdateSelection = function()
@@ -101,20 +105,25 @@ Interface.prototype.UpdateSelection = function()
 	this.SelectionDiv.style.height = Math.floor(selectionRect.bottom - selectionRect.top);
 }
 
+Interface.prototype.SelectionChanged = function()
+{
+  CallAll(this.OnSelectionChanged, this.Selection);
+}
+
 Interface.prototype.ClearSelection = function()
 {
 	for(var i = 0; i < this.Selection.length; i++)
 		this.Selection[i].HTMLDiv.classList.remove("selected");
 
 	this.Selection = [];
-	this.UpdatePossibleActions();
+	this.SelectionChanged();
 }
 
 Interface.prototype.AddToSelection = function(handle)
 {
 	this.Selection.push(handle);
 	handle.HTMLDiv.classList.add("selected");
-	this.UpdatePossibleActions();
+	this.SelectionChanged();
 }
 
 Interface.prototype.RemoveFromSelection = function(handle)
@@ -124,6 +133,6 @@ Interface.prototype.RemoveFromSelection = function(handle)
 	{
 		this.Selection.splice(i, 1);
 		handle.HTMLDiv.classList.remove("selected");
-		this.UpdatePossibleActions();
+		this.SelectionChanged();
 	}
 };

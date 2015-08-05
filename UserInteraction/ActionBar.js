@@ -23,7 +23,7 @@ Extend("Interface.prototype.UpdateSelection", function()
 	}
 });
 
-Extend("Interface.prototype.UpdatePossibleActions", function ()
+Extend("Interface.prototype.SelectionChanged", function ()
 {
   this.ActionBar.innerHTML = "";
 	this.FillMenu(this.ActionBar, this.PossibleActions);

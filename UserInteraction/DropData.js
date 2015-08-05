@@ -27,7 +27,7 @@ Extend("Interface.prototype.OnDrop", function(e)
     // Just check if the URL "looks" like a image.
     if(url.match(/.(\.png|\.jpg|\.jpeg|\.gif|\.apng)/))
     {
-      var token = {Type: "Token", X: e.pageX, Y: e.pageY, Texture: url};
+      var token = {Type: "Cutout", X: e.pageX, Y: e.pageY, TexSize: "cover", Texture: url};
       this.NetState.Script.Create("Object", token, undefined, RELIABLE);
     }
     /*else if(url.match(/.(\.mp3|\.ogg)/))
@@ -48,7 +48,7 @@ Extend("Interface.prototype.OnDrop", function(e)
         var self  = this;
 
         var reader = new FileReader();
-        var token  = this.NetState.Script.Create("Object", {Type: "Token", X: e.pageX+(i*40), Y: e.pageY}, undefined, RELIABLE);
+        var token  = this.NetState.Script.Create("Object", {Type: "Cutout", X: e.pageX+(i*40), Y: e.pageY, TexSize: "cover"}, undefined, RELIABLE);
 
         var image = new Image();
         reader.onload = function()
