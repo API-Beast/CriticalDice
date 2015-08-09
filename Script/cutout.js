@@ -33,6 +33,18 @@ Cutout.InitHTML = function()
 	var div = this.HTMLDiv;
   div.classList.add('cutout');
 
+	var self = this;
+	div.addEventListener('keydown', function(e)
+	{
+		if(e.keyCode === 13)
+		{
+			self.Text.focus();
+			PlaceCaretAtEnd(self.Text);
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	});
+
   this.Container = document.createElement("div");
 
   this.Text = document.createElement('span');
@@ -60,6 +72,12 @@ Cutout.OnTextEdit = function(event)
   Script.API.NetState.Script.Update(this, {Text: value}, RELIABLE);
 }
 
+Cutout.Blur = function()
+{
+	this.HTMLDiv.blur();
+	this.Text.blur();
+}
+
 Cutout.UpdateHTML = function()
 {
 	var div = this.Container;
@@ -71,7 +89,8 @@ Cutout.UpdateHTML = function()
   else                  div.style.height  = '';
 
   var bg = [];
-  if(this.State.Texture)   bg.push("url("+this.State.Texture+") "+this.State.TexAlign+" / "+this.State.TexSize+" no-repeat");
+  if(this.State.Texture)        bg.push("url("+this.State.Texture+") "+this.State.TexAlign+" / "+this.State.TexSize+" no-repeat");
+	if(this.PlaceholderSrc){      bg.push("url("+this.PlaceholderSrc+") "+this.State.TexAlign+" / "+this.State.TexSize+" no-repeat");}
   if(this.State.BGTexture) bg.push("url("+this.State.BGTexture+")");
 
   if(this.State.BGColor)

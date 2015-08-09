@@ -9,6 +9,7 @@
 	<link href="http://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css">
 
 	<script src="Dependencies/functions.js"></script>
+	<script src="Dependencies/ui.js"></script>
 	<script src="Dependencies/xini.js"></script>
 	<script src="Dependencies/peer.js"></script>
 	<script src="Dependencies/marked.js"></script>
@@ -42,6 +43,7 @@
 	<script src="NetState/interfaceTransition.js"></script>
 
 	<script src="Sidebar/properties.js"></script>
+	<script src="Sidebar/archive.js"></script>
 
 	<script src="Script/common.js"></script>
 	<script src="Script/cutout.js"></script>
@@ -64,41 +66,42 @@
 
 	<div id="sidebar" class="tabbed">
 		<section class="active-tab">
-			<h2><a><i class="fa fa-comment"></i></a></h2>
-			<div id="chat-area">
+			<h2><a tabindex="1"><i class="fa fa-comment"></i></a></h2>
+			<div class="content">
 
-			</div>
-			<label id="chat-controls">
-				<input id="name-input" placeholder="Your Nick"><textarea id="chat-input" placeholder="What do you want to share?"></textarea>
-			</label>
-		</section>
-
-		<section>
-			<h2><a><i class="fa fa-bars"></i></a></h2>
-
-			<div id="sidebar-properties"></div>
-
-			<h3>Session</h3>
-			<label><span>Background</span><select id="background-select"></select></label>
-			<div class="group"><button id="save-session-button" class="half-wide"><i class="fa fa-download"></i> Save to Disk</button>
-			<button id="load-session-button" class="half-wide"><i class="fa fa-upload"></i> Load from Disk</button></div>
-		</section>
-
-		<section>
-			<h2><a><i class="fa fa-book"></i></a></h2>
-			<div id="library-list">
+				<div id="chat-area"></div>
+				<label id="chat-controls">
+					<input id="name-input" placeholder="Your Nick"><textarea id="chat-input" placeholder="What do you want to share?"></textarea>
+				</label>
 
 			</div>
 		</section>
 
 		<section>
-			<h2><a><i class="fa fa-archive"></i></a></h2>
-			<h3>Public Archive</h3>
-			<div id="public-archive">
-			</div>
+			<h2><a tabindex="2"><i class="fa fa-bars"></i></a></h2>
+			<div class="content">
+				<h3>Session</h3>
+				<label><span>Background</span><select id="background-select"></select></label>
+				<div class="group"><button id="save-session-button" class="half-wide"><i class="fa fa-download"></i> Save to Disk</button>
+				<button id="load-session-button" class="half-wide"><i class="fa fa-upload"></i> Load from Disk</button></div>
 
-			<h3>Private Archive</h3>
-			<div id="private-archive">
+				<h3>Selected Objects</h3>
+				<div id="sidebar-properties"></div>
+			</div>
+		</section>
+
+		<section>
+			<h2><a tabindex="3"><i class="fa fa-book"></i></a></h2>
+			<div class="content">
+				<div id="library-list"></div>
+			</div>
+		</section>
+
+		<section>
+			<h2><a tabindex="4"><i class="fa fa-archive"></i></a></h2>
+			<div class="content">
+				<h3>Public Archive</h3>
+				<div id="public-archive"></div>
 			</div>
 		</section>
 

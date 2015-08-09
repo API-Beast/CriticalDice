@@ -32,7 +32,10 @@ function GameInit(argument)
 
 	var elements = document.querySelectorAll(".tabbed section h2 a");
 	for (var i = 0; i < elements.length; i++)
+  {
 		elements[i].addEventListener("click", SetActiveTab.bind(undefined, elements[i].parentNode.parentNode));
+    elements[i].addEventListener("focus", SetActiveTab.bind(undefined, elements[i].parentNode.parentNode));
+  }
 
 	var nameField = id("name-input");
 	var name = GetStored("nick");
@@ -127,30 +130,6 @@ function GameInit(argument)
 
   id("hide-sidebar-button").addEventListener('click', function(){ id("sidebar").classList.toggle("hidden"); });
 
-  var PrepareArchive = function(div)
-  {
-    div.classList.add("archive");
-
-    var newTextFile = document.createElement("button");
-    newTextFile.classList.add("item");
-    newTextFile.innerHTML = "<i class='fa fa-file-text'></i> New Text-Document";
-    div.appendChild(newTextFile);
-
-    var dropArea = document.createElement("div");
-    dropArea.classList.add("item");
-    dropArea.classList.add("hint");
-    dropArea.innerHTML = "...or drag files here to import them.";
-    div.appendChild(dropArea);
-
-    dropArea.OnObjectDrop = function(evnt)
-    {
-      console.log(evnt);
-      evnt.result = "MOVE";
-    };
-  };
-  PrepareArchive(id("public-archive"));
-  PrepareArchive(id("private-archive"));
-
 	RequestLibrary(function()
 	{
 		var libraryList = id("library-list");
@@ -194,13 +173,10 @@ function GameInit(argument)
 	});
 }
 
-function LibraryItem(p)
+function GetLabel(p)
 {
-	var item = document.createElement("div");
-	var label = document.createElement("div");
-	label.className = "label";
-	item.appendChild(label);
-
+  if(p.Label) return p.Label;
+  var label = document.createElement("div");
 	var icon;
 	if(typeof p.Icon === 'string')
 	{
@@ -231,9 +207,19 @@ function LibraryItem(p)
 		icon.classList.add("icon");
 		label.appendChild(icon);
 	}
-
-	var name = document.createTextNode(p.Title || p.Name);
+	var name = document.createTextNode(p.Name);
 	label.appendChild(name);
+  p.Label = label.innerHTML;
+  return p.Label;
+}
+
+function LibraryItem(p)
+{
+	var item = document.createElement("div");
+  var label = document.createElement("div");
+	label.className = "label";
+  label.innerHTML = GetLabel(p);
+  item.appendChild(label);
 
 	if(p.Prefab || p.Folder)
 	{
@@ -417,4 +403,5 @@ function ChatMessage(nick, color, text)
   div.appendChild(textSpan);
 
   chatArea.appendChild(div);
+  textSpan.scrollIntoView(false);
 }

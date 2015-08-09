@@ -412,3 +412,22 @@ function ColorIsDark(clr)
 	var brightness = (0.2126*clr[0] + 0.7152*clr[1] + 0.0722*clr[2]);
 	return brightness < 140;
 }
+
+function PlaceCaretAtEnd(el)
+{
+    el.focus();
+    if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    } else if (typeof document.body.createTextRange != "undefined") {
+        var textRange = document.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.collapse(false);
+        textRange.select();
+    }
+}

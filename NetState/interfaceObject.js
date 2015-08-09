@@ -19,6 +19,8 @@ objIface.FixPrototype = function(proto)
 	proto.UpdateHTML   = proto.UpdateHTML   || dummy;
 	proto.UpdateState  = proto.UpdateState  || dummy;
 	proto.Deinitialize = proto.Deinitialize || dummy;
+	proto.Focus        = proto.Focus        || dummy;
+	proto.Blur         = proto.Blur         || dummy;
 
 	if(proto.Volatile === undefined)
 		proto.Volatile = false;
@@ -28,6 +30,7 @@ objIface.Creation = function(handle)
 {
 	handle.HTMLDiv = document.createElement("div");
 	handle.HTMLDiv.classList.add("obj");
+	handle.HTMLDiv.tabIndex = "-1";
 	handle.HTMLDiv.GameHandle = handle;
 
 	handle.Initialize();

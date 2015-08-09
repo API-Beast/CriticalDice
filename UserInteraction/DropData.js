@@ -29,6 +29,9 @@ Extend("Interface.prototype.OnDrop", function(e)
     {
       var token = {Type: "Cutout", X: e.pageX, Y: e.pageY, TexSize: "cover", VertAlign: "bottom", Texture: url};
       this.NetState.Script.Create("Object", token, undefined, RELIABLE);
+
+      this.ClearSelection();
+      this.AddToSelection(token);
     }
     /*else if(url.match(/.(\.mp3|\.ogg)/))
     {
@@ -49,6 +52,9 @@ Extend("Interface.prototype.OnDrop", function(e)
 
         var reader = new FileReader();
         var token  = this.NetState.Script.Create("Object", {Type: "Cutout", X: e.pageX+(i*40), Y: e.pageY, VertAlign: "bottom", TexSize: "cover"}, undefined, RELIABLE);
+
+        this.ClearSelection();
+        this.AddToSelection(token);
 
         var image = new Image();
         reader.onload = function()

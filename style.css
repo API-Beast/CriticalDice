@@ -89,6 +89,11 @@ body
 #chat-area {
     /* padding-left: 10px; */
     /* position: relative; */
+    position: absolute;
+    bottom: 40px;
+    overflow-y: auto;
+    top: 0px;
+    padding: 5px;
 }
 
 #loading
@@ -210,8 +215,6 @@ div#loading.finished
 
 *[contenteditable="true"]
 {
-  /* font-weight: 700; */
-  /* color: white; */
   user-select: all;
   -webkit-user-select: all;
   pointer-events: all;
@@ -222,6 +225,11 @@ div#loading.finished
   content: attr(placeholder);
   font-style: italic;
   color: rgba(255, 255, 255, 0.5);
+}
+
+*:focus
+{
+  outline: 0px solid transparent;
 }
 
 .title-bar .buttons {
@@ -284,7 +292,7 @@ div#loading.finished
   padding: 5px;
 }
 
-.library * .icon
+.icon
 {
   margin-right: 4px;
   vertical-align: middle;
@@ -350,7 +358,7 @@ input, button {
     height: 24px;    vertical-align: middle;    line-height: 24px;
     /* width: 316px; */
     /* background-color: rgb(255, 200, 200); */
-    transition: background-color 0.5s; */;
+    transition: background-color 0.5s;
 }
 
 
@@ -491,7 +499,7 @@ div#chat-controls {
 
 textarea#chat-input {
     /* height: 24px; */
-    /* width: 60%; */
+    width: 222px;
     resize: none;
     /* display: inline-block; */
     /* margin: 0; */
@@ -562,6 +570,7 @@ b.minus {
 .library {
     border-top: 1px solid black;
     /* font-weight: 300; */
+    /* overflow: scroll; */
 }
 
 label>*:nth-child(1) {
@@ -569,7 +578,7 @@ label>*:nth-child(1) {
     display: inline-block;
     /* text-align: right; */
     padding-left: 5px;
-    border-right: 1px solid black;
+    border-right: 1px solid #383030;
     min-height: 24px;
     vertical-align: middle;
     line-height: 24px;
@@ -579,7 +588,7 @@ label>*:nth-child(1) {
 }
 
 label>*:nth-child(2) {
-    width: 208px;
+    width: 202px;
 
     height: 24px;
     vertical-align: middle;
@@ -589,7 +598,7 @@ label>*:nth-child(2) {
 label span
 {
   border: none;
-  background: rgba(255, 200, 200, 0.18);
+  /* background: rgba(255, 200, 200, 0); */
 }
 
 label input, label select, label textarea
@@ -603,6 +612,8 @@ label {
     margin: 5px;
     display: block;
     border: 1px solid rgb(150, 0, 0); */;
+    width: 310px;
+    box-sizing: border-box;
 }
 
 
@@ -614,7 +625,8 @@ label {
 
 label#chat-controls {
     position: absolute;
-    bottom: 40px;
+    bottom: 0px;
+    width: 320px;
 }
 
 #chat-area a {
@@ -738,24 +750,31 @@ button {
 
 .property-list {
     margin-bottom: 20px;
-    border: 1px solid;
+    border: 1px solid rgb(64, 64, 64);
+    width: 318px;
+    box-sizing: content-box;
 }
+
+.property-list {}
 
 .property-list .item {
     margin: 0;
     border: 0;
+    width: 318px;
+    box-sizing: border-box;
 }
 
 .property-list .item:nth-child(even) {
-    background-color: #FFDFDF;
+    background-color: #E9F4F9;
 }
 
 .property-list .item input {
-    background: none;
     padding: 0;
     padding-left: 10px;
-    width: 218px;
+    width: 212px;
     /* padding: 0; */
+    padding-right: 5px;
+    background: none;
 }
 
 .token img {
@@ -770,7 +789,7 @@ button {
     background-size: cover;
     position: relative;
     display: flex;
-    justify-content: center;    
+    justify-content: center;
     flex-direction: column;
 }
 
@@ -783,4 +802,49 @@ button {
     text-shadow: white 0px 0px 8px;
     font-weight: bold;
     text-align: center;
+    pointer-events: none;
+}
+
+
+.archive .item .icon {
+    /* max-height: 24px; */
+    /* vertical-align: top; */
+    /* margin-right: 5px; */
+    margin-right: 4px;    vertical-align: middle;    margin-bottom: 4px;    display: inline-block;    max-height: 24px;
+}
+
+
+.property-list .item:nth-child(odd) {
+    background: white;
+}
+
+.property-list .item.title {
+    background-color: #97B3BF;
+    border-bottom: 1px solid black;
+    padding: 5px;
+}
+
+.property-list .item.title:before {
+    content: "";
+}
+
+.property-list .item.title:before
+{
+  content: "\f0da";
+
+  font: normal normal normal 24px/1 FontAwesome;
+  color: rgb(134, 0, 0);
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.property-list.open .item.title:before
+{
+  content: "\f0d7";
+}
+
+.property-list:not(.open) .item:not(.title) {
+  display: none;
 }

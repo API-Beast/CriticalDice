@@ -46,6 +46,16 @@ Common.UpdateHTML = function()
 	else                  div.style.height  = '';
 }
 
+Common.Focus = function()
+{
+	this.HTMLDiv.focus();
+	console.log("Focus");
+}
+Common.Blur = function()
+{
+	this.HTMLDiv.blur();
+}
+
 // ------------------
 // Action: Common.Move
 // ------------------

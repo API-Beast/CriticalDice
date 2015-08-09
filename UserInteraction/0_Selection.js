@@ -113,7 +113,10 @@ Interface.prototype.SelectionChanged = function()
 Interface.prototype.ClearSelection = function()
 {
 	for(var i = 0; i < this.Selection.length; i++)
+  {
 		this.Selection[i].HTMLDiv.classList.remove("selected");
+    this.Selection[i].Blur();
+  }
 
 	this.Selection = [];
 	this.SelectionChanged();
@@ -123,6 +126,7 @@ Interface.prototype.AddToSelection = function(handle)
 {
 	this.Selection.push(handle);
 	handle.HTMLDiv.classList.add("selected");
+  handle.Focus();
 	this.SelectionChanged();
 }
 
@@ -133,6 +137,7 @@ Interface.prototype.RemoveFromSelection = function(handle)
 	{
 		this.Selection.splice(i, 1);
 		handle.HTMLDiv.classList.remove("selected");
+    handle.Blur();
 		this.SelectionChanged();
 	}
 };
