@@ -33,10 +33,8 @@ Extend("Interface.prototype.OnRelease", function(e)
   e.preventDefault();
   e.stopPropagation();
 
-  this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Finish", this.MouseX, this.MouseY], RELIABLE);
+  this.FinishAction();
 
-  this.LastAction = this.CurrentAction;
-  this.CurrentAction = null;
   this.PreventContext = true;
 });
 
@@ -80,6 +78,14 @@ Extend("Interface.prototype.SelectionChanged", function()
 	}
 });
 
+Interface.prototype.FinishAction = function()
+{
+  this.NetState.Script.Input(this.CurrentAction, this.NetState.Clock() + this.MouseDelay, ["Finish", this.MouseX, this.MouseY], RELIABLE);
+
+  this.LastAction = this.CurrentAction;
+  this.CurrentAction = null;
+}
+
 Interface.prototype.ExecuteAction = function(action, mouseX, mouseY)
 {
 	var blueprint =
@@ -109,6 +115,9 @@ Interface.prototype.ExecuteAction = function(action, mouseX, mouseY)
 	}
 	blueprint.CenterX = (selectionRect.left + selectionRect.right)/2;
 	blueprint.CenterY = (selectionRect.top  + selectionRect.bottom)/2;
+
+  if(this.CurrentAction)
+    this.FinishAction();
 
 	this.CurrentAction = this.NetState.Script.Create("Action", blueprint, undefined, RELIABLE);
 };
