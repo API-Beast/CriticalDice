@@ -107,6 +107,8 @@ NetState.Package.ChangeNick = function(player, intro)
 
 NetState.Package.ChatMsg = function(player, text, type, value)
 {
+  if(type === null || type === undefined)
+    type = "chatmsg";
   ChatMessage(player.Nick, player.Color, text, type, value);
 }
 
