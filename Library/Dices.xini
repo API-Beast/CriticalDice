@@ -95,7 +95,7 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 6
+	NumFaces = 3
 	NumFrames = 6
 
 	[Prefab]
@@ -108,7 +108,7 @@ Folder
 	Faces    = Library/FudgeDiceFacesWhite.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 6
+	NumFaces = 3
 	NumFrames = 6
 
 	[Prefab]
@@ -121,7 +121,7 @@ Folder
 	Faces    = Library/FudgeDiceFacesWhite.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 6
+	NumFaces = 3
 	NumFrames = 6
 
 	[Prefab]
@@ -134,7 +134,7 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 6
+	NumFaces = 3
 	NumFrames = 6
 
 	[Prefab]
@@ -147,7 +147,7 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 6
+	NumFaces = 3
 	NumFrames = 6
 
 	[Prefab]
@@ -160,6 +160,6 @@ Folder
 	Faces    = Library/FudgeDiceFaces.png
 	FaceValues = [-1, 0, +1]
 	FaceSize = [60, 60]
-	NumFaces = 6
+	NumFaces = 3
 	NumFrames = 6
 }
