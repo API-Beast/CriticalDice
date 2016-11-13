@@ -105,9 +105,9 @@ NetState.Package.ChangeNick = function(player, intro)
   }
 }
 
-NetState.Package.ChatMsg = function(player, text)
+NetState.Package.ChatMsg = function(player, text, type, value)
 {
-  ChatMessage(player.Nick, player.Color, text);
+  ChatMessage(player.Nick, player.Color, text, type, value);
 }
 
 NetState.Package.UpdateGlobalState = function(player, newGlobalState)
