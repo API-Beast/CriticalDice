@@ -451,7 +451,7 @@ div#chat-controls {
     width: 90%;
 }
 
-span .player-name {
+div .player-name {
     /* text-align: right; */
     max-width: 120px;
     /* display: inline-block; */
