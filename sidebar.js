@@ -9,6 +9,7 @@ var Sidebar = function(netstate, iface)
 
 	this.Modules.push(new Sidebar.Properties(netstate));
 	this.Modules.push(new Sidebar.Archive(netstate));
+	this.Modules.push(new Sidebar.Chat(netstate));
 
 	this.Interface.OnSelectionChanged.push(this.OnSelectionChanged.bind(this));
 	this.NetState.Script.OnUpdate.push(this.OnObjectChange.bind(this));

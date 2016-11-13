@@ -57,58 +57,6 @@ function GameInit(argument)
     }
   });
 
-  var chatInput = id("chat-input");
-  chatInput.inputHistory = [""];
-  chatInput.inputHistoryPos = -1;
-  chatInput.addEventListener('keydown',
-  function(e)
-  {
-    if(e.which == 13 || e.keyCode == 13)
-    if(!e.shiftKey)
-    {
-      if(this.value.length)
-      {
-        if(this.inputHistoryPos !== -1)
-          this.inputHistory.splice(this.inputHistoryPos, 1);
-
-        gNetState.Chat(this.value);
-        this.inputHistory.unshift(this.value);
-        this.value = "";
-        this.inputHistoryPos = -1;
-      }
-      e.preventDefault();
-    }
-
-    if(e.which == 38)
-    if(this.inputHistory[this.inputHistoryPos+1])
-    {
-      if(this.inputHistoryPos === -1)
-        this.cachedValue = this.value;
-
-      this.inputHistoryPos++;
-      this.value = this.inputHistory[this.inputHistoryPos];
-      e.preventDefault();
-    }
-
-    if(e.which == 40)
-    if(this.inputHistory[this.inputHistoryPos-1])
-    {
-      this.inputHistoryPos--;
-      this.value = this.inputHistory[this.inputHistoryPos];
-      e.preventDefault();
-    }
-    else if(this.inputHistoryPos === 0)
-    {
-      this.value = this.cachedValue || "";
-      this.inputHistoryPos = -1;
-      e.preventDefault();
-    }
-
-    if(e.which !== 13 && e.which !== 38 && e.which !== 40)
-      this.inputHistoryPos = -1;
-
-  });
-
 	//window.addEventListener('storage', OnStorageChange, false);
 	window.addEventListener('unload', SessionExit, false);
 	var peerID = GetSessionStorage("PeerID");
@@ -375,32 +323,39 @@ function Status(style, text)
 	chatArea.appendChild(div);
 }
 
-function ChatMessage(nick, color, text)
+function ChatMessage(nick, color, text, type, value)
 {
-  var me = false;
-  me = text.indexOf("/me ") === 0;
-  if(me)
-    text = text.substr("/me ".length);
+  if(type === undefined)
+    type = "chatmsg";
 
   text = text.trim();
 
   var chatArea = document.getElementById("chat-area");
 
   var div = document.createElement('div');
-  if(me) div.classList.add("action");
-  else   div.classList.add("chatmsg");
+  div.classList.add(type);
 
   var nickSpan = document.createElement('span');
-  nickSpan.innerHTML = nick;
+  nickSpan.appendChild(document.createTextNode(nick));
   nickSpan.classList.add("player-name");
-  if(!me) nickSpan.style.color = color;
+  nickSpan.style.color = color;
 
   var textSpan = document.createElement('span');
   textSpan.innerHTML = text;
   textSpan.classList.add("message");
 
+  var valueSpan = null;
+  if(value !== undefined)
+  {
+    valueSpan = document.createElement('span');
+    valueSpan.innerHTML = value;
+    valueSpan.classList.add("value");
+  }
+
   div.appendChild(nickSpan);
   div.appendChild(textSpan);
+  if(valueSpan)
+    div.appendChild(valueSpan);
 
   chatArea.appendChild(div);
   textSpan.scrollIntoView(false);

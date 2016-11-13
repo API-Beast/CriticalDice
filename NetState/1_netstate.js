@@ -286,10 +286,10 @@ NetState.prototype.SetGlobal = function(key, value)
   CallAll(this.OnGlobalStateChange);
 }
 
-NetState.prototype.Chat = function(text)
+NetState.prototype.Chat = function(text, type, value)
 {
-  ChatMessage(this.MyPlayer.Nick, this.MyPlayer.Color, text);
-  this.Broadcast("ChatMsg", [text], "", RELIABLE);
+  ChatMessage(this.MyPlayer.Nick, this.MyPlayer.Color, text, type, value);
+  this.Broadcast("ChatMsg", [text, type, value], "", RELIABLE);
 }
 
 NetState.prototype.LogNetwork = function(command, direction, player, p)

@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 body
 {
   font-family: 'Roboto Condensed', sans-serif;
@@ -449,17 +451,38 @@ div#chat-controls {
     width: 90%;
 }
 
-.chatmsg .player-name {
+span .player-name {
     /* text-align: right; */
     max-width: 120px;
     /* display: inline-block; */
     padding-right: 5px;
-    border-right: 1px solid rgb(200, 200, 200);
     margin-right: 5px;
     min-width: 120px;
     text-overflow: ellipsis;
     overflow: hidden;
     vertical-align: top;
+}
+
+.chatmsg .player-name
+{
+    border-right: 1px solid rgb(200, 200, 200);
+}
+
+.roll .player-name {
+  margin-right: 5px;
+}
+
+.roll .player-name:before {
+  content: "+";
+  color: black;
+  text-shadow: none;
+  vertical-align: top;
+}
+
+.roll .value
+{
+  margin-left: 5px;
+  font-weight: bold;
 }
 
 .chatmsg .player-name:before {
@@ -491,10 +514,19 @@ div#chat-controls {
     /* padding-right: 13px; */
     /* border-right: 1px solid rgb(200, 200, 200); */
     margin-right: 5px;
+    color: black !important;
 }
 
 .action .player-name:before {
     content: "* ";
+}
+
+.note .player-name{
+  display: none;
+}
+
+.note{
+  font-size: 70%;
 }
 
 textarea#chat-input {
