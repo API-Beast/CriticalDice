@@ -33,18 +33,6 @@ Cutout.InitHTML = function()
 	var div = this.HTMLDiv;
   div.classList.add('cutout');
 
-	var self = this;
-	div.addEventListener('keydown', function(e)
-	{
-		if(e.keyCode === 13)
-		{
-			self.Text.focus();
-			PlaceCaretAtEnd(self.Text);
-			e.stopPropagation();
-			e.preventDefault();
-		}
-	});
-
   this.Container = document.createElement("div");
 
   this.Text = document.createElement('span');
@@ -72,10 +60,20 @@ Cutout.OnTextEdit = function(event)
   Script.API.NetState.Script.Update(this, {Text: value}, RELIABLE);
 }
 
+Cutout.Focus = function()
+{
+  this.Text.focus();
+  PlaceCaretAtEnd(this.Text);
+}
+
 Cutout.Blur = function()
 {
 	this.HTMLDiv.blur();
 	this.Text.blur();
+	// Blur alone is often not enough, select chat.
+	var chat = document.getElementById("chat-input");
+	chat.focus();
+	PlaceCaretAtEnd(chat);
 }
 
 Cutout.UpdateHTML = function()
