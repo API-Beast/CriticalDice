@@ -288,6 +288,7 @@ NetState.prototype.SetGlobal = function(key, value)
 
 NetState.prototype.Chat = function(text, type, value)
 {
+  if(type === "undefined") type = "chatmsg";
   ChatMessage(this.MyPlayer.Nick, this.MyPlayer.Color, text, type, value);
   this.Broadcast("ChatMsg", [text, type, value], "", RELIABLE);
 }
