@@ -880,3 +880,9 @@ button {
 .property-list:not(.open) .item:not(.title) {
   display: none;
 }
+
+
+.error {
+  font-style: italic;
+  color: #5a1254;
+}

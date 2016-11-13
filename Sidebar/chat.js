@@ -20,8 +20,20 @@ Sidebar.Chat.prototype.Send = function(message)
       this.NetState.Chat(parameters, "action");
     else if(command === "/roll")
     {
-      // using dice.js
-      var expr = dice.parse(parameters);
+      var expr = null
+      try
+      {
+        // using dice.js
+        var expr = dice.parse(parameters);
+      }
+      catch(e)
+      {
+        Status("error", "/roll Error: "+e.message);
+      }
+
+      if(!expr)
+        return;
+
       var result = dice.eval(expr);
       this.NetState.Chat("<i>"+parameters+"</i> = ", "roll", +result);
       this.NetState.Chat(dice.stringify(result), "note");
