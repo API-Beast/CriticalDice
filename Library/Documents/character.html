@@ -1,0 +1,29 @@
+<style>
+  @import "basic.css";
+  @import "items.css";
+</style>
+
+<h2 property="title">Name</h2>
+<row>
+  <column class="quickInfo">
+    <img property="portrait">
+    <row>
+      <item class="boxAttr" property="health">5/5</item>
+      <item class="boxAttr" property="armor">0</item>
+      <item class="boxAttr" property="energy">0</item>
+    </row>
+  </column>
+  <div property="description">
+    <h3>Beschreibung</h3>
+  </div>
+</row>
+<row>
+  <item-list property="attributes">
+    <h3>Stats</h3>
+    <item-template><span key="name"></span><input key="value"/><input key="bonus"/></item-template>
+  </item-list>
+  <item-list property="skills">
+    <h3>Skills</h3>
+    <item-template><span key="name"></span><input key="value"/><input key="bonus"/></item-template>
+  </item-list>
+</row>

@@ -1,0 +1,63 @@
+item>*[key="name"]
+{
+flex-grow: 0.33;
+flex-basis: 0px;
+}
+
+item>*[key="value"]
+{
+/* flex-grow: 0.33; */
+flex-grow: 0.33;
+flex-basis: 0px;
+}
+
+item>*[key="bonus"]
+{
+flex-grow: 0;
+flex-basis: 30px;
+}
+
+
+item-list[property="skills"]>item, item-list[property="attributes"]>item {
+  flex-direction: row;
+}
+
+item-list[property="skills"] {
+  width: 300px;
+  max-height: 200px;
+}
+
+img {
+  /* flex-grow: 0; */
+  /* width: 150px; */
+  height: 190px;
+}
+
+item-list[property="attributes"] {
+  width: 200px;
+}
+
+column.quickInfo {
+  flex-grow: 0;
+}
+
+item.boxAttr[property="health"]
+{
+  background: radial-gradient(#FF9595, #E20000);
+  color: white;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+item.boxAttr[property="energy"]
+{
+  background: radial-gradient(#00FFFC, #85C9D6);
+  /* border-top-left-radius: 15px; */
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+
+item.boxAttr[property="armor"] {
+  border-radius: 0px;
+}

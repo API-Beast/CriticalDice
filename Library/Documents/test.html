@@ -1,0 +1,68 @@
+
+<style media="screen">
+  .doc
+  {
+    margin-bottom: 60px;
+    display: block;
+    border: 1px solid gray;
+    box-shadow: 0px 0px 5px black;
+    padding: 20px;
+    display: block;
+    width: 600px;
+    height: 600px;
+    overflow: auto;
+  }
+</style>
+<body>
+  <script src="document.js"></script>
+  <script type="text/javascript">
+    var data = {
+    title: "Punka",
+    savingThrows:
+      [
+        {name: "Strength"},
+        {name: "Dexterity"},
+        {name: "Constitution"},
+        {name: "Intelligence"},
+        {name: "Wisdom"},
+        {name: "Charisma"}
+      ]
+    ,
+    attributes:
+      [
+        {name: "Strength"},
+        {name: "Dexterity"},
+        {name: "Constitution"},
+        {name: "Intelligence"},
+        {name: "Wisdom"},
+        {name: "Charisma"}
+      ],
+    skills:
+      [
+        {name: "Acrobatics"},
+        {name: "Athletics"},
+        {name: "History"},
+        {name: "Intimidation"},
+        {name: "Medicine"},
+        {name: "Perception"},
+        {name: "Persuasion"},
+        {name: "Sleight of Hand"},
+        {name: "Survival"}
+      ]
+    };
+
+    var request = new XMLHttpRequest();
+    request.open("GET", "character.html", true);
+    request.send();
+    request.onreadystatechange = function()
+    {
+      if(request.readyState== 4 && request.status == 200)
+      {
+        var doc = new EmbDocument(request.responseText, data);
+        document.body.appendChild(doc.Frame);
+        doc.initialize();
+      }
+    }
+
+  </script>
+</body>

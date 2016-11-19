@@ -1,0 +1,117 @@
+<style>@import "basic.css";</style>
+
+<page>
+  <row>
+    <block>
+      <h2 property="title"></h2>
+      <label>Character Name</label>
+    </block>
+    <block>
+      <column>
+        <row>
+          <item><label>Class</label><span property="class"></span></item>
+          <item><label>Background</label><span property="background"></span></item>
+          <item><label>Player Name</label><span property="playername"></span></item>
+        </row>
+        <row>
+          <item><label>Race</label><span property="race"></span></item>
+          <item><label>Alignment</label><span property="alignment"></span></item>
+          <item><label>Experience Points</label><span property="xp"></span></item>
+        </row>
+      </column>
+    </block>
+  </row>
+
+  <row>
+    <column>
+      <row>
+        <item-list property="attributes">
+          <item-template><label key="name"></label><input key="value"/><input key="bonus"/></item-template>
+        </item-list>
+        <column>
+          <item><input property="inspiration"><label>Inspiration</label></item>
+          <item><input property="proficiency"><label>Proficiency Bonus</label></item>
+          <item-list property="savingThrows">
+            <item-template><label key="name"></label><input key="value"/></item-template>
+            <label>Saving Throws</label>
+          </item-list>
+          <item-list property="skills">
+            <item-template><label key="name"></label><input key="value"/></item-template>
+            <label>Skills</label>
+          </item-list>
+        </column>
+      </row>
+      <item><input property="perception"/><label>Passive Wisdom (Perception)</label></item>
+      <block>
+        <div property="proficiencies"></div>
+        <label>Other Proficiencies and Languages</label>
+      </block>
+    </column>
+
+    <column>
+      <row>
+        <item><input property="armor"/><label>Armor</label></item>
+        <item><input property="intiative"/><label>Initiative</label></item>
+        <item><input property="speed"/><label>Speed</label></item>
+      </row>
+      <row>
+        <item><input property="currenthp"/><label>Current HP</label></item>
+        <item><input property="maxhp"/><label>Max. HP</label></item>
+        <item><input property="temphp"/><label>Tempoary HP</label></item>
+      </row>
+      <row>
+        <item></item>
+      </row>
+    </column>
+
+    <column>
+
+    </column>
+  </row>
+</page>
+
+<page>
+  <row>
+    <block>
+      <h2 property="title"></h2>
+      <label>Character Name</label>
+    </block>
+    <block>
+      <column>
+        <row>
+          <item><label>Age   </label><span property="age"></span></item>
+          <item><label>Height</label><span property="height"></span></item>
+          <item><label>Weight</label><span property="weight"></span></item>
+        </row>
+        <row>
+          <item><label>Eyes</label><span property="eyes"></span></item>
+          <item><label>Skin</label><span property="skin"></span></item>
+          <item><label>Hair</label><span property="hair"></span></item>
+        </row>
+      </column>
+    </block>
+  </row>
+  <row>
+    <column>
+      <img property="portrait">
+      <block>
+        <div property="backstory"></div>
+        <label>Character Backstory</label>
+      </block>
+    </column>
+    <column>
+      <block>
+        <div property="allies"></div>
+        <label>Allies and Organizations</label>
+      </block>
+      <block>
+        <div property="features"></div>
+        <label>Additional Features and Traits</label>
+      </block>
+      <block>
+        <div property="treasure"></div>
+        <label>Treasure</label>
+      </block>
+    </column>
+  </row>
+</page>
